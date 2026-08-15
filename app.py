@@ -1120,10 +1120,58 @@ st.markdown(
 # ---------------------------------------------------------------------------
 # Carga de datos
 # ---------------------------------------------------------------------------
-@st.cache_data
+# Columnas que la app realmente usa de cada parquet. Leer solo estas (y
+# compactar los textos repetidos a dtype category) reduce la memoria del
+# proceso a menos de la mitad, necesario para el límite del hosting gratuito.
+_COLUMNAS_APP = {
+    "ocds_procesos": [
+        "ocid", "fecha", "entidad", "metodo_contratacion", "tipo_objeto",
+        "cubso_descripcion", "monto_adjudicado", "proveedor_id",
+        "proveedor_nombre", "anio",
+    ],
+    "documentos_convocatoria": [
+        "ocid", "tipo_documento", "titulo", "formato", "url",
+        "fecha_publicacion",
+    ],
+    "convocatorias_vigentes": [
+        "ocid", "convocatoria", "titulo", "descripcion", "entidad",
+        "metodo_contratacion", "tipo_objeto", "monto_referencial",
+        "fecha_publicacion", "fecha_inicio_ofertas", "fecha_cierre_ofertas",
+        "cubso_descripcion", "n_documentos", "origen_limite",
+        "dias_para_cierre", "vigencia",
+    ],
+    "proveedores_padron": [
+        "ruc", "razon_social", "es_habilitado", "es_apto_contratar",
+        "estado_habilitacion", "capitulos_nombres", "fecha_consulta",
+    ],
+}
+
+
+@st.cache_data(max_entries=10)
 def cargar(ruta):
-    """Lee un Parquet si existe; devuelve None si la etapa no se corrió."""
-    return pd.read_parquet(ruta) if ruta.exists() else None
+    """Lee un Parquet si existe; devuelve None si la etapa no se corrió.
+
+    Optimización de memoria: lee solo las columnas que la app usa y convierte
+    a category los textos de baja cardinalidad (excepto fechas).
+    """
+    if not ruta.exists():
+        return None
+    import pyarrow.parquet as _pq
+
+    deseadas = _COLUMNAS_APP.get(ruta.stem)
+    columnas = None
+    if deseadas:
+        disponibles = set(_pq.read_schema(ruta).names)
+        columnas = [c for c in deseadas if c in disponibles] or None
+    df = pd.read_parquet(ruta, columns=columnas)
+    for c in df.columns:
+        if "fecha" in c:
+            continue
+        if str(df[c].dtype) in ("object", "str"):
+            n = df[c].nunique(dropna=True)
+            if 0 < n and n / max(len(df), 1) < 0.5:
+                df[c] = df[c].astype("category")
+    return df
 
 
 maestro = cargar(config.PARQUET_MAESTRO)
