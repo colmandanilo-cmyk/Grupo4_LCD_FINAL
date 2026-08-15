@@ -6,6 +6,25 @@ Curso: Lenguaje de Ciencia de Datos II (4364) · CIBERTEC · Grupo 4
 
 ---
 
+## Instalación rápida (evaluación)
+
+Requiere **Python 3.11 o superior** (desarrollado y probado con Python 3.14).
+
+Los datos procesados ya vienen versionados en `data/processed/`, por lo que el
+dashboard corre **sin necesidad de ejecutar el pipeline**:
+
+```bash
+git clone https://github.com/colmandanilo-cmyk/Grupo4_LCD_FINAL.git
+cd Grupo4_LCD_FINAL
+pip install -r requirements.txt
+streamlit run app.py
+```
+
+El navegador se abre en `http://localhost:8501` con la Data App de 3 pantallas.
+Para regenerar los datos desde las fuentes, ver la sección [Ejecución](#ejecución).
+
+---
+
 ## Qué resuelve
 
 Un proveedor que quiere venderle al Estado peruano no puede responder hoy tres
@@ -123,7 +142,7 @@ según el ritmo real de cada fuente: **diaria** para las convocatorias vigentes
 (tienen fecha de cierre) y el año OCDS en curso; **semanal** para la demanda
 histórica, la habilitación de proveedores y el diccionario CUBSO. El
 orquestador limpia solo los logs de más de 30 días, así que el disco no crece
-sin límite. Ver `INSTRUCCIONES_AUTOMATIZACION.md` y `crontab.txt`.
+sin límite.
 
 ### Manual (etapa por etapa)
 
@@ -226,10 +245,7 @@ radar-oportunidades/
 ├── diagnostico.py             # orquesta calidad → validación → integración → transformación
 ├── wrangling_radar_oportunidades.ipynb   # notebook de wrangling sobre los datos del proyecto
 ├── app.py                     # Data App en Streamlit (3 pantallas)
-├── ejecutar_diario.bat        # lo dispara el Programador de tareas (Windows)
-├── ejecutar_semanal.bat       #   idem, actualización completa
-├── crontab.txt                # diseño de despliegue en servidor (Linux)
-├── INSTRUCCIONES_AUTOMATIZACION.md
+├── requirements.txt           # dependencias del proyecto
 ├── normativa/
 │   └── formalidades_catalogo.json
 ├── data/{raw,processed,checkpoints}/

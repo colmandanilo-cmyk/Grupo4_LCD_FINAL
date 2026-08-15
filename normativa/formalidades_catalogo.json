@@ -1,0 +1,189 @@
+{
+  "version": "1.0",
+  "actualizado_en": "2026-07",
+  "responsable": "Grupo 4 — Radar de Oportunidades en Compras Públicas",
+  "marco_legal": [
+    {
+      "norma": "Ley N.º 32069 — Ley General de Contrataciones Públicas",
+      "nota": "Deroga la Ley N.º 30225 y reemplaza al OSCE por el OECE.",
+      "url": "https://lpderecho.pe/ley-general-de-contrataciones-publicas-actualizada/"
+    },
+    {
+      "norma": "Reglamento de la Ley N.º 32069 — D.S. 009-2025-EF",
+      "nota": "Publicado el 22 de abril de 2025; desarrolla procedimientos, plazos, formatos y el régimen del RNP.",
+      "url": "https://lpderecho.pe/reglamento-de-la-ley-32069-ley-general-de-contrataciones-publicas/"
+    }
+  ],
+  "advertencia": "Este catálogo es una guía referencial de orientación, no asesoría legal. Los requisitos exigibles en un procedimiento concreto son los de sus BASES INTEGRADAS, que prevalecen sobre cualquier resumen. Antes de presentar una oferta debe leerse el documento de bases publicado en el propio llamado y verificarse la vigencia de la norma citada.",
+  "etapas": [
+    {
+      "orden": 1,
+      "clave": "habilitacion",
+      "nombre": "Habilitación previa",
+      "resumen": "Lo que hay que tener resuelto antes de mirar cualquier convocatoria."
+    },
+    {
+      "orden": 2,
+      "clave": "participacion",
+      "nombre": "Ingreso al procedimiento",
+      "resumen": "Los pasos con plazo que se ejecutan dentro del cronograma del llamado."
+    },
+    {
+      "orden": 3,
+      "clave": "oferta",
+      "nombre": "Armado de la oferta",
+      "resumen": "Qué contiene la propuesta y contra qué se la evalúa."
+    },
+    {
+      "orden": 4,
+      "clave": "post_adjudicacion",
+      "nombre": "Después de la buena pro",
+      "resumen": "Garantías y perfeccionamiento del contrato."
+    }
+  ],
+  "requisitos": [
+    {
+      "id": "F-01",
+      "etapa": "habilitacion",
+      "requisito": "Inscripción vigente en el Registro Nacional de Proveedores (RNP)",
+      "detalle": "Es el primer filtro y no admite excepción: para ser participante, postor, contratista o subcontratista del Estado se requiere inscripción vigente en el RNP. El registro opera cuatro categorías separadas —bienes, servicios, consultores de obras y ejecutores de obras—; hay que estar inscrito en la que corresponde al objeto del llamado.",
+      "aplica_a": ["bienes", "servicios", "obras", "consultoria"],
+      "base_legal": "Art. 22.2 y 22.3 del Reglamento (D.S. 009-2025-EF); Art. 29 de la Ley N.º 32069",
+      "critico": true
+    },
+    {
+      "id": "F-02",
+      "etapa": "habilitacion",
+      "requisito": "No estar incurso en causal de impedimento para contratar con el Estado",
+      "detalle": "La ley enumera los impedimentos, que incluyen supuestos de carácter personal (autoridades, funcionarios y servidores públicos), vínculos de parentesco y sanciones de inhabilitación vigentes. Postular estando impedido no solo descalifica la oferta: expone a sanción adicional. Conviene verificar el registro de inhabilitados del OECE antes de ofertar.",
+      "aplica_a": ["bienes", "servicios", "obras", "consultoria"],
+      "base_legal": "Art. 30 de la Ley N.º 32069; Art. 39 del Reglamento (verificación de impedimentos)",
+      "critico": true
+    },
+    {
+      "id": "F-03",
+      "etapa": "habilitacion",
+      "requisito": "Ficha Única del Proveedor (FUP) actualizada",
+      "detalle": "La FUP consolida la información relevante del proveedor a partir de datos del OECE y de otras entidades mediante interoperabilidad. Es la fuente que la entidad consulta; si está desactualizada o inconsistente, el problema aparece recién en la calificación, cuando ya no hay margen.",
+      "aplica_a": ["bienes", "servicios", "obras", "consultoria"],
+      "base_legal": "Art. 31 de la Ley N.º 32069; Art. 36 del Reglamento",
+      "critico": false
+    },
+    {
+      "id": "F-04",
+      "etapa": "habilitacion",
+      "requisito": "Capacidad máxima de contratación (CMC) suficiente",
+      "detalle": "Solo para ejecutores de obras: el RNP fija un tope hasta el cual se puede contratar ejecución de obras públicas simultáneamente, calculado sobre el récord de obras culminadas. Para suscribir el contrato se exige además la Constancia de Capacidad Libre de Contratación (CCLC), que acredita el margen disponible.",
+      "aplica_a": ["obras"],
+      "base_legal": "Art. 28 del Reglamento (D.S. 009-2025-EF)",
+      "critico": true
+    },
+    {
+      "id": "F-05",
+      "etapa": "participacion",
+      "requisito": "Registro de participantes dentro del plazo del cronograma",
+      "detalle": "El registro habilita a formular consultas y a presentar oferta. Se realiza en la oportunidad que fija el cronograma del propio procedimiento: fuera de esa ventana no se puede participar, aunque se cumplan todos los demás requisitos.",
+      "aplica_a": ["bienes", "servicios", "obras", "consultoria"],
+      "base_legal": "Art. 65 del Reglamento (D.S. 009-2025-EF)",
+      "critico": true
+    },
+    {
+      "id": "F-06",
+      "etapa": "participacion",
+      "requisito": "Formulación de consultas y observaciones a las bases",
+      "detalle": "Es la única oportunidad para pedir aclaraciones o cuestionar requisitos que restrinjan indebidamente la competencia. Una MYPE que detecta un requisito desproporcionado tiene aquí su mecanismo de defensa; después ya no.",
+      "aplica_a": ["bienes", "servicios", "obras", "consultoria"],
+      "base_legal": "Art. 66 del Reglamento (D.S. 009-2025-EF)",
+      "critico": false
+    },
+    {
+      "id": "F-07",
+      "etapa": "participacion",
+      "requisito": "Revisión del pliego absolutorio y de las bases integradas",
+      "detalle": "Las bases integradas incorporan las respuestas a consultas y observaciones y son la versión definitiva y exigible del llamado. Preparar la oferta sobre las bases originales, sin leer la integración, es una fuente frecuente de descalificación.",
+      "aplica_a": ["bienes", "servicios", "obras", "consultoria"],
+      "base_legal": "Art. 67 del Reglamento (D.S. 009-2025-EF)",
+      "critico": true
+    },
+    {
+      "id": "F-08",
+      "etapa": "oferta",
+      "requisito": "Presentación de la oferta en la forma y el plazo previstos",
+      "detalle": "La presentación es electrónica y cierra a la hora exacta que fija el sistema. El margen es real, no formal: la práctica recomendada es cargar la oferta con holgura, porque una falla de conexión sobre la hora de cierre equivale a no haber presentado.",
+      "aplica_a": ["bienes", "servicios", "obras", "consultoria"],
+      "base_legal": "Art. 68 del Reglamento (D.S. 009-2025-EF)",
+      "critico": true
+    },
+    {
+      "id": "F-09",
+      "etapa": "oferta",
+      "requisito": "Contenido completo de la oferta y declaraciones juradas",
+      "detalle": "El reglamento define qué debe contener la oferta, incluidas las declaraciones juradas con los formatos estándar. Los errores más comunes no son técnicos sino formales: declaraciones mal firmadas, con fecha equivocada o con formato distinto al exigido.",
+      "aplica_a": ["bienes", "servicios", "obras", "consultoria"],
+      "base_legal": "Art. 69 del Reglamento (D.S. 009-2025-EF)",
+      "critico": true
+    },
+    {
+      "id": "F-10",
+      "etapa": "oferta",
+      "requisito": "Cumplimiento de los requisitos de calificación",
+      "detalle": "Son las condiciones mínimas de capacidad legal, técnica, profesional y —cuando corresponde— económica que el postor debe acreditar. Se verifican sobre documentación: la experiencia que no se puede acreditar documentalmente no cuenta, aunque exista.",
+      "aplica_a": ["bienes", "servicios", "obras", "consultoria"],
+      "base_legal": "Art. 72 del Reglamento (D.S. 009-2025-EF)",
+      "critico": true
+    },
+    {
+      "id": "F-11",
+      "etapa": "oferta",
+      "requisito": "Suscripción del pacto de integridad",
+      "detalle": "Todo proveedor que participa en un proceso de contratación suscribe el pacto de integridad establecido en el reglamento.",
+      "aplica_a": ["bienes", "servicios", "obras", "consultoria"],
+      "base_legal": "Art. 29.8 de la Ley N.º 32069",
+      "critico": false
+    },
+    {
+      "id": "F-12",
+      "etapa": "post_adjudicacion",
+      "requisito": "Garantía de fiel cumplimiento",
+      "detalle": "Para perfeccionar el contrato se exige garantía de fiel cumplimiento, y garantía adicional por los adelantos que se soliciten. Es una restricción financiera concreta para una empresa pequeña: hay que tener resuelta la línea con la entidad financiera antes de ofertar, no después de ganar.",
+      "aplica_a": ["bienes", "servicios", "obras", "consultoria"],
+      "base_legal": "Régimen de garantías de la Ley N.º 32069 y su Reglamento",
+      "critico": true
+    },
+    {
+      "id": "F-13",
+      "etapa": "post_adjudicacion",
+      "requisito": "Garantía para interponer recurso de apelación",
+      "detalle": "Impugnar el resultado exige constituir una garantía. La nueva ley redujo el monto de la carta fianza respecto del régimen anterior, lo que abarata el acceso a la impugnación.",
+      "aplica_a": ["bienes", "servicios", "obras", "consultoria"],
+      "base_legal": "Régimen del recurso de apelación de la Ley N.º 32069",
+      "critico": false
+    }
+  ],
+  "tipos_documento_ocds": {
+    "biddingDocuments": {
+      "nombre": "Bases administrativas",
+      "por_que_importa": "Documento rector del llamado: contiene el requerimiento, los requisitos de calificación y los factores de evaluación. Es lo primero que hay que leer."
+    },
+    "clarifications": {
+      "nombre": "Pliego absolutorio de consultas y observaciones",
+      "por_que_importa": "Modifica las bases. Junto con ellas conforma las bases integradas, que son la versión exigible."
+    },
+    "technicalSpecifications": {
+      "nombre": "Especificaciones técnicas / términos de referencia",
+      "por_que_importa": "Define qué se debe entregar exactamente. Determina si la empresa puede cumplir o no."
+    },
+    "awardNotice": {
+      "nombre": "Documentos de otorgamiento de la buena pro",
+      "por_que_importa": "Resultado del procedimiento. Sirve para analizar quién ganó y con qué oferta."
+    },
+    "evaluationReports": {
+      "nombre": "Informes de evaluación",
+      "por_que_importa": "Explica el resultado, incluidas las declaratorias de desierto — señal de una categoría con poca competencia."
+    },
+    "contractSigned": {
+      "nombre": "Contrato suscrito",
+      "por_que_importa": "Cierra el ciclo y permite verificar montos y plazos finales."
+    }
+  }
+}
