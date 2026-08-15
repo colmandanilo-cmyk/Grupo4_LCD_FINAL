@@ -33,7 +33,7 @@ st.set_page_config(
     page_title="Radar de Oportunidades en Compras Públicas",
     page_icon="📡",
     layout="wide",
-    initial_sidebar_state="collapsed",
+    initial_sidebar_state="expanded",
 )
 
 MONEDA = "S/"
@@ -2470,38 +2470,33 @@ else:
 
 meses_disponibles = list(range(1, 13))
 
+st.sidebar.markdown("### 🗓️ Periodo de análisis")
+st.sidebar.caption("Estos filtros acompañan todo el dashboard.")
+anios_seleccionados = st.sidebar.multiselect(
+    "Años",
+    anios_disponibles,
+    default=anios_disponibles,
+    help="Elige uno o varios años del histórico que quieres comparar.",
+)
+meses_seleccionados = st.sidebar.multiselect(
+    "Meses",
+    meses_disponibles,
+    default=meses_disponibles,
+    format_func=mes_nombre,
+    help="Si eliges varios años, el mes se aplica a cada año seleccionado.",
+)
 st.markdown(
-    '<div class="ro-filter-title">Periodo de análisis · estos filtros acompañan todo el dashboard</div>',
+    f"""
+    <div class="ro-period">
+      <div class="ro-period-title">Periodo activo</div>
+      <div class="ro-period-copy">{escape(resumen_periodo(anios_seleccionados, meses_seleccionados))}</div>
+    </div>
+    """,
     unsafe_allow_html=True,
 )
-p1, p2, p3 = st.columns([1.15, 2.3, 1.1])
-with p1:
-    anios_seleccionados = st.multiselect(
-        "Años",
-        anios_disponibles,
-        default=anios_disponibles,
-        help="Elige uno o varios años del histórico que quieres comparar.",
-    )
-with p2:
-    meses_seleccionados = st.multiselect(
-        "Meses",
-        meses_disponibles,
-        default=meses_disponibles,
-        format_func=mes_nombre,
-        help="Si eliges varios años, el mes se aplica a cada año seleccionado.",
-    )
-with p3:
-    st.markdown(
-        f"""
-        <div class="ro-period">
-          <div class="ro-period-title">Periodo activo</div>
-          <div class="ro-period-copy">{escape(resumen_periodo(anios_seleccionados, meses_seleccionados))}</div>
-        </div>
-        """,
-        unsafe_allow_html=True,
-    )
 
 if not anios_seleccionados or not meses_seleccionados:
+    st.sidebar.warning("Selecciona al menos un año y un mes.")
     st.info("Selecciona al menos un año y un mes para continuar.")
     st.stop()
 
