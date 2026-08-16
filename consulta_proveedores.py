@@ -51,7 +51,7 @@ from __future__ import annotations
 import pandas as pd
 
 import config
-from utils import Cronometro, Reporte, crear_logger
+from utils import Cronometro, Reporte, crear_logger, registrar_corrida
 
 log = crear_logger("consulta_proveedores")
 
@@ -310,6 +310,7 @@ def main() -> None:
 
     ruta = reporte.guardar()
     log.info("Reporte de metricas escrito | %s", ruta.name)
+    registrar_corrida("consulta_proveedores")
     log.info("FIN consulta proveedores | estado=EXITO")
 
 

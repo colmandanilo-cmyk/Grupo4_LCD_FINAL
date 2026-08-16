@@ -251,3 +251,11 @@ PARQUET_DOCUMENTOS = PROCESSED_DIR / "documentos_convocatoria.parquet"
 PARQUET_CRONOGRAMA = PROCESSED_DIR / "cronograma_convocatoria.parquet"
 PARQUET_ESTACIONALIDAD = PROCESSED_DIR / "estacionalidad_categoria.parquet"
 PARQUET_MAESTRO = PROCESSED_DIR / "maestro_oportunidades.parquet"
+
+# Metadato de corridas: fecha de fin exitoso de cada módulo del pipeline.
+# Vive junto a los parquet y se versiona con ellos, porque es metadato del
+# dato (cuándo se generó) y no del proceso (qué pasó al generarlo). Es la
+# fuente de las fechas de la Data App cuando corre en un entorno que no
+# tiene acceso a logs/ (Streamlit Cloud: el contenido de logs/ y reports/
+# está en .gitignore y llega vacío al servidor).
+RUTA_METADATA_CORRIDAS = PROCESSED_DIR / "metadata_corridas.json"

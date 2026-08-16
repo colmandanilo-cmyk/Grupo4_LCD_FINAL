@@ -71,7 +71,7 @@ import pandas as pd
 import requests
 
 import config
-from utils import Cronometro, Reporte, crear_logger
+from utils import Cronometro, Reporte, crear_logger, registrar_corrida
 
 log = crear_logger("monitor_convocatorias")
 
@@ -849,6 +849,7 @@ def main() -> None:
         limpiar_cursor()
         log.info("Checkpoint limpiado | proxima corrida API inicia desde lo mas reciente")
 
+    registrar_corrida("monitor_convocatorias")
     log.info("FIN monitor | estado=EXITO")
 
 

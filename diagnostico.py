@@ -45,7 +45,7 @@ import config
 import calidad
 import transformacion
 import validacion
-from utils import Cronometro, Reporte, crear_logger
+from utils import Cronometro, Reporte, crear_logger, registrar_corrida
 
 log = crear_logger("diagnostico")
 
@@ -290,6 +290,7 @@ def main() -> None:
 
     ruta = reporte.guardar()
     log.info("Reporte de metricas escrito | %s", ruta.name)
+    registrar_corrida("diagnostico")
     log.info("FIN diagnostico | estado=EXITO")
 
 

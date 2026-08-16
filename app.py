@@ -18,6 +18,7 @@ from __future__ import annotations
 from html import escape
 from datetime import datetime
 from pathlib import Path
+import json
 import re
 import unicodedata
 
@@ -1447,25 +1448,48 @@ def resumen_periodo(anios: list[int], meses: list[int]) -> str:
 
 
 def ultima_corrida(prefijos: list[str]) -> str:
-    """Busca la fecha más reciente grabada en nombres de logs/reportes."""
+    """Fecha de la última corrida de un módulo del pipeline.
+
+    Lee primero el metadato versionado (data/processed/metadata_corridas.json),
+    que viaja con los parquet en el repositorio y por lo tanto existe también
+    en Streamlit Cloud, donde logs/ y reports/ llegan vacíos (.gitignore).
+    Los nombres de archivos de logs/reportes quedan como respaldo local para
+    corridas anteriores a la introducción del metadato.
+    """
     fechas = []
     patron = re.compile(r"(\d{8})_(\d{6})")
-    carpetas = [getattr(config, "LOG_DIR", None), getattr(config, "REPORT_DIR", None)]
-    for carpeta in carpetas:
-        if not carpeta:
-            continue
-        carpeta = Path(carpeta)
-        if not carpeta.exists():
-            continue
-        for prefijo in prefijos:
-            for archivo in carpeta.glob(f"{prefijo}_*"):
-                m = patron.search(archivo.name)
-                if not m:
-                    continue
-                try:
-                    fechas.append(datetime.strptime("".join(m.groups()), "%Y%m%d%H%M%S"))
-                except ValueError:
-                    pass
+
+    # 1) Metadato versionado: la fuente que funciona en cualquier entorno.
+    ruta_meta = getattr(config, "RUTA_METADATA_CORRIDAS", None)
+    if ruta_meta and Path(ruta_meta).exists():
+        try:
+            meta = json.loads(Path(ruta_meta).read_text(encoding="utf-8"))
+            for prefijo in prefijos:
+                valor = meta.get(prefijo)
+                if valor:
+                    fechas.append(datetime.strptime(valor, "%Y%m%d_%H%M%S"))
+        except (json.JSONDecodeError, ValueError, OSError):
+            pass
+
+    # 2) Respaldo local: fecha grabada en los nombres de logs/reportes.
+    if not fechas:
+        carpetas = [getattr(config, "LOG_DIR", None), getattr(config, "REPORT_DIR", None)]
+        for carpeta in carpetas:
+            if not carpeta:
+                continue
+            carpeta = Path(carpeta)
+            if not carpeta.exists():
+                continue
+            for prefijo in prefijos:
+                for archivo in carpeta.glob(f"{prefijo}_*"):
+                    m = patron.search(archivo.name)
+                    if not m:
+                        continue
+                    try:
+                        fechas.append(datetime.strptime("".join(m.groups()), "%Y%m%d%H%M%S"))
+                    except ValueError:
+                        pass
+
     if not fechas:
         return "No encontrada"
     return max(fechas).strftime("%d/%m/%Y %H:%M")

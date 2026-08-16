@@ -38,7 +38,7 @@ import pandas as pd
 import requests
 
 import config
-from utils import Cronometro, Reporte, bytes_legibles, crear_logger
+from utils import Cronometro, Reporte, bytes_legibles, crear_logger, registrar_corrida
 
 log = crear_logger("ingesta_ocds")
 
@@ -388,6 +388,7 @@ def main() -> None:
 
     ruta_rep = reporte.guardar()
     log.info("Reporte de metricas escrito | %s", ruta_rep.name)
+    registrar_corrida("ingesta_ocds")
     log.info("FIN ingesta OCDS | estado=EXITO")
 
 

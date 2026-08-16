@@ -58,7 +58,7 @@ import numpy as np
 import pandas as pd
 
 import config
-from utils import Cronometro, Reporte, crear_logger, optimizar_memoria
+from utils import Cronometro, Reporte, crear_logger, optimizar_memoria, registrar_corrida
 
 log = crear_logger("transformacion")
 
@@ -525,6 +525,7 @@ def main() -> None:
 
     ruta = reporte.guardar()
     log.info("Reporte de metricas escrito | %s", ruta.name)
+    registrar_corrida("transformacion")
     log.info("FIN transformacion | estado=EXITO")
 
 

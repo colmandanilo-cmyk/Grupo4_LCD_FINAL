@@ -205,6 +205,33 @@ class Reporte:
         return destino
 
 
+def registrar_corrida(nombre: str) -> None:
+    """Graba la fecha de fin exitoso de un módulo en el metadato versionado.
+
+    Los logs y reportes registran cada corrida en local, pero su contenido no
+    viaja con el repositorio: en Streamlit Cloud las carpetas llegan vacías y
+    la Data App no puede fechar las corridas desde ahí. Este JSON acompaña a
+    los parquet (mismo directorio, mismo commit), de modo que la fecha de
+    corrida viaje con el dato que esa corrida produjo.
+
+    Se llama al final exitoso de cada módulo. Si el archivo no existe o está
+    corrupto se reconstruye: perder el metadato de módulos anteriores es
+    preferible a abortar una corrida que ya terminó bien.
+    """
+    ruta = config.RUTA_METADATA_CORRIDAS
+    datos: dict = {}
+    if ruta.exists():
+        try:
+            datos = json.loads(ruta.read_text(encoding="utf-8"))
+            if not isinstance(datos, dict):
+                datos = {}
+        except (json.JSONDecodeError, OSError):
+            datos = {}
+    datos[nombre] = datetime.now().strftime("%Y%m%d_%H%M%S")
+    ruta.write_text(json.dumps(datos, indent=2, ensure_ascii=False, sort_keys=True),
+                    encoding="utf-8")
+
+
 def bytes_legibles(n: int | float) -> str:
     """Convierte una cantidad de bytes a una unidad legible."""
     tamanio = float(n)

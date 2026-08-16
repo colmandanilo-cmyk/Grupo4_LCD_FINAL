@@ -44,7 +44,7 @@ import json
 import pandas as pd
 
 import config
-from utils import Cronometro, Reporte, crear_logger
+from utils import Cronometro, Reporte, crear_logger, registrar_corrida
 
 log = crear_logger("formalidades")
 
@@ -243,6 +243,9 @@ def main() -> None:
     reporte.seccion("fichas", fichas[:20])  # muestra acotada en el reporte
     ruta = reporte.guardar()
     log.info("Reporte escrito | %s", ruta.name)
+    # Solo el modo ficha completa cuenta como corrida: la consulta puntual
+    # (--tipo) no regenera las fichas de las convocatorias vigentes.
+    registrar_corrida("formalidades")
     log.info("FIN formalidades | estado=EXITO")
 
 
