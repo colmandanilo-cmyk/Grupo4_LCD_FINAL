@@ -1262,6 +1262,13 @@ for clave, valor in {
     "listos": set(),
 }.items():
     st.session_state.setdefault(clave, valor)
+    # Reasignación deliberada: Streamlit elimina el estado de los widgets que
+    # no se renderizan en la corrida actual. "categoria" es la clave de un
+    # selectbox del Paso 1; al navegar al Paso 2 ese widget no existe y su
+    # estado se borraría en el primer rerun, deshabilitando el filtro de
+    # categoría exacta. Volver a escribir la clave en cada corrida la marca
+    # como estado de la app y evita esa limpieza.
+    st.session_state[clave] = st.session_state[clave]
 
 
 # ---------------------------------------------------------------------------
@@ -2059,6 +2066,10 @@ def selector_rubro(df: pd.DataFrame) -> str | None:
             if st.button("Quitar filtro de rubro", key="limpiar_rubro_p2",
                          use_container_width=True):
                 st.session_state["rubro_p2"] = None
+                # El gráfico guarda su propia selección bajo su key: si no se
+                # borra, el próximo rerun la devuelve en el evento y el filtro
+                # se vuelve a aplicar solo. Borrar la key reinicia el widget.
+                st.session_state.pop("sel_rubro_p2", None)
                 st.rerun()
     return elegido
 
