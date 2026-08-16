@@ -1,8 +1,8 @@
-requests>=2.31
-pandas>=2.0
-pyarrow>=14.0
-streamlit>=1.30
-pandera>=0.20
-numpy>=1.26
-openpyxl>=3.1
-altair>=5.0
+altair==6.2.2
+numpy==2.4.6
+openpyxl==3.1.5
+pandas==3.0.3
+pandera==0.32.1
+pyarrow==24.0.0
+requests==2.34.2
+streamlit==1.60.0
