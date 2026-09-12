@@ -298,14 +298,23 @@ st.markdown(
       }}
       .ro-qchip {{
         background: rgba(255,255,255,.92);
-        border-radius: 20px;
-        padding: 7px 14px;
-        font-size: 12.5px;
+        border-radius: 12px;
+        padding: 8px 14px;
+        flex: 1 1 180px;
+      }}
+      .ro-qchip-q {{
+        font-size: 12px;
         font-weight: 650;
         color: {TINTA};
         white-space: nowrap;
       }}
-      .ro-qchip b {{ color: {NARANJA}; margin-right: 4px; }}
+      .ro-qchip-q b {{ color: {NARANJA}; margin-right: 4px; }}
+      .ro-qchip-a {{
+        font-size: 13.5px;
+        font-weight: 800;
+        color: {AZUL};
+        margin-top: 3px;
+      }}
 
       div[data-testid="stRadio"] > div {{
         background: #fff;
@@ -1700,18 +1709,50 @@ def titulo_paso(etiqueta: str, titulo: str, subtitulo: str, dark: bool = False) 
     )
 
 
-def render_preguntas_negocio() -> None:
-    """Franja compacta con las 5 preguntas. El detalle vive en cada pantalla."""
+def render_preguntas_negocio(
+    maestro_periodo: pd.DataFrame, ocds_periodo: pd.DataFrame
+) -> None:
+    """Franja compacta con las 5 preguntas, cada una con la respuesta del periodo.
+
+    Q1-Q3 se pueden resumir para todo el periodo elegido (sin depender de una
+    categoría). Q4 y Q5 solo tienen sentido para una categoría puntual, así
+    que invitan a elegirla en el Paso 1 en vez de mostrar un promedio que
+    nadie usaría para decidir.
+    """
+    if maestro_periodo is not None and not maestro_periodo.empty:
+        texto_q1 = formato_soles(maestro_periodo["demanda_soles"].sum())
+        poca_o_sin = maestro_periodo["banda_competencia"].astype(str).isin(
+            ["Sin adjudicatario vigente", "Poca competencia (1-2)"]
+        )
+        pct_poca = poca_o_sin.sum() / len(maestro_periodo) * 100
+        texto_q2 = f"{pct_poca:.0f}% con poca competencia"
+    else:
+        texto_q1 = "—"
+        texto_q2 = "—"
+
+    texto_q3 = "—"
+    if ocds_periodo is not None and not ocds_periodo.empty:
+        fechas = pd.to_datetime(ocds_periodo.get("fecha"), errors="coerce", utc=True)
+        montos = pd.to_numeric(ocds_periodo.get("monto_adjudicado"), errors="coerce")
+        por_mes = pd.DataFrame({"mes": fechas.dt.month, "monto": montos}).dropna()
+        if not por_mes.empty:
+            mes_pico = por_mes.groupby("mes")["monto"].sum().idxmax()
+            texto_q3 = mes_nombre(mes_pico)
+
+    ver_categoria = "Elige una categoría en el Paso 1"
     chips = [
-        ("Q1", "💰", "¿Dónde compra más el Estado?"),
-        ("Q2", "🛡️", "¿Dónde hay menos competencia?"),
-        ("Q3", "📅", "¿Cuándo compra más?"),
-        ("Q4", "📏", "¿El contrato está a mi alcance?"),
-        ("Q5", "🏁", "¿Quiénes siguen en carrera hoy?"),
+        ("Q1", "💰", "¿Dónde compra más el Estado?", texto_q1),
+        ("Q2", "🛡️", "¿Dónde hay menos competencia?", texto_q2),
+        ("Q3", "📅", "¿Cuándo compra más?", texto_q3),
+        ("Q4", "📏", "¿El contrato está a mi alcance?", ver_categoria),
+        ("Q5", "🏁", "¿Quiénes siguen en carrera hoy?", ver_categoria),
     ]
     items = "".join(
-        f'<div class="ro-qchip"><b>{qq}</b>{icon} {escape(texto)}</div>'
-        for qq, icon, texto in chips
+        f'<div class="ro-qchip">'
+        f'<div class="ro-qchip-q"><b>{qq}</b>{icon} {escape(texto)}</div>'
+        f'<div class="ro-qchip-a">{escape(str(respuesta))}</div>'
+        '</div>'
+        for qq, icon, texto, respuesta in chips
     )
     st.markdown(
         f"""
@@ -2451,8 +2492,6 @@ st.markdown(
     unsafe_allow_html=True,
 )
 
-render_preguntas_negocio()
-
 # Periodo histórico global: afecta demanda, competencia histórica, ticket,
 # estacionalidad, ranking e índice en todo el recorrido.
 if ocds is not None and not ocds.empty:
@@ -2483,16 +2522,6 @@ meses_seleccionados = st.sidebar.multiselect(
     format_func=mes_nombre,
     help="Si eliges varios años, el mes se aplica a cada año seleccionado.",
 )
-st.markdown(
-    f"""
-    <div class="ro-period">
-      <div class="ro-period-title">Periodo activo</div>
-      <div class="ro-period-copy">{escape(resumen_periodo(anios_seleccionados, meses_seleccionados))}</div>
-    </div>
-    """,
-    unsafe_allow_html=True,
-)
-
 if not anios_seleccionados or not meses_seleccionados:
     st.sidebar.warning("Selecciona al menos un año y un mes.")
     st.info("Selecciona al menos un año y un mes para continuar.")
@@ -2505,6 +2534,18 @@ maestro_periodo = construir_maestro_periodo(
     ocds_periodo, padron, convocatorias
 )
 periodo_txt = resumen_periodo(anios_seleccionados, meses_seleccionados)
+
+render_preguntas_negocio(maestro_periodo, ocds_periodo)
+
+st.markdown(
+    f"""
+    <div class="ro-period">
+      <div class="ro-period-title">Periodo activo</div>
+      <div class="ro-period-copy">{escape(periodo_txt)}</div>
+    </div>
+    """,
+    unsafe_allow_html=True,
+)
 
 PANTALLAS = [
     "1 · ¿Dónde me conviene buscar?",
