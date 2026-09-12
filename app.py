@@ -600,19 +600,6 @@ st.markdown(
       }}
       .ro-reading strong {{ color: {NARANJA}; }}
 
-      .ro-q {{
-        display: inline-flex;
-        align-items: center;
-        gap: 6px;
-        background: linear-gradient(135deg, {AZUL}, {MORADO});
-        color: #fff;
-        border-radius: 12px;
-        padding: 5px 12px;
-        font-size: 12px;
-        font-weight: 800;
-        margin-right: 8px;
-        box-shadow: 0 4px 12px rgba(0,64,100,0.2);
-      }}
       .ro-aviso {{
         background: linear-gradient(135deg, #FFF2E9, #FFF8F3);
         border: 2px solid #F6CEB4;
@@ -1673,14 +1660,6 @@ def construir_maestro_periodo(
     ).round(1)
 
     return salida.sort_values("demanda_soles", ascending=False)
-
-
-def q(etiqueta: str, texto: str) -> None:
-    st.markdown(
-        f'<span class="ro-q">{escape(etiqueta)}</span>'
-        f'<span style="font-size:13px;color:{APAGADO};font-weight:650">{escape(texto)}</span>',
-        unsafe_allow_html=True,
-    )
 
 
 def titulo_paso(etiqueta: str, titulo: str, subtitulo: str, dark: bool = False) -> None:
@@ -3259,72 +3238,6 @@ elif pantalla.startswith("2"):
     st.markdown("#### Los que requieren atención primero")
     st.caption("Mostramos primero los llamados cuya fecha de cierre está más cerca.")
     render_llamados_destacados(mostrar)
-
-    q("Q3", "¿Cuánto tiempo me queda y qué entidad está comprando?")
-    ventana = mostrar.copy()
-    ventana["Cierra en (días)"] = ventana["dias_para_cierre"].clip(lower=0)
-    chart_ventana = (
-        alt.Chart(ventana)
-        .mark_circle(opacity=0.85, strokeWidth=2, stroke="white")
-        .encode(
-            x=alt.X(
-                "Cierra en (días):Q",
-                title="Días que quedan para presentar oferta",
-                axis=alt.Axis(
-                    gridColor="#E8ECF1",
-                    labelColor=APAGADO,
-                    titleColor=TINTA,
-                    titleFontSize=13,
-                    titleFontWeight=700,
-                    labelFontSize=11,
-                ),
-            ),
-            y=alt.Y(
-                "entidad:N",
-                title=None,
-                axis=alt.Axis(
-                    labelColor=TINTA,
-                    labelFontSize=11,
-                    labelFontWeight=600,
-                ),
-            ),
-            size=alt.Size(
-                "monto_referencial:Q",
-                title="Monto referencial",
-                scale=alt.Scale(range=[90, 620]),
-            ),
-            color=alt.Color(
-                "vigencia:N",
-                scale=alt.Scale(
-                    domain=["POR CERRAR", "VIGENTE"],
-                    range=[NARANJA, MORADO],
-                ),
-                legend=alt.Legend(
-                    orient="bottom",
-                    title=None,
-                    labelFontSize=12,
-                    labelFontWeight=700,
-                    padding=15,
-                ),
-            ),
-            tooltip=[
-                alt.Tooltip("titulo:N", title="Llamado"),
-                alt.Tooltip("entidad:N", title="Entidad"),
-                alt.Tooltip("metodo_contratacion:N", title="Método"),
-                alt.Tooltip("monto_referencial:Q", title="Monto", format=",.0f"),
-                alt.Tooltip("dias_para_cierre:Q", title="Días restantes", format=".0f"),
-            ],
-        )
-        .properties(height=320)
-        .configure_view(strokeWidth=0, fill="transparent")
-        .configure_axis(
-            gridColor="#E8ECF1",
-            labelColor=APAGADO,
-            titleColor=TINTA,
-        )
-        .configure_legend(labelColor=APAGADO)
-    )
-    st.altair_chart(chart_ventana, use_container_width=True)
 
     st.markdown("#### Oportunidades abiertas")
     for _, f in mostrar.sort_values("dias_para_cierre").head(30).iterrows():
