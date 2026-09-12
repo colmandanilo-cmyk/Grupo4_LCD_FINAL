@@ -162,10 +162,6 @@ st.markdown(
         from {{ opacity: 0; }}
         to {{ opacity: 1; }}
       }}
-      @keyframes slideInRight {{
-        from {{ opacity: 0; transform: translateX(-20px); }}
-        to {{ opacity: 1; transform: translateX(0); }}
-      }}
       @keyframes pulse {{
         0%, 100% {{ transform: scale(1); }}
         50% {{ transform: scale(1.03); }}
@@ -215,20 +211,6 @@ st.markdown(
         border-radius: 50%;
       }}
       .ro-hero-left {{ min-width: 0; position: relative; z-index: 1; }}
-      .ro-kicker {{
-        display: inline-block;
-        background: rgba(255,107,43,0.9);
-        color: #fff;
-        border-radius: 8px;
-        padding: 6px 14px;
-        font-size: 11px;
-        font-weight: 800;
-        letter-spacing: .08em;
-        margin-bottom: 14px;
-        text-transform: uppercase;
-        box-shadow: 0 4px 15px rgba(255,107,43,0.3);
-        animation: slideInRight 0.6s ease-out 0.2s both;
-      }}
       .ro-hero-title {{
         font-size: 38px;
         line-height: 1.05;
@@ -2507,7 +2489,6 @@ st.markdown(
     f"""
     <div class="ro-hero">
       <div class="ro-hero-left">
-        <span class="ro-kicker">📡 Data app · presentación final</span>
         <div class="ro-hero-title">Radar de Oportunidades en <span>Compras Públicas</span></div>
         <div class="ro-hero-sub">Encuentra categorías con compras reales, poca competencia conocida y contratos que tu negocio puede evaluar. Del millón de procesos del Estado, el llamado que tu empresa sí puede atender.</div>
       </div>
