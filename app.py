@@ -281,93 +281,31 @@ st.markdown(
 
       .ro-questions-wrap {{
         background: linear-gradient(145deg, {AZUL} 0%, #0a3050 100%);
-        border-radius: 20px;
-        padding: 28px;
+        border-radius: 16px;
+        padding: 16px 20px;
         margin: 14px 0 18px 0;
-        box-shadow: 0 12px 40px rgba(0,64,100,.12);
-        animation: fadeInUp 0.8s ease-out 0.2s both;
       }}
       .ro-questions-title {{
         color: {NARANJA};
-        font-size: 22px;
-        font-weight: 900;
-        margin: 0 0 18px 0;
-        display: flex;
-        align-items: center;
-        gap: 10px;
-      }}
-      .ro-questions {{
-        display: grid;
-        grid-template-columns: repeat(4, minmax(0, 1fr));
-        gap: 12px;
-      }}
-      .ro-question {{
-        background: rgba(255,255,255,.95);
-        border: none;
-        border-radius: 14px;
-        padding: 20px 18px;
-        min-height: 140px;
-        transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
-        position: relative;
-        overflow: hidden;
-      }}
-      .ro-question::before {{
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        height: 4px;
-        background: linear-gradient(90deg, {NARANJA}, #FF8F5C);
-        opacity: 0;
-        transition: opacity 0.3s ease;
-      }}
-      .ro-question:hover {{
-        transform: translateY(-6px);
-        box-shadow: 0 16px 40px rgba(0,64,100,.15);
-      }}
-      .ro-question:hover::before {{ opacity: 1; }}
-      .ro-question.q5 {{
-        grid-column: 1 / -1;
-        min-height: auto;
-        display: flex;
-        align-items: center;
-        gap: 20px;
-      }}
-      .ro-question-icon {{
-        font-size: 28px;
-        margin-bottom: 10px;
-        display: block;
-      }}
-      .ro-question-title {{
-        color: #0E0E0E;
         font-size: 15px;
-        line-height: 1.3;
         font-weight: 800;
-        margin-bottom: 8px;
+        margin: 0 0 10px 0;
       }}
-      .ro-question-title b {{
-        color: {NARANJA};
-        font-size: 18px;
-      }}
-      .ro-question-copy {{
-        color: #444;
-        font-size: 13px;
-        line-height: 1.5;
-      }}
-      .ro-route {{
-        background: {MORADO};
-        color: #fff;
-        border-radius: 12px;
-        padding: 14px 18px;
-        margin-top: 14px;
-        font-size: 13px;
-        font-weight: 600;
+      .ro-qchip-row {{
         display: flex;
-        align-items: center;
-        gap: 10px;
-        box-shadow: 0 4px 15px rgba(34,38,93,0.2);
+        flex-wrap: wrap;
+        gap: 8px;
       }}
+      .ro-qchip {{
+        background: rgba(255,255,255,.92);
+        border-radius: 20px;
+        padding: 7px 14px;
+        font-size: 12.5px;
+        font-weight: 650;
+        color: {TINTA};
+        white-space: nowrap;
+      }}
+      .ro-qchip b {{ color: {NARANJA}; margin-right: 4px; }}
 
       div[data-testid="stRadio"] > div {{
         background: #fff;
@@ -554,7 +492,6 @@ st.markdown(
         text-align: center;
         min-width: 100px;
         box-shadow: 0 8px 25px rgba(255,107,43,0.25);
-        animation: pulse 2s ease-in-out infinite;
       }}
       .ro-index small {{
         display: block;
@@ -720,7 +657,6 @@ st.markdown(
       }}
       .ro-call.urgent {{
         border-left-color: {NARANJA};
-        animation: pulse 3s ease-in-out infinite;
       }}
       .ro-call.urgent::before {{
         background: radial-gradient(circle, rgba(255,107,43,0.15) 0%, transparent 70%);
@@ -1050,7 +986,6 @@ st.markdown(
         border-radius: 20px;
         text-transform: uppercase;
         letter-spacing: .06em;
-        animation: pulse 2s ease-in-out infinite;
       }}
 
       .ro-prov-grid {{
@@ -1766,43 +1701,23 @@ def titulo_paso(etiqueta: str, titulo: str, subtitulo: str, dark: bool = False) 
 
 
 def render_preguntas_negocio() -> None:
+    """Franja compacta con las 5 preguntas. El detalle vive en cada pantalla."""
+    chips = [
+        ("Q1", "💰", "¿Dónde compra más el Estado?"),
+        ("Q2", "🛡️", "¿Dónde hay menos competencia?"),
+        ("Q3", "📅", "¿Cuándo compra más?"),
+        ("Q4", "📏", "¿El contrato está a mi alcance?"),
+        ("Q5", "🏁", "¿Quiénes siguen en carrera hoy?"),
+    ]
+    items = "".join(
+        f'<div class="ro-qchip"><b>{qq}</b>{icon} {escape(texto)}</div>'
+        for qq, icon, texto in chips
+    )
     st.markdown(
         f"""
         <div class="ro-questions-wrap">
-          <div class="ro-questions-title">🎯 Las 5 preguntas para decidir dónde vale la pena postular</div>
-          <div class="ro-questions">
-            <div class="ro-question">
-              <span class="ro-question-icon">💰</span>
-              <div class="ro-question-title"><b>Q1</b> · ¿Dónde compra más el Estado?</div>
-              <div class="ro-question-copy">Mira cuánto dinero adjudicó el Estado en cada categoría durante el periodo que elegiste.</div>
-            </div>
-            <div class="ro-question">
-              <span class="ro-question-icon">🛡️</span>
-              <div class="ro-question-title"><b>Q2</b> · ¿Dónde tengo menos competencia conocida?</div>
-              <div class="ro-question-copy">Cuenta cuántos proveedores que ya ganaron siguen habilitados para volver a competir.</div>
-            </div>
-            <div class="ro-question">
-              <span class="ro-question-icon">📅</span>
-              <div class="ro-question-title"><b>Q3</b> · ¿En qué meses se mueve más la compra?</div>
-              <div class="ro-question-copy">Ayuda a preparar compras, personal y documentos antes de que aparezcan los llamados.</div>
-            </div>
-            <div class="ro-question">
-              <span class="ro-question-icon">📏</span>
-              <div class="ro-question-title"><b>Q4</b> · ¿El tamaño del contrato está a mi alcance?</div>
-              <div class="ro-question-copy">Compara el monto promedio con la {sigla("UIT")} para saber si encaja con la capacidad de una {sigla("MYPE")}.</div>
-            </div>
-            <div class="ro-question q5">
-              <span class="ro-question-icon" style="font-size:32px;margin:0">🏁</span>
-              <div>
-                <div class="ro-question-title"><b>Q5</b> · ¿Cuántos proveedores siguen realmente en carrera?</div>
-                <div class="ro-question-copy">Cruza quién ganó antes con quién sigue habilitado hoy en el {sigla("RNP")}.</div>
-              </div>
-            </div>
-          </div>
-          <div class="ro-route">
-            <span style="font-size:18px">🧭</span>
-            <span>Elegir categoría → revisar la oportunidad → validar oportunidades actuales en SEACE → preparar documentos → decidir si postular.</span>
-          </div>
+          <div class="ro-questions-title">🎯 Recorrido: elegir rubro → ver la mejor oportunidad → confirmar en SEACE → preparar documentos</div>
+          <div class="ro-qchip-row">{items}</div>
         </div>
         """,
         unsafe_allow_html=True,
@@ -2626,70 +2541,58 @@ if pantalla.startswith("1"):
     )
 
     st.markdown(
-        '<div class="ro-filter-title">Ajusta la búsqueda a lo que tu negocio puede atender</div>',
+        '<div class="ro-filter-title">Primero, elige tu rubro</div>',
         unsafe_allow_html=True,
     )
-    f1, f2, f3, f4 = st.columns(4)
+    f1, f2 = st.columns(2)
     with f1:
         rubros_elegidos = st.multiselect(
-            "Rubro al que pertenezco",
+            "Rubro al que pertenece tu negocio",
             list(RUBROS_NEGOCIO.keys()),
             # Con key, Streamlit conserva la selección entre pantallas: el
             # rubro elegido aquí es el que usa el Paso 2.
             key="rubros_paso1",
-            help=(
-                "Atajo por giro comercial: agrupa varias palabras a la vez. "
-                "El rubro que marques aquí acompaña al Paso 2."
-            ),
+            help="El rubro que marques aquí también se usa en el Paso 2.",
         )
     with f2:
         busqueda = st.text_input(
-            "¿Qué vendes o qué servicio das?",
+            "¿Qué vendes o qué servicio das? (opcional)",
             placeholder="alimentación, catering, víveres...",
-            help=(
-                "Busca dentro de la descripción CUBSO. Ignora mayúsculas y tildes. "
-                "Puedes escribir varias palabras separadas por coma y trae las "
-                "categorías que contengan cualquiera de ellas."
-            ),
-        )
-    with f3:
-        bandas_comp = ["Todas"] + [
-            b
-            for b in (config.BANDAS_COMPETENCIA_ETIQUETAS + ["Competencia no determinada"])
-            if b in set(maestro_periodo["banda_competencia"].dropna().astype(str))
-        ] if not maestro_periodo.empty else ["Todas"]
-        banda_elegida = st.selectbox(
-            "Q2 · Competencia conocida",
-            bandas_comp,
-            format_func=lambda x: "Todas" if x == "Todas" else etiqueta_competencia(x),
-            help="Cuenta ganadores del periodo elegido que siguen habilitados hoy en el RNP.",
-        )
-    with f4:
-        bandas_disponibles = [
-            b
-            for b in config.BANDAS_TICKET_ETIQUETAS
-            if not maestro_periodo.empty
-            and b in set(maestro_periodo["banda_ticket"].dropna().astype(str))
-        ]
-        bandas_elegidas = st.multiselect(
-            "Q4 · Tamaño promedio del contrato",
-            bandas_disponibles,
-            default=bandas_disponibles,
-            help="Las bandas se expresan en UIT para que puedas comparar el tamaño de los contratos con mayor facilidad.",
+            help="Busca por palabra dentro de la categoría. Ignora mayúsculas y tildes.",
         )
 
-    # Segunda fila del panel: el índice mínimo y los dos interruptores de
-    # alcance, separados de los selectores para que las cajas de arriba
-    # queden alineadas entre sí.
-    g1, g2, g3 = st.columns([1, 1.5, 1.5])
-    with g1:
+    with st.expander("Filtros avanzados (opcional)"):
+        g1, g2 = st.columns(2)
+        with g1:
+            bandas_comp = ["Todas"] + [
+                b
+                for b in (config.BANDAS_COMPETENCIA_ETIQUETAS + ["Competencia no determinada"])
+                if b in set(maestro_periodo["banda_competencia"].dropna().astype(str))
+            ] if not maestro_periodo.empty else ["Todas"]
+            banda_elegida = st.selectbox(
+                "Q2 · Competencia conocida",
+                bandas_comp,
+                format_func=lambda x: "Todas" if x == "Todas" else etiqueta_competencia(x),
+                help="Cuenta ganadores del periodo elegido que siguen habilitados hoy en el RNP.",
+            )
+        with g2:
+            bandas_disponibles = [
+                b
+                for b in config.BANDAS_TICKET_ETIQUETAS
+                if not maestro_periodo.empty
+                and b in set(maestro_periodo["banda_ticket"].dropna().astype(str))
+            ]
+            bandas_elegidas = st.multiselect(
+                "Q4 · Tamaño del contrato",
+                bandas_disponibles,
+                default=bandas_disponibles,
+                help="Bandas en UIT para comparar el tamaño de los contratos.",
+            )
         indice_min = st.slider(
-            "Índice mínimo",
+            "Mostrar solo desde este índice",
             0, 100, 0, step=5,
-            help="Úsalo para quedarte solo con las categorías mejor posicionadas dentro del periodo seleccionado.",
+            help="Deja fuera las categorías con menor puntaje.",
         )
-    with g2:
-        st.markdown("<div style='height:30px'></div>", unsafe_allow_html=True)
         solo_aptas = st.checkbox(
             "Solo categorías con compras repetidas",
             value=True,
@@ -2698,15 +2601,13 @@ if pantalla.startswith("1"):
                 f"procesos y {config.MINIMO_DEMANDA_UIT_MERCADO} UIT acumuladas en el periodo."
             ),
         )
-    with g3:
-        st.markdown("<div style='height:30px'></div>", unsafe_allow_html=True)
         solo_accionables = st.checkbox(
             "Solo categorías convocadas el último día registrado",
             value=False,
             help=(
-                f"Muestra las categorías que tuvieron convocatorias con inicio de ofertas "
-                f"el {ultima_fecha_snapshot_txt}, la fecha más reciente del snapshot. "
-                f"Indica actividad reciente en la fuente, no vigencia para postular hoy."
+                f"Categorías con convocatorias cuya oferta inició el "
+                f"{ultima_fecha_snapshot_txt}. Indica actividad reciente en la fuente, "
+                f"no vigencia para postular hoy."
             ),
         )
 
@@ -2747,10 +2648,6 @@ if pantalla.startswith("1"):
     if indice_min > 0 and not filtrado.empty:
         filtrado = filtrado[filtrado["indice_oportunidad"] >= indice_min]
 
-    desierto = (
-        filtrado["mercado_desierto"].astype("object").fillna(False).astype(bool)
-        if not filtrado.empty else pd.Series(dtype=bool)
-    )
     indice_max = (
         numero_seguro(filtrado["indice_oportunidad"].max())
         if len(filtrado) else 0
@@ -2770,18 +2667,6 @@ if pantalla.startswith("1"):
             "accent": "orange",
         },
         {
-            "label": "Convocatorias del último día registrado",
-            "value": f"{int(ultimos_procedimientos_snapshot):,}",
-            "note": f"Inicio de ofertas el {ultima_fecha_snapshot_txt} · validar vigencia en SEACE",
-            "accent": "purple",
-        },
-        {
-            "label": "Q2 · Sin ganador histórico habilitado",
-            "value": f"{int(desierto.sum()):,}",
-            "note": "Hubo ganadores en el periodo, pero ninguno sigue habilitado",
-            "accent": "orange",
-        },
-        {
             "label": "Mejor índice",
             "value": f"{indice_max:.0f}",
             "note": "Mayor puntaje entre las categorías filtradas",
@@ -2792,11 +2677,10 @@ if pantalla.startswith("1"):
     st.markdown(
         f"""
         <div class="ro-index-help">
-          <h4>¿Qué es el índice de oportunidad?</h4>
-          <p>Es una <strong>brújula de 0 a 100</strong> para ordenar categorías. No dice que tengas 66% o 80% de probabilidad de ganar.</p>
-          <p><strong>1.</strong> Primero combinamos cuánto compró el Estado (<strong>55%</strong>) con qué tan despejada está la competencia conocida (<strong>45%</strong>).</p>
-          <p><strong>2.</strong> Después ajustamos ese potencial según el tamaño promedio del contrato: cuanto más manejable para una {sigla("MYPE")}, menos castigo recibe.</p>
-          <p><strong>3.</strong> Sirve para decidir <strong>qué revisar primero</strong>. El índice se recalcula con el periodo y los filtros elegidos.</p>
+          <h4>¿Qué significa el índice?</h4>
+          <p>Va de <strong>0 a 100</strong>. Mientras más alto, <strong>más conviene revisar esa categoría</strong>:
+          hay bastante compra del Estado y pocos competidores conocidos que sigan habilitados hoy.
+          No es una probabilidad de ganar, es un orden para decidir qué mirar primero.</p>
         </div>
         """,
         unsafe_allow_html=True,
@@ -2846,7 +2730,6 @@ if pantalla.startswith("1"):
     vigentes_cat = int(round(numero_seguro(fila.get("competencia_vigente"))))
     ganaron_cat = int(round(numero_seguro(fila.get("ganadores_historicos"))))
     ticket_cat = numero_seguro(fila.get("ticket_uit"))
-    salieron = numero_seguro(fila.get("salieron_del_registro"))
 
     # Puente entre el conteo de las tarjetas Q2/Q5 y el detalle nominal.
     # El popup responde "¿quiénes son esos proveedores?" sin salir de la vista.
@@ -2944,139 +2827,23 @@ if pantalla.startswith("1"):
         st.altair_chart(chart, use_container_width=True)
 
     with der:
-        espacio = numero_seguro(fila.get("espacio_mercado"))
-        acces = numero_seguro(fila.get("accesibilidad"))
-        potencial = numero_seguro(fila.get("potencial_mercado")) / 100
-        demanda_esc = numero_seguro(fila.get("demanda_escalada"))
-
-        # Gráfico ampliado y alineado con el mapa de categorías.
         st.markdown(
-            f"#### Cómo se construyó este índice: {numero_seguro(fila.get('indice_oportunidad')):.0f}/100"
+            f"#### Índice de esta categoría: {numero_seguro(fila.get('indice_oportunidad')):.0f}/100"
         )
         st.caption(
-            "Los tres componentes están expresados en una escala de 0 a 1. Cuanto más larga la barra, mayor aporte al potencial de la categoría."
+            "A mayor índice, más conviene revisarla: hay buena demanda y pocos "
+            "competidores conocidos siguen habilitados."
         )
-        desglose = pd.DataFrame({
-            "Componente": [
-                "Nivel de compras",
-                "Espacio frente a competencia",
-                "Accesibilidad del contrato",
-            ],
-            "Valor": [demanda_esc, espacio, acces],
-        })
-        grafico_indice = (
-            alt.Chart(desglose)
-            .mark_bar(
-                color=AZUL,
-                cornerRadiusEnd=8,
-                size=38,
-            )
-            .encode(
-                x=alt.X(
-                    "Valor:Q",
-                    scale=alt.Scale(domain=[0, 1]),
-                    title=None,
-                    axis=alt.Axis(
-                        format=".1f",
-                        tickCount=6,
-                        grid=True,
-                        gridColor="#E9EDF1",
-                        labelColor=APAGADO,
-                        labelFontSize=11,
-                    ),
-                ),
-                y=alt.Y(
-                    "Componente:N",
-                    sort=None,
-                    title=None,
-                    axis=alt.Axis(
-                        labelLimit=220,
-                        labelPadding=12,
-                        labelColor=TINTA,
-                        labelFontSize=12,
-                        labelFontWeight=700,
-                    ),
-                ),
-                tooltip=[
-                    alt.Tooltip("Componente", title="Componente"),
-                    alt.Tooltip("Valor:Q", format=".2f", title="Valor"),
-                ],
-            )
-            .properties(height=280)
-            .configure_view(strokeWidth=0, fill="transparent")
-            .configure_axis(labelColor=APAGADO, titleColor=TINTA)
-        )
-        st.altair_chart(grafico_indice, use_container_width=True)
-        st.caption(
-            f"Potencial {potencial:.2f} × accesibilidad {acces:.2f} = "
-            f"{numero_seguro(fila.get('indice_oportunidad')):.0f} puntos."
-        )
-
         st.markdown(
             f"""
             <div class="ro-reading">
               <h4>Qué me dice esta categoría</h4>
               <p>En <strong>{escape(periodo_txt)}</strong>, el Estado adjudicó <strong>{escape(formato_soles(fila.get('demanda_soles')))}</strong> en esta categoría.</p>
               <p>En ese periodo ganaron {ganaron_cat} proveedores; <strong>{vigentes_cat} siguen habilitados hoy</strong> en el {sigla("RNP")}.</p>
-              <p>El contrato promedio equivale a <strong>{ticket_cat:.1f} {sigla("UIT")}</strong>. El día más reciente del snapshot es el <strong>{ultima_fecha_snapshot_txt}</strong>, con <strong>{int(ultimos_procedimientos_snapshot):,} convocatorias</strong> cuyo plazo de ofertas abrió esa fecha. La vigencia para postular se confirma en el {sigla("SEACE")}.</p>
+              <p>El contrato promedio equivale a <strong>{ticket_cat:.1f} {sigla("UIT")}</strong>. La vigencia para postular se confirma en el {sigla("SEACE")}.</p>
             </div>
             """,
             unsafe_allow_html=True,
-        )
-
-    # Q5 y Q3 salen de las columnas anteriores y se dibujan en una sola fila:
-    # así las seis tarjetas arrancan a la misma altura, sin depender del alto
-    # que tomen el mapa, el gráfico del índice o el texto de lectura.
-    q5_col, q3_col = st.columns([1.35, 1.05], gap="large")
-
-    with q5_col:
-        q("Q5", "¿Cuántos de los ganadores del periodo siguen habilitados hoy?")
-        q5c1, q5c2, q5c3 = st.columns(3)
-        q5c1.metric(
-            "Ganaron en el periodo",
-            f"{ganaron_cat}",
-            help="Proveedores distintos que ganaron adjudicaciones en el periodo seleccionado.",
-        )
-        q5c2.metric(
-            "Siguen habilitados hoy",
-            f"{vigentes_cat}",
-            help="Ganadores del periodo que actualmente figuran habilitados en el RNP.",
-        )
-        q5c3.metric(
-            "Ya no figuran habilitados",
-            f"{int(round(salieron))}",
-            help="Ganadores del periodo que ya no aparecen habilitados en el cruce actual con el RNP.",
-        )
-        st.caption(
-            "Lectura Q5: histórico del periodo seleccionado comparado con la situación actual en el RNP."
-        )
-        if st.button(
-            "👥 Ver quiénes son",
-            key="ver_proveedores_q5",
-            use_container_width=True,
-        ):
-            abrir_proveedores = True
-
-    with q3_col:
-        q("Q3", "¿En qué mes se concentraron más compras dentro del periodo?")
-        c1, c2, c3 = st.columns(3)
-        c1.metric(
-            "Mes con más compras",
-            mes_nombre(fila.get("mes_pico")),
-            help="Mes del periodo seleccionado con el mayor monto adjudicado en esta categoría.",
-        )
-        c2.metric(
-            "Peso de ese mes",
-            f"{numero_seguro(fila.get('concentracion_mes')) * 100:.0f}%",
-            help="Porcentaje del monto del periodo que cayó en el mes con mayor compra.",
-        )
-        c3.metric(
-            "Meses con actividad",
-            f"{int(round(numero_seguro(fila.get('meses_activos'))))}/{len(meses_seleccionados)}",
-            help="Cantidad de meses seleccionados en los que hubo adjudicaciones para esta categoría.",
-        )
-        st.caption(
-            "Lectura Q3: sirve para preparar compras y documentos antes del mes pico."
         )
 
     if abrir_proveedores:
@@ -3098,9 +2865,7 @@ if pantalla.startswith("1"):
     cols_rank = [
         c for c in [
             "cubso_descripcion", "indice_oportunidad", "demanda_soles",
-            "n_procesos", "ganadores_historicos", "competencia_vigente",
-            "salieron_del_registro", "banda_competencia", "ticket_promedio",
-            "ticket_uit", "banda_ticket", "mes_pico",
+            "competencia_vigente", "banda_competencia", "ticket_uit", "mes_pico",
         ] if c in filtrado.columns
     ]
 
@@ -3112,14 +2877,9 @@ if pantalla.startswith("1"):
         "cubso_descripcion": "Categoría",
         "indice_oportunidad": "Índice",
         "demanda_soles": "Q1 · Compras del periodo",
-        "n_procesos": "Procesos",
-        "ganadores_historicos": "Q5 · Ganaron en el periodo",
         "competencia_vigente": "Q5 · Siguen habilitados",
-        "salieron_del_registro": "Ya no figuran habilitados",
         "banda_competencia": "Q2 · Competencia conocida",
-        "ticket_promedio": "Q4 · Contrato promedio",
         "ticket_uit": "Q4 · Contrato (UIT)",
-        "banda_ticket": "Q4 · Tamaño",
         "mes_pico": "Q3 · Mes con más compras",
     })
     if "Q3 · Mes con más compras" in tabla.columns:
@@ -3135,12 +2895,10 @@ if pantalla.startswith("1"):
                 help="Puntaje comparativo para ordenar categorías; no es una probabilidad de ganar.",
             ),
             "Q1 · Compras del periodo": st.column_config.NumberColumn(format="S/ %.0f"),
-            "Q4 · Contrato promedio": st.column_config.NumberColumn(format="S/ %.0f"),
             "Q4 · Contrato (UIT)": st.column_config.NumberColumn(
                 format="%.1f",
                 help="UIT = Unidad Impositiva Tributaria.",
             ),
-            "Q5 · Ganaron en el periodo": st.column_config.NumberColumn(format="%d"),
             "Q5 · Siguen habilitados": st.column_config.NumberColumn(
                 format="%d",
                 help="De los ganadores del periodo, cuántos siguen habilitados hoy en el RNP.",
@@ -3408,18 +3166,6 @@ elif pantalla.startswith("2"):
             "note": "Plazo de 7 días o menos",
             "accent": "orange",
         },
-        {
-            "label": "Entidades comprando",
-            "value": f"{mostrar['entidad'].nunique():,}",
-            "note": "Cantidad de compradores públicos distintos",
-            "accent": "purple",
-        },
-        {
-            "label": "Monto típico",
-            "value": formato_soles(_montos_publicados.median()) if len(_montos_publicados) else "—",
-            "note": _nota_montos,
-            "accent": "blue",
-        },
     ])
 
     if mostrar.empty:
@@ -3529,149 +3275,81 @@ elif pantalla.startswith("2"):
     )
     st.altair_chart(chart_ventana, use_container_width=True)
 
-    lista, panel = st.columns([1.55, 0.9], gap="large")
+    st.markdown("#### Oportunidades abiertas")
+    for _, f in mostrar.sort_values("dias_para_cierre").head(30).iterrows():
+        urgente = f["vigencia"] == "POR CERRAR"
+        dias = numero_seguro(f.get("dias_para_cierre"), default=np.nan)
+        monto = numero_seguro(f.get("monto_referencial"))
 
-    with lista:
-        st.markdown("#### Oportunidades abiertas")
-        for _, f in mostrar.sort_values("dias_para_cierre").head(30).iterrows():
-            urgente = f["vigencia"] == "POR CERRAR"
-            dias = numero_seguro(f.get("dias_para_cierre"), default=np.nan)
-            monto = numero_seguro(f.get("monto_referencial"))
+        st.markdown(
+            f'<div class="ro-ancla" id="{ancla_llamado(f.get("ocid"))}"></div>',
+            unsafe_allow_html=True,
+        )
+        with st.container(border=True):
+            n_docs = int(DOCS_POR_OCID.get(str(f["ocid"]), 0))
+            a, b, c = st.columns([4.2, 1.2, 1.35])
+            with a:
+                st.markdown(
+                    f"**{texto_seguro(f.get('titulo'))}**",
+                    unsafe_allow_html=True,
+                )
+                marca_docs = (
+                    f" · 📎 {n_docs} documento{'s' if n_docs != 1 else ''} publicados"
+                    if n_docs else " · sin documentos en la descarga"
+                )
+                st.caption(
+                    f"{f.get('entidad', '—')} · "
+                    f"{f.get('metodo_contratacion', '—')} · "
+                    f"{f.get('cubso_descripcion', '—')}"
+                    f"{marca_docs}"
+                )
+            with b:
+                dias_txt, dias_lbl, vencido = plazo_declarado(
+                    dias, f.get("origen_limite")
+                )
+                color_dias = GRIS if vencido else NARANJA
+                tam_dias = "20" if len(dias_txt) > 4 else "27"
+                st.markdown(
+                    f"<div style='font-size:{tam_dias}px;font-weight:880;"
+                    f"color:{color_dias};line-height:1.1'>{escape(dias_txt)}</div>"
+                    f"<div style='font-size:9.5px;color:{APAGADO};font-weight:750;margin-top:5px'>{escape(dias_lbl)}</div>",
+                    unsafe_allow_html=True,
+                )
+            with c:
+                monto_txt, monto_nota = monto_declarado(f)
+                color_monto = AZUL if monto > 0 else APAGADO
+                tam_monto = "16" if monto <= 0 else "19"
+                st.markdown(
+                    f"<div style='font-size:{tam_monto}px;font-weight:850;"
+                    f"color:{color_monto}'>{escape(monto_txt)}</div>"
+                    # La nota puede contener el <abbr> de sigla("UIT"), así que
+                    # va sin escape; los textos alternativos son planos.
+                    f"<div style='font-size:11px;color:{APAGADO}'>{monto_nota}</div>",
+                    unsafe_allow_html=True,
+                )
+                st.button(
+                    "Ver requisitos →",
+                    key=f"btn_{f['ocid']}",
+                    type="primary" if urgente else "secondary",
+                    use_container_width=True,
+                    on_click=ir_a,
+                    args=(PANTALLAS[2],),
+                    kwargs={"ocid": f["ocid"]},
+                )
 
-            st.markdown(
-                f'<div class="ro-ancla" id="{ancla_llamado(f.get("ocid"))}"></div>',
-                unsafe_allow_html=True,
-            )
-            with st.container(border=True):
-                n_docs = int(DOCS_POR_OCID.get(str(f["ocid"]), 0))
-                a, b, c = st.columns([4.2, 1.2, 1.35])
-                with a:
-                    st.markdown(
-                        f"**{texto_seguro(f.get('titulo'))}**",
-                        unsafe_allow_html=True,
-                    )
-                    marca_docs = (
-                        f" · 📎 {n_docs} documento{'s' if n_docs != 1 else ''} publicados"
-                        if n_docs else " · sin documentos en la descarga"
-                    )
-                    st.caption(
-                        f"{f.get('entidad', '—')} · "
-                        f"{f.get('metodo_contratacion', '—')} · "
-                        f"{f.get('cubso_descripcion', '—')}"
-                        f"{marca_docs}"
-                    )
-                with b:
-                    dias_txt, dias_lbl, vencido = plazo_declarado(
-                        dias, f.get("origen_limite")
-                    )
-                    color_dias = GRIS if vencido else NARANJA
-                    tam_dias = "20" if len(dias_txt) > 4 else "27"
-                    st.markdown(
-                        f"<div style='font-size:{tam_dias}px;font-weight:880;"
-                        f"color:{color_dias};line-height:1.1'>{escape(dias_txt)}</div>"
-                        f"<div style='font-size:9.5px;color:{APAGADO};font-weight:750;margin-top:5px'>{escape(dias_lbl)}</div>",
-                        unsafe_allow_html=True,
-                    )
-                with c:
-                    monto_txt, monto_nota = monto_declarado(f)
-                    color_monto = AZUL if monto > 0 else APAGADO
-                    tam_monto = "16" if monto <= 0 else "19"
-                    st.markdown(
-                        f"<div style='font-size:{tam_monto}px;font-weight:850;"
-                        f"color:{color_monto}'>{escape(monto_txt)}</div>"
-                        # La nota puede contener el <abbr> de sigla("UIT"), así que
-                        # va sin escape; los textos alternativos son planos.
-                        f"<div style='font-size:11px;color:{APAGADO}'>{monto_nota}</div>",
-                        unsafe_allow_html=True,
-                    )
-                    st.button(
-                        "Ver requisitos →",
-                        key=f"btn_{f['ocid']}",
-                        type="primary" if urgente else "secondary",
-                        use_container_width=True,
-                        on_click=ir_a,
-                        args=(PANTALLAS[2],),
-                        kwargs={"ocid": f["ocid"]},
-                    )
-
-    with panel:
-        q("Q3", "¿Quién está comprando ahora?")
-        por_entidad = (
-            mostrar.groupby("entidad")
-            .size()
-            .reset_index(name="Llamados")
-            .sort_values("Llamados", ascending=False)
-        )
-        st.altair_chart(
-            alt.Chart(por_entidad.head(10))
-            .mark_bar(color=AZUL, cornerRadiusEnd=3)
-            .encode(
-                x=alt.X("Llamados:Q", title=None),
-                # labelLimit amplio para que el nombre de la entidad no se
-                # corte; cuando aun asi no entra, el tooltip lo muestra entero.
-                y=alt.Y(
-                    "entidad:N",
-                    sort="-x",
-                    title=None,
-                    axis=alt.Axis(labelLimit=260, labelFontSize=10.5),
-                ),
-                tooltip=[
-                    alt.Tooltip("entidad:N", title="Entidad"),
-                    alt.Tooltip("Llamados:Q", title="Llamados"),
-                ],
-            )
-            .properties(height=260)
-            .configure_view(strokeWidth=0)
-            .configure_axis(grid=False, labelColor=APAGADO),
-            use_container_width=True,
-        )
-
-        q("Q4", "¿Qué tipo de proceso aparece con más frecuencia?")
-        por_metodo = (
-            mostrar.groupby("metodo_contratacion")
-            .size()
-            .reset_index(name="Llamados")
-            .sort_values("Llamados", ascending=False)
-        )
-        st.altair_chart(
-            alt.Chart(por_metodo)
-            .mark_bar(color=MORADO, cornerRadiusEnd=3)
-            .encode(
-                x=alt.X("Llamados:Q", title=None),
-                y=alt.Y(
-                    "metodo_contratacion:N",
-                    sort="-x",
-                    title=None,
-                    axis=alt.Axis(labelLimit=260, labelFontSize=10.5),
-                ),
-                tooltip=[
-                    alt.Tooltip("metodo_contratacion:N", title="Procedimiento"),
-                    alt.Tooltip("Llamados:Q", title="Llamados"),
-                ],
-            )
-            .properties(height=210)
-            .configure_view(strokeWidth=0)
-            .configure_axis(grid=False, labelColor=APAGADO),
-            use_container_width=True,
-        )
-        st.caption(
-            "Este gráfico ayuda a reconocer qué procedimiento aparece más entre las oportunidades que estás revisando."
-        )
-
-    # El rubro marcado en el Paso 1 acompaña al Paso 2. Los llamados vigentes
-    # son pocos por el desfase de la fuente; los cerrados del mismo rubro son
-    # la referencia concreta de qué pide el Estado en ese giro.
+    # El rubro marcado en el Paso 1 acompaña al Paso 2: es el camino de
+    # salida cuando ningún llamado vigente convence todavía.
     rubros_paso1 = st.session_state.get("rubros_paso1") or []
-    if rubros_elegido_historial := ([rubro_elegido] if rubro_elegido else rubros_paso1):
-        st.markdown('<hr class="ro-divider">', unsafe_allow_html=True)
-        render_historial_rubro(convocatorias, rubros_elegido_historial)
-    else:
-        st.markdown('<hr class="ro-divider">', unsafe_allow_html=True)
-        st.info(
-            "Marca tu rubro en el Paso 1 (o toca una barra del gráfico de arriba) "
-            "para ver los llamados anteriores de tu giro con el detalle de lo que "
-            "pidió cada entidad."
-        )
+    rubros_para_historial = [rubro_elegido] if rubro_elegido else rubros_paso1
+    with st.expander("¿Ninguno te convence? Mira llamados anteriores de tu rubro"):
+        if rubros_para_historial:
+            render_historial_rubro(convocatorias, rubros_para_historial)
+        else:
+            st.info(
+                "Marca tu rubro en el Paso 1 (o toca una barra del gráfico de arriba) "
+                "para ver los llamados anteriores de tu giro con el detalle de lo que "
+                "pidió cada entidad."
+            )
 
 
 # ===========================================================================
@@ -3944,20 +3622,31 @@ else:
         unsafe_allow_html=True,
     )
 
-    st.markdown("### El índice explicado sin fórmulas complicadas")
+    st.markdown("### El índice, sin fórmulas complicadas")
     st.markdown(
         f"""
         <div class="ro-index-help">
-          <h4>¿Para qué sirve?</h4>
-          <p>Sirve para <strong>ordenar categorías y decidir cuál revisar primero</strong>. No predice que vas a ganar una licitación.</p>
-          <p><strong>Paso 1:</strong> damos 55% de peso a cuánto compró el Estado y 45% a cuánto espacio queda frente a los ganadores que siguen habilitados.</p>
-          <p><strong>Paso 2:</strong> convertimos ambas señales a una escala comparable entre 0 y 1.</p>
-          <p><strong>Paso 3:</strong> ajustamos el resultado por el tamaño promedio del contrato. Un contrato pequeño conserva más puntaje; uno muy grande recibe un castigo porque puede ser difícil para una {sigla("MYPE")}.</p>
-          <p><strong>Resultado:</strong> un puntaje de 0 a 100 que se recalcula cuando cambias el periodo o los filtros.</p>
+          <h4>¿Qué significa?</h4>
+          <p>Va de <strong>0 a 100</strong>. Mientras más alto, más conviene revisar esa categoría: hay
+          buena demanda del Estado y pocos competidores conocidos siguen habilitados hoy. No predice que
+          vas a ganar una licitación, solo ayuda a decidir qué mirar primero.</p>
         </div>
         """,
         unsafe_allow_html=True,
     )
+    with st.expander("Cómo se calcula (detalle técnico)"):
+        st.markdown(
+            f"""
+            1. Se pondera 55% cuánto compró el Estado y 45% cuánto espacio queda frente a los
+               ganadores que siguen habilitados.
+            2. Ambas señales se llevan a una escala comparable de 0 a 1.
+            3. El resultado se ajusta por el tamaño promedio del contrato: uno pequeño conserva
+               más puntaje, uno muy grande recibe un castigo porque puede ser difícil para una
+               {sigla("MYPE")}.
+            4. El puntaje final (0 a 100) se recalcula al cambiar el periodo o los filtros.
+            """,
+            unsafe_allow_html=True,
+        )
 
     st.markdown("### Qué responde cada pregunta")
     st.dataframe(
