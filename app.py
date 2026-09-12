@@ -300,20 +300,26 @@ st.markdown(
         background: rgba(255,255,255,.92);
         border-radius: 12px;
         padding: 8px 14px;
-        flex: 1 1 180px;
+        flex: 1 1 220px;
       }}
       .ro-qchip-q {{
         font-size: 12px;
         font-weight: 650;
         color: {TINTA};
-        white-space: nowrap;
       }}
       .ro-qchip-q b {{ color: {NARANJA}; margin-right: 4px; }}
       .ro-qchip-a {{
-        font-size: 13.5px;
+        font-size: 13px;
         font-weight: 800;
         color: {AZUL};
         margin-top: 3px;
+        line-height: 1.3;
+      }}
+      .ro-qchip-n {{
+        font-size: 11px;
+        font-weight: 600;
+        color: {APAGADO};
+        margin-top: 2px;
       }}
 
       div[data-testid="stRadio"] > div {{
@@ -1714,23 +1720,45 @@ def render_preguntas_negocio(
 ) -> None:
     """Franja compacta con las 5 preguntas, cada una con la respuesta del periodo.
 
-    Q1-Q3 se pueden resumir para todo el periodo elegido (sin depender de una
-    categoría). Q4 y Q5 solo tienen sentido para una categoría puntual, así
+    Q1 y Q2 muestran la categoría concreta (no un promedio): la de mayor
+    compra y la de menor competencia conocida. Q3 se resume a nivel de todo
+    el periodo. Q4 y Q5 solo tienen sentido para una categoría puntual, así
     que invitan a elegirla en el Paso 1 en vez de mostrar un promedio que
     nadie usaría para decidir.
     """
-    if maestro_periodo is not None and not maestro_periodo.empty:
-        texto_q1 = formato_soles(maestro_periodo["demanda_soles"].sum())
-        poca_o_sin = maestro_periodo["banda_competencia"].astype(str).isin(
-            ["Sin adjudicatario vigente", "Poca competencia (1-2)"]
-        )
-        pct_poca = poca_o_sin.sum() / len(maestro_periodo) * 100
-        texto_q2 = f"{pct_poca:.0f}% con poca competencia"
-    else:
-        texto_q1 = "—"
-        texto_q2 = "—"
+    def _acortar(texto, limite: int = 60) -> str:
+        texto = str(texto)
+        return texto if len(texto) <= limite else texto[: limite - 1].rstrip() + "…"
 
-    texto_q3 = "—"
+    if maestro_periodo is not None and not maestro_periodo.empty:
+        fila_demanda = maestro_periodo.loc[maestro_periodo["demanda_soles"].idxmax()]
+        texto_q1 = _acortar(fila_demanda["cubso_descripcion"])
+        nota_q1 = formato_soles(fila_demanda["demanda_soles"])
+
+        aptas = maestro_periodo[
+            maestro_periodo["apto_para_ranking"].astype("object").fillna(False).astype(bool)
+        ]
+        base_q2 = aptas if not aptas.empty else maestro_periodo
+        base_q2 = base_q2.assign(
+            _competencia=pd.to_numeric(base_q2["competencia_vigente"], errors="coerce")
+        ).dropna(subset=["_competencia"])
+        if not base_q2.empty:
+            fila_competencia = base_q2.sort_values(
+                ["_competencia", "demanda_soles"], ascending=[True, False]
+            ).iloc[0]
+            texto_q2 = _acortar(fila_competencia["cubso_descripcion"])
+            n_comp = int(round(numero_seguro(fila_competencia["competencia_vigente"])))
+            nota_q2 = (
+                f"{n_comp} competidor{'es' if n_comp != 1 else ''} "
+                f"conocido{'s' if n_comp != 1 else ''}"
+            )
+        else:
+            texto_q2, nota_q2 = "—", ""
+    else:
+        texto_q1, nota_q1 = "—", ""
+        texto_q2, nota_q2 = "—", ""
+
+    texto_q3, nota_q3 = "—", ""
     if ocds_periodo is not None and not ocds_periodo.empty:
         fechas = pd.to_datetime(ocds_periodo.get("fecha"), errors="coerce", utc=True)
         montos = pd.to_numeric(ocds_periodo.get("monto_adjudicado"), errors="coerce")
@@ -1741,18 +1769,19 @@ def render_preguntas_negocio(
 
     ver_categoria = "Elige una categoría en el Paso 1"
     chips = [
-        ("Q1", "💰", "¿Dónde compra más el Estado?", texto_q1),
-        ("Q2", "🛡️", "¿Dónde hay menos competencia?", texto_q2),
-        ("Q3", "📅", "¿Cuándo compra más?", texto_q3),
-        ("Q4", "📏", "¿El contrato está a mi alcance?", ver_categoria),
-        ("Q5", "🏁", "¿Quiénes siguen en carrera hoy?", ver_categoria),
+        ("Q1", "💰", "¿Dónde compra más el Estado?", texto_q1, nota_q1),
+        ("Q2", "🛡️", "¿Dónde hay menos competencia?", texto_q2, nota_q2),
+        ("Q3", "📅", "¿Cuándo compra más?", texto_q3, nota_q3),
+        ("Q4", "📏", "¿El contrato está a mi alcance?", ver_categoria, ""),
+        ("Q5", "🏁", "¿Quiénes siguen en carrera hoy?", ver_categoria, ""),
     ]
     items = "".join(
         f'<div class="ro-qchip">'
         f'<div class="ro-qchip-q"><b>{qq}</b>{icon} {escape(texto)}</div>'
         f'<div class="ro-qchip-a">{escape(str(respuesta))}</div>'
-        '</div>'
-        for qq, icon, texto, respuesta in chips
+        + (f'<div class="ro-qchip-n">{escape(str(nota))}</div>' if nota else "")
+        + '</div>'
+        for qq, icon, texto, respuesta, nota in chips
     )
     st.markdown(
         f"""
