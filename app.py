@@ -34,7 +34,7 @@ st.set_page_config(
     page_title="Radar de Oportunidades en Compras Públicas",
     page_icon="📡",
     layout="wide",
-    initial_sidebar_state="expanded",
+    initial_sidebar_state="collapsed",
 )
 
 MONEDA = "S/"
@@ -54,8 +54,9 @@ LILA = "#DADBF1"
 FONDO = "#F4F7F9"
 BLANCO = "#FFFFFF"
 TINTA = "#272525"
+CUERPO = "#3A4A56"
 APAGADO = "#667684"
-BORDE = "#D0D1E7"
+BORDE = "#E3E9ED"
 VERDE = "#2F9E65"
 AMBAR = "#C18A20"
 GRIS = "#869AB4"
@@ -136,318 +137,194 @@ COLOR_BANDA = {
 st.markdown(
     f"""
     <style>
-      @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+      @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
 
+      /* ---------------------------------------------------------------
+         Sistema de diseño: una sola tarjeta base, una escala tipográfica
+         de 6 pasos y dos colores con función (azul = marca/lectura,
+         naranja = acción/urgencia). Nada de degradados salvo el
+         encabezado, ni animaciones de entrada (Streamlit vuelve a pintar
+         todo en cada clic, así que "aparecer deslizándose" se repite en
+         cada interacción y cansa en vez de verse elegante).
+         --------------------------------------------------------------- */
       :root {{
-        --ro-azul:{AZUL}; --ro-naranja:{NARANJA}; --ro-morado:{MORADO};
-        --ro-lila:{LILA}; --ro-fondo:{FONDO}; --ro-tinta:{TINTA};
-        --ro-apagado:{APAGADO}; --ro-borde:{BORDE};
-        --ro-verde:{VERDE}; --ro-ambar:{AMBAR}; --ro-gris:{GRIS};
+        --ro-azul:{AZUL}; --ro-naranja:{NARANJA}; --ro-fondo:{FONDO};
+        --ro-tinta:{TINTA}; --ro-cuerpo:{CUERPO}; --ro-apagado:{APAGADO};
+        --ro-borde:{BORDE}; --ro-verde:{VERDE}; --ro-ambar:{AMBAR}; --ro-gris:{GRIS};
+        --ro-radio: 12px;
+        --ro-sombra: 0 1px 2px rgba(15,23,42,.05), 0 1px 1px rgba(15,23,42,.04);
       }}
 
       .stApp {{ background:{FONDO}; color:{TINTA}; font-family: 'Inter', sans-serif; }}
-      .block-container {{ max-width:1480px; padding-top:0.8rem; padding-bottom:3rem; }}
+      .block-container {{ max-width:1180px; padding-top:1.2rem; padding-bottom:3rem; }}
       #MainMenu {{ visibility:hidden; }}
       footer {{ visibility:hidden; }}
       header[data-testid="stHeader"] {{ background:transparent; }}
 
-      h1, h2, h3, h4 {{ letter-spacing:-0.025em; color:{TINTA}; font-family: 'Inter', sans-serif; }}
-      p, label, .stCaption {{ color:{APAGADO}; font-family: 'Inter', sans-serif; }}
+      h1, h2, h3, h4 {{ letter-spacing:-0.01em; color:{TINTA}; font-family: 'Inter', sans-serif; }}
+      p, label, .stCaption {{ color:{CUERPO}; font-family: 'Inter', sans-serif; }}
+      small, .stCaption, [data-testid="stCaptionContainer"] p {{ color:{APAGADO} !important; }}
 
-      @keyframes fadeInUp {{
-        from {{ opacity: 0; transform: translateY(30px); }}
-        to {{ opacity: 1; transform: translateY(0); }}
-      }}
-      @keyframes fadeIn {{
-        from {{ opacity: 0; }}
-        to {{ opacity: 1; }}
-      }}
-      @keyframes slideInRight {{
-        from {{ opacity: 0; transform: translateX(-20px); }}
-        to {{ opacity: 1; transform: translateX(0); }}
-      }}
-      @keyframes pulse {{
-        0%, 100% {{ transform: scale(1); }}
-        50% {{ transform: scale(1.03); }}
-      }}
-      @keyframes shimmer {{
-        0% {{ background-position: -200% 0; }}
-        100% {{ background-position: 200% 0; }}
-      }}
-      @keyframes float {{
-        0%, 100% {{ transform: translateY(0px); }}
-        50% {{ transform: translateY(-8px); }}
-      }}
-
+      /* Encabezado: único bloque de color sólido de toda la app. */
       .ro-hero {{
-        background: linear-gradient(135deg, {AZUL} 0%, #0a2540 40%, {MORADO} 100%);
-        border-radius: 24px;
-        padding: 40px 36px 36px 36px;
+        background: {AZUL};
+        border-radius: 16px;
+        padding: 28px 32px;
         color: #fff;
         display: flex;
         align-items: center;
-        gap: 28px;
-        box-shadow: 0 20px 60px rgba(0,64,100,.18), 0 0 0 1px rgba(255,255,255,.08) inset;
-        margin-bottom: 20px;
-        position: relative;
-        overflow: hidden;
-        animation: fadeInUp 0.8s ease-out;
+        gap: 24px;
+        margin-bottom: 18px;
       }}
-      .ro-hero::before {{
-        content: '';
-        position: absolute;
-        top: -60%;
-        right: -5%;
-        width: 500px;
-        height: 500px;
-        background: radial-gradient(circle, rgba(255,107,43,0.12) 0%, transparent 65%);
-        border-radius: 50%;
-        animation: float 6s ease-in-out infinite;
-      }}
-      .ro-hero::after {{
-        content: '';
-        position: absolute;
-        bottom: -30%;
-        left: -10%;
-        width: 400px;
-        height: 400px;
-        background: radial-gradient(circle, rgba(218,219,241,0.08) 0%, transparent 60%);
-        border-radius: 50%;
-      }}
-      .ro-hero-left {{ min-width: 0; position: relative; z-index: 1; }}
-      .ro-kicker {{
-        display: inline-block;
-        background: rgba(255,107,43,0.9);
-        color: #fff;
-        border-radius: 8px;
-        padding: 6px 14px;
-        font-size: 11px;
-        font-weight: 800;
-        letter-spacing: .08em;
-        margin-bottom: 14px;
-        text-transform: uppercase;
-        box-shadow: 0 4px 15px rgba(255,107,43,0.3);
-        animation: slideInRight 0.6s ease-out 0.2s both;
-      }}
+      .ro-hero-left {{ min-width: 0; }}
       .ro-hero-title {{
-        font-size: 38px;
-        line-height: 1.05;
-        font-weight: 900;
+        font-size: 26px;
+        line-height: 1.2;
+        font-weight: 700;
         color: #fff;
-        letter-spacing: -.04em;
         margin: 0;
-        animation: fadeInUp 0.7s ease-out 0.3s both;
       }}
-      .ro-hero-title span {{
-        color: {NARANJA};
-        text-shadow: 0 2px 20px rgba(255,107,43,0.3);
-      }}
+      .ro-hero-title span {{ color: {NARANJA}; }}
       .ro-hero-sub {{
-        color: #A8C4D9;
-        font-size: 15px;
-        margin-top: 12px;
+        color: #C7DCE8;
+        font-size: 14px;
+        margin-top: 8px;
         line-height: 1.5;
-        max-width: 600px;
-        animation: fadeInUp 0.7s ease-out 0.4s both;
+        max-width: 620px;
       }}
       .ro-hero-meta {{
         margin-left: auto;
         display: flex;
-        gap: 10px;
+        gap: 8px;
         flex-wrap: wrap;
         justify-content: flex-end;
-        max-width: 480px;
-        position: relative;
-        z-index: 1;
-        animation: fadeInUp 0.7s ease-out 0.5s both;
+        max-width: 420px;
       }}
       .ro-chip {{
-        background: rgba(255,255,255,.08);
+        background: rgba(255,255,255,.12);
         color: #fff;
-        border: 1px solid rgba(255,255,255,.18);
-        border-radius: 10px;
-        padding: 10px 14px;
+        border: 1px solid rgba(255,255,255,.2);
+        border-radius: 8px;
+        padding: 7px 12px;
         font-size: 12px;
-        font-weight: 700;
+        font-weight: 600;
         white-space: nowrap;
-        backdrop-filter: blur(10px);
-        transition: all 0.3s ease;
-      }}
-      .ro-chip:hover {{
-        background: rgba(255,255,255,.15);
-        transform: translateY(-2px);
-        box-shadow: 0 8px 20px rgba(0,0,0,0.15);
       }}
 
+      /* Franja de respuesta: tarjeta clara con acento azul, no un
+         segundo bloque oscuro compitiendo con el encabezado. */
       .ro-questions-wrap {{
-        background: linear-gradient(145deg, {AZUL} 0%, #0a3050 100%);
-        border-radius: 20px;
-        padding: 28px;
-        margin: 14px 0 18px 0;
-        box-shadow: 0 12px 40px rgba(0,64,100,.12);
-        animation: fadeInUp 0.8s ease-out 0.2s both;
+        background: #fff;
+        border: 1px solid {BORDE};
+        border-left: 4px solid {AZUL};
+        border-radius: var(--ro-radio);
+        padding: 16px 20px;
+        margin: 0 0 18px 0;
       }}
       .ro-questions-title {{
-        color: {NARANJA};
-        font-size: 22px;
-        font-weight: 900;
-        margin: 0 0 18px 0;
+        color: {AZUL};
+        font-size: 14px;
+        font-weight: 700;
+        margin: 0 0 10px 0;
+      }}
+      .ro-qchip-row {{
         display: flex;
-        align-items: center;
-        gap: 10px;
+        flex-wrap: wrap;
+        gap: 8px;
       }}
-      .ro-questions {{
-        display: grid;
-        grid-template-columns: repeat(4, minmax(0, 1fr));
-        gap: 12px;
+      .ro-qchip {{
+        background: {FONDO};
+        border-radius: 10px;
+        padding: 8px 14px;
+        flex: 1 1 220px;
       }}
-      .ro-question {{
-        background: rgba(255,255,255,.95);
-        border: none;
-        border-radius: 14px;
-        padding: 20px 18px;
-        min-height: 140px;
-        transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
-        position: relative;
-        overflow: hidden;
-      }}
-      .ro-question::before {{
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        height: 4px;
-        background: linear-gradient(90deg, {NARANJA}, #FF8F5C);
-        opacity: 0;
-        transition: opacity 0.3s ease;
-      }}
-      .ro-question:hover {{
-        transform: translateY(-6px);
-        box-shadow: 0 16px 40px rgba(0,64,100,.15);
-      }}
-      .ro-question:hover::before {{ opacity: 1; }}
-      .ro-question.q5 {{
-        grid-column: 1 / -1;
-        min-height: auto;
-        display: flex;
-        align-items: center;
-        gap: 20px;
-      }}
-      .ro-question-icon {{
-        font-size: 28px;
-        margin-bottom: 10px;
-        display: block;
-      }}
-      .ro-question-title {{
-        color: #0E0E0E;
-        font-size: 15px;
-        line-height: 1.3;
-        font-weight: 800;
-        margin-bottom: 8px;
-      }}
-      .ro-question-title b {{
-        color: {NARANJA};
-        font-size: 18px;
-      }}
-      .ro-question-copy {{
-        color: #444;
-        font-size: 13px;
-        line-height: 1.5;
-      }}
-      .ro-route {{
-        background: {MORADO};
-        color: #fff;
-        border-radius: 12px;
-        padding: 14px 18px;
-        margin-top: 14px;
-        font-size: 13px;
+      .ro-qchip-q {{
+        font-size: 12px;
         font-weight: 600;
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        box-shadow: 0 4px 15px rgba(34,38,93,0.2);
+        color: {APAGADO};
+      }}
+      .ro-qchip-q b {{ color: {AZUL}; margin-right: 4px; }}
+      .ro-qchip-a {{
+        font-size: 13px;
+        font-weight: 700;
+        color: {TINTA};
+        margin-top: 3px;
+        line-height: 1.3;
+      }}
+      .ro-qchip-n {{
+        font-size: 11px;
+        font-weight: 500;
+        color: {APAGADO};
+        margin-top: 2px;
       }}
 
+      /* Navegación entre pasos, estilo pestañas. */
       div[data-testid="stRadio"] > div {{
         background: #fff;
-        border: 2px solid {BORDE};
-        border-radius: 16px;
-        padding: 6px;
-        gap: 6px;
-        box-shadow: 0 4px 20px rgba(0,0,0,0.04);
+        border: 1px solid {BORDE};
+        border-radius: var(--ro-radio);
+        padding: 4px;
+        gap: 4px;
       }}
       div[data-testid="stRadio"] label {{
         background: transparent;
-        border-radius: 12px;
-        padding: 10px 16px !important;
-        min-height: 44px;
-        font-weight: 700;
+        border-radius: 8px;
+        padding: 9px 16px !important;
+        min-height: 40px;
+        font-weight: 600;
         font-size: 13.5px;
-        transition: all 0.3s ease;
-        border: 2px solid transparent;
+        transition: background 0.15s ease;
       }}
-      div[data-testid="stRadio"] label:hover {{
-        background: {LILA};
-        transform: translateY(-1px);
-      }}
+      div[data-testid="stRadio"] label:hover {{ background: {FONDO}; }}
       div[data-testid="stRadio"] label:has(input:checked) {{
-        background: linear-gradient(135deg, {AZUL}, {MORADO});
+        background: {AZUL};
         color: #fff;
-        box-shadow: 0 6px 20px rgba(0,64,100,0.25);
-        border-color: transparent;
       }}
       div[data-testid="stRadio"] label:has(input:checked) p {{ color: #fff !important; }}
 
-      .ro-step {{ margin: 24px 0 16px 0; animation: fadeInUp 0.6s ease-out; }}
+      .ro-step {{ margin: 22px 0 16px 0; }}
       .ro-step.light {{ background: transparent; padding: 0; }}
       .ro-step.dark {{
-        background: linear-gradient(135deg, {AZUL} 0%, {MORADO} 100%);
-        padding: 28px 30px;
-        border-radius: 18px;
-        box-shadow: 0 12px 40px rgba(0,64,100,.15);
+        background: {AZUL};
+        padding: 22px 26px;
+        border-radius: 14px;
       }}
       .ro-step-tag {{
         display: inline-block;
-        background: {LILA};
-        color: {MORADO};
-        border-radius: 8px;
-        padding: 5px 12px;
+        background: {FONDO};
+        color: {AZUL};
+        border-radius: 6px;
+        padding: 4px 10px;
         font-size: 11px;
-        font-weight: 800;
-        letter-spacing: .06em;
+        font-weight: 700;
+        letter-spacing: .05em;
         text-transform: uppercase;
       }}
       .ro-step.dark .ro-step-tag {{ background: rgba(255,255,255,.15); color: #fff; }}
       .ro-step-title {{
-        font-size: 32px;
-        line-height: 1.08;
-        font-weight: 900;
+        font-size: 24px;
+        line-height: 1.2;
+        font-weight: 700;
         color: {AZUL};
-        margin: 10px 0 8px 0;
-        letter-spacing: -.035em;
+        margin: 10px 0 6px 0;
       }}
-      .ro-step.dark .ro-step-title {{ color: #fff; text-shadow: 0 2px 10px rgba(0,0,0,0.2); }}
+      .ro-step.dark .ro-step-title {{ color: #fff; }}
       .ro-step-sub {{
-        font-size: 15px;
+        font-size: 14px;
         color: {APAGADO};
-        max-width: 980px;
+        max-width: 860px;
         line-height: 1.5;
       }}
-      .ro-step.dark .ro-step-sub {{ color: #C8D9E4; }}
+      .ro-step.dark .ro-step-sub {{ color: #C7DCE8; }}
 
       .ro-filter-title {{
-        background: linear-gradient(90deg, {LILA}, #E8E9F5);
-        color: {MORADO};
-        border-radius: 10px;
-        padding: 12px 16px;
+        background: {FONDO};
+        color: {AZUL};
+        border-radius: 8px;
+        padding: 10px 14px;
         font-size: 13px;
-        font-weight: 800;
+        font-weight: 700;
         margin: 4px 0 8px 0;
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        box-shadow: 0 2px 8px rgba(34,38,93,0.06);
       }}
       div[data-testid="stHorizontalBlock"] {{ align-items: flex-start; }}
       div[data-testid="stSelectbox"] label p,
@@ -464,308 +341,170 @@ st.markdown(
       }}
       div[data-testid="stCheckbox"] label p {{ min-height: 0; display: inline; }}
 
+      /* Tarjeta base: se reutiliza (con ligeras variantes de borde) en
+         KPI, respuestas Q1-Q5, llamados destacados, formalidades y
+         proveedores, en vez de que cada una tenga su propio degradado. */
       .ro-kpi-grid {{
         display: grid;
-        grid-template-columns: repeat(5, minmax(0, 1fr));
-        gap: 14px;
-        margin: 16px 0 20px 0;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 12px;
+        margin: 14px 0 18px 0;
       }}
       .ro-kpi {{
         background: #fff;
         border: 1px solid {BORDE};
-        border-radius: 16px;
-        padding: 20px 18px;
-        min-height: 130px;
-        box-shadow: 0 4px 20px rgba(31,53,72,.04);
-        transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
-        position: relative;
-        overflow: hidden;
-        animation: fadeInUp 0.6s ease-out;
+        border-radius: var(--ro-radio);
+        padding: 16px 18px;
+        box-shadow: var(--ro-sombra);
       }}
-      .ro-kpi::before {{
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        height: 4px;
-        transition: height 0.3s ease;
-      }}
-      .ro-kpi.orange::before {{ background: linear-gradient(90deg, {NARANJA}, #FF8F5C); }}
-      .ro-kpi.blue::before {{ background: linear-gradient(90deg, {AZUL}, #0068A5); }}
-      .ro-kpi.purple::before {{ background: linear-gradient(90deg, {MORADO}, #3D4280); }}
-      .ro-kpi.green::before {{ background: linear-gradient(90deg, {VERDE}, #4DB87A); }}
-      .ro-kpi:hover {{
-        transform: translateY(-5px);
-        box-shadow: 0 16px 45px rgba(0,64,100,.12);
-      }}
-      .ro-kpi:hover::before {{ height: 5px; }}
-      .ro-kpi-icon {{
-        font-size: 22px;
-        margin-bottom: 8px;
-        display: block;
-      }}
+      .ro-kpi-icon {{ font-size: 18px; margin-bottom: 6px; display: block; }}
       .ro-kpi-label {{
         color: {APAGADO};
-        font-size: 10.5px;
-        font-weight: 800;
+        font-size: 11px;
+        font-weight: 700;
         text-transform: uppercase;
-        letter-spacing: .06em;
+        letter-spacing: .04em;
         line-height: 1.3;
       }}
       .ro-kpi-value {{
         color: {AZUL};
-        font-size: 36px;
-        line-height: 1.0;
-        font-weight: 900;
-        margin: 10px 0 6px 0;
-        letter-spacing: -.04em;
+        font-size: 28px;
+        line-height: 1.1;
+        font-weight: 700;
+        margin: 6px 0 4px 0;
       }}
-      .ro-kpi-note {{
-        color: {APAGADO};
-        font-size: 11.5px;
-        line-height: 1.35;
-      }}
+      .ro-kpi-note {{ color: {APAGADO}; font-size: 12px; line-height: 1.35; }}
 
       .ro-focus-head {{
-        background: linear-gradient(135deg, #fff 0%, #FAFBFF 100%);
-        border: 2px solid {BORDE};
-        border-radius: 16px;
-        padding: 20px 24px;
+        background: #fff;
+        border: 1px solid {BORDE};
+        border-radius: var(--ro-radio);
+        padding: 18px 22px;
         margin: 6px 0 14px 0;
         display: flex;
         align-items: center;
         gap: 16px;
-        box-shadow: 0 4px 20px rgba(0,0,0,0.04);
-        animation: fadeInUp 0.5s ease-out;
+        box-shadow: var(--ro-sombra);
       }}
-      .ro-focus-name {{
-        color: {AZUL};
-        font-size: 22px;
-        font-weight: 900;
-        line-height: 1.2;
-      }}
+      .ro-focus-name {{ color: {AZUL}; font-size: 19px; font-weight: 700; line-height: 1.25; }}
       .ro-index {{
         margin-left: auto;
-        background: linear-gradient(135deg, {NARANJA}, #FF8F5C);
+        background: {NARANJA};
         color: #fff;
-        border-radius: 14px;
-        padding: 12px 18px;
+        border-radius: 10px;
+        padding: 10px 16px;
         text-align: center;
-        min-width: 100px;
-        box-shadow: 0 8px 25px rgba(255,107,43,0.25);
-        animation: pulse 2s ease-in-out infinite;
+        min-width: 90px;
       }}
       .ro-index small {{
         display: block;
         font-size: 9px;
-        font-weight: 800;
+        font-weight: 700;
         opacity: .9;
-        letter-spacing: .08em;
+        letter-spacing: .06em;
         text-transform: uppercase;
       }}
-      .ro-index strong {{
-        font-size: 28px;
-        line-height: 1;
-        font-weight: 900;
-      }}
+      .ro-index strong {{ font-size: 24px; line-height: 1; font-weight: 700; }}
+
       .ro-answer-grid {{
         display: grid;
         grid-template-columns: repeat(5, minmax(0, 1fr));
-        gap: 12px;
-        margin: 0 0 20px 0;
+        gap: 10px;
+        margin: 0 0 18px 0;
       }}
       .ro-answer {{
-        background: linear-gradient(145deg, {LILA}, #E8E9F5);
-        border-radius: 14px;
-        padding: 18px 16px;
-        min-height: 140px;
-        transition: all 0.35s ease;
-        position: relative;
-        overflow: hidden;
-        animation: fadeInUp 0.5s ease-out;
+        background: #fff;
+        border: 1px solid {BORDE};
+        border-radius: var(--ro-radio);
+        padding: 16px 14px;
+        min-height: 130px;
       }}
-      .ro-answer:hover {{
-        transform: translateY(-4px);
-        box-shadow: 0 12px 35px rgba(34,38,93,0.1);
-      }}
-      .ro-answer::after {{
-        content: '';
-        position: absolute;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        height: 3px;
-        background: linear-gradient(90deg, {NARANJA}, transparent);
-        opacity: 0.5;
-      }}
-      .ro-answer-q {{
-        color: {NARANJA};
-        font-weight: 900;
-        font-size: 13px;
-        letter-spacing: .04em;
-      }}
+      .ro-answer-q {{ color: {AZUL}; font-weight: 700; font-size: 12px; letter-spacing: .02em; }}
       .ro-answer-title {{
-        color: #111;
-        font-weight: 800;
-        font-size: 12.5px;
+        color: {TINTA};
+        font-weight: 600;
+        font-size: 12px;
         line-height: 1.3;
         margin-top: 4px;
         min-height: 32px;
       }}
       .ro-answer-value {{
         color: {AZUL};
-        font-weight: 900;
-        font-size: 34px;
-        line-height: 1;
-        margin: 12px 0 8px 0;
-        letter-spacing: -.04em;
+        font-weight: 700;
+        font-size: 26px;
+        line-height: 1.1;
+        margin: 10px 0 6px 0;
       }}
-      .ro-answer-note {{
-        color: #444;
-        font-size: 11.5px;
-        line-height: 1.3;
-      }}
-      .ro-answer.clickable {{
-        border: 2px dashed rgba(255,107,43,.55);
-        cursor: pointer;
-      }}
+      .ro-answer-note {{ color: {APAGADO}; font-size: 11.5px; line-height: 1.3; }}
+      .ro-answer.clickable {{ border: 1px dashed {NARANJA}; cursor: pointer; }}
       .ro-answer-cta {{
         display: inline-block;
         margin-top: 8px;
         background: {NARANJA};
         color: #fff;
         font-size: 10px;
-        font-weight: 800;
-        letter-spacing: .05em;
+        font-weight: 700;
+        letter-spacing: .04em;
         text-transform: uppercase;
         border-radius: 20px;
         padding: 3px 10px;
       }}
 
       .ro-reading {{
-        background: linear-gradient(145deg, {AZUL}, #0a3050);
-        border-radius: 16px;
-        padding: 24px;
+        background: {AZUL};
+        border-radius: var(--ro-radio);
+        padding: 22px;
         color: #fff;
         margin-bottom: 16px;
-        box-shadow: 0 8px 30px rgba(0,64,100,.15);
-        animation: fadeInUp 0.5s ease-out;
       }}
-      .ro-reading h4 {{
-        color: #fff;
-        font-size: 20px;
-        margin: 0 0 14px 0;
-        font-weight: 800;
-      }}
-      .ro-reading p {{
-        color: #C8D9E4;
-        font-size: 13.5px;
-        line-height: 1.6;
-        margin: 0 0 10px 0;
-      }}
-      .ro-reading strong {{ color: {NARANJA}; }}
+      .ro-reading h4 {{ color: #fff; font-size: 17px; margin: 0 0 12px 0; font-weight: 700; }}
+      .ro-reading p {{ color: #C7DCE8; font-size: 13.5px; line-height: 1.6; margin: 0 0 10px 0; }}
+      .ro-reading strong {{ color: #fff; }}
 
-      .ro-q {{
-        display: inline-flex;
-        align-items: center;
-        gap: 6px;
-        background: linear-gradient(135deg, {AZUL}, {MORADO});
-        color: #fff;
-        border-radius: 12px;
-        padding: 5px 12px;
-        font-size: 12px;
-        font-weight: 800;
-        margin-right: 8px;
-        box-shadow: 0 4px 12px rgba(0,64,100,0.2);
-      }}
       .ro-aviso {{
-        background: linear-gradient(135deg, #FFF2E9, #FFF8F3);
-        border: 2px solid #F6CEB4;
-        border-radius: 14px;
-        padding: 16px 18px;
+        background: #FFF6EF;
+        border: 1px solid #F6CEB4;
+        border-radius: var(--ro-radio);
+        padding: 14px 16px;
         color: #7A4218;
         font-size: 13.5px;
         line-height: 1.5;
-        box-shadow: 0 4px 15px rgba(246,206,180,0.2);
       }}
 
       .ro-calls {{
         display: grid;
         grid-template-columns: repeat(3, minmax(0, 1fr));
-        gap: 16px;
-        margin: 14px 0 20px 0;
+        gap: 12px;
+        margin: 14px 0 18px 0;
       }}
       .ro-call {{
-        background: linear-gradient(145deg, {AZUL}, #0a3050);
-        border: 2px solid rgba(195,206,219,0.3);
-        border-left: 6px solid #4950BC;
-        border-radius: 14px;
-        padding: 22px 20px;
-        min-height: 190px;
-        transition: all 0.35s ease;
-        position: relative;
-        overflow: hidden;
-        animation: fadeInUp 0.5s ease-out;
+        background: #fff;
+        border: 1px solid {BORDE};
+        border-left: 4px solid {GRIS};
+        border-radius: var(--ro-radio);
+        padding: 18px 18px;
+        min-height: 170px;
+        box-shadow: var(--ro-sombra);
       }}
-      .ro-call::before {{
-        content: '';
-        position: absolute;
-        top: 0;
-        right: 0;
-        width: 120px;
-        height: 120px;
-        background: radial-gradient(circle, rgba(255,107,43,0.08) 0%, transparent 70%);
-        border-radius: 50%;
-      }}
-      .ro-call.urgent {{
-        border-left-color: {NARANJA};
-        animation: pulse 3s ease-in-out infinite;
-      }}
-      .ro-call.urgent::before {{
-        background: radial-gradient(circle, rgba(255,107,43,0.15) 0%, transparent 70%);
-      }}
-      .ro-call:hover {{
-        transform: translateY(-5px);
-        box-shadow: 0 16px 45px rgba(0,64,100,.18);
-        border-color: rgba(255,107,43,0.3);
-      }}
+      .ro-call.urgent {{ border-left-color: {NARANJA}; }}
       .ro-call-title {{
-        color: #fff;
-        font-size: 16px;
-        font-weight: 800;
+        color: {TINTA};
+        font-size: 14.5px;
+        font-weight: 700;
         line-height: 1.35;
-        min-height: 65px;
-        position: relative;
-        z-index: 1;
+        min-height: 58px;
       }}
-      .ro-call-value {{
-        color: {NARANJA};
-        font-size: 30px;
-        font-weight: 900;
-        margin: 10px 0 10px;
-        position: relative;
-        z-index: 1;
-        text-shadow: 0 2px 10px rgba(255,107,43,0.2);
-      }}
-      .ro-call-note {{
-        color: #B8C9D8;
-        font-size: 12.5px;
-        line-height: 1.5;
-        position: relative;
-        z-index: 1;
-      }}
-
-      .ro-call-link {{ text-decoration: none; display: block; }}
+      .ro-call-value {{ color: {AZUL}; font-size: 24px; font-weight: 700; margin: 8px 0; }}
+      .ro-call-note {{ color: {APAGADO}; font-size: 12px; line-height: 1.5; }}
+      .ro-call-link, .ro-call-link * {{ text-decoration: none !important; }}
+      .ro-call-link {{ display: block; }}
       .ro-call-cta {{
-        margin-top: 12px;
+        margin-top: 10px;
         font-size: 11px;
-        font-weight: 800;
-        letter-spacing: .04em;
+        font-weight: 700;
+        letter-spacing: .03em;
         text-transform: uppercase;
         color: {NARANJA};
-        position: relative;
-        z-index: 1;
       }}
       /* Deja aire sobre el llamado al que se salta. */
       .ro-ancla {{ scroll-margin-top: 90px; }}
@@ -773,121 +512,70 @@ st.markdown(
       .ro-formal-grid {{
         display: grid;
         grid-template-columns: repeat(4, minmax(0, 1fr));
-        gap: 14px;
-        margin: 16px 0 20px 0;
+        gap: 12px;
+        margin: 14px 0 18px 0;
       }}
       .ro-formal {{
-        background: linear-gradient(145deg, {LILA}, #E8E9F5);
+        background: #fff;
         border: 1px solid {BORDE};
-        border-radius: 14px;
-        padding: 20px 18px;
-        min-height: 120px;
-        transition: all 0.3s ease;
-        position: relative;
-        overflow: hidden;
-        animation: fadeInUp 0.5s ease-out;
+        border-radius: var(--ro-radio);
+        padding: 16px 16px;
+        min-height: 110px;
       }}
-      .ro-formal:hover {{
-        transform: translateY(-4px);
-        box-shadow: 0 12px 35px rgba(34,38,93,0.1);
-      }}
-      .ro-formal::before {{
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 4px;
-        height: 100%;
-        background: linear-gradient(180deg, {NARANJA}, {AZUL});
-        opacity: 0;
-        transition: opacity 0.3s ease;
-      }}
-      .ro-formal:hover::before {{ opacity: 1; }}
-      .ro-formal-title {{
-        color: #171717;
-        font-size: 16px;
-        font-weight: 850;
-        margin-bottom: 10px;
-        line-height: 1.3;
-      }}
-      .ro-formal-title b {{
-        color: {NARANJA};
-        font-size: 20px;
-      }}
-      .ro-formal-copy {{
-        color: #444;
-        font-size: 12.5px;
-        line-height: 1.45;
-      }}
+      .ro-formal-title {{ color: {TINTA}; font-size: 14.5px; font-weight: 700; margin-bottom: 8px; line-height: 1.3; }}
+      .ro-formal-title b {{ color: {NARANJA}; font-size: 17px; }}
+      .ro-formal-copy {{ color: {APAGADO}; font-size: 12.5px; line-height: 1.45; }}
 
       div[data-testid="stMetric"] {{
-        background: linear-gradient(145deg, #fff, #FAFBFF);
-        border: 2px solid {BORDE};
-        border-radius: 14px;
+        background: #fff;
+        border: 1px solid {BORDE};
+        border-radius: var(--ro-radio);
         padding: 14px 16px;
-        min-height: 100px;
+        min-height: 96px;
         height: 100%;
         display: flex;
         flex-direction: column;
         justify-content: center;
-        transition: all 0.3s ease;
-        box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+        box-shadow: var(--ro-sombra);
       }}
-      div[data-testid="stMetric"]:hover {{
-        transform: translateY(-3px);
-        box-shadow: 0 10px 30px rgba(0,0,0,0.06);
-      }}
-      div[data-testid="stMetricValue"] {{
-        font-size: 32px;
-        color: {AZUL};
-        font-weight: 900;
-        letter-spacing: -.02em;
-      }}
+      div[data-testid="stMetricValue"] {{ font-size: 28px; color: {AZUL}; font-weight: 700; }}
       div[data-testid="stMetricLabel"] {{
         min-height: 36px;
         color: {APAGADO};
-        font-weight: 700;
+        font-weight: 600;
         font-size: 11px;
         text-transform: uppercase;
-        letter-spacing: .04em;
+        letter-spacing: .03em;
       }}
       div[data-testid="stDataFrame"] {{
-        border: 2px solid {BORDE};
-        border-radius: 14px;
-        overflow: hidden;
-        box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+        border: 1px solid {BORDE};
+        border-radius: var(--ro-radio);
+        overflow-x: auto;
       }}
       div[data-testid="stExpander"] {{
-        border: 2px solid {BORDE};
-        border-radius: 12px;
+        border: 1px solid {BORDE};
+        border-radius: var(--ro-radio);
         background: #fff;
-        box-shadow: 0 4px 15px rgba(0,0,0,0.03);
-        transition: all 0.3s ease;
-      }}
-      div[data-testid="stExpander"]:hover {{
-        box-shadow: 0 8px 25px rgba(0,0,0,0.06);
       }}
       div[data-testid="stVerticalBlockBorderWrapper"] {{
         border-color: {BORDE} !important;
-        border-radius: 14px;
+        border-radius: var(--ro-radio);
       }}
 
-      /* El gradiente, el padding y la sombra van solo en el elemento botón.
-         Si también los reciben sus hijos (el div y el <p> internos de
-         Streamlit), se dibujan cajas anidadas y el botón crece de alto. */
+      /* El padding y el color van solo en el elemento botón. Si también
+         los reciben sus hijos (el div y el <p> internos de Streamlit),
+         se dibujan cajas anidadas y el botón crece de alto. */
       .stButton > button[kind="primary"],
       div[data-testid="stButton"] button[data-testid="stBaseButton-primary"] {{
-        background: linear-gradient(135deg, {NARANJA}, #FF8F5C) !important;
+        background: {NARANJA} !important;
         border: none !important;
         color: #fff !important;
-        font-weight: 800 !important;
-        border-radius: 12px !important;
+        font-weight: 700 !important;
+        border-radius: 10px !important;
         padding: 0 20px !important;
         min-height: 42px !important;
         height: 42px !important;
         line-height: 1.2 !important;
-        box-shadow: 0 6px 20px rgba(255,107,43,0.3) !important;
-        transition: all 0.3s ease !important;
       }}
       .stButton > button[kind="primary"] *,
       div[data-testid="stButton"] button[data-testid="stBaseButton-primary"] * {{
@@ -895,29 +583,23 @@ st.markdown(
         box-shadow: none !important;
         border: none !important;
         color: #fff !important;
-        font-weight: 800 !important;
+        font-weight: 700 !important;
         padding: 0 !important;
         margin: 0 !important;
         min-height: 0 !important;
         line-height: 1.2 !important;
       }}
-      .stButton > button[kind="primary"]:hover,
-      div[data-testid="stButton"] button[data-testid="stBaseButton-primary"]:hover {{
-        transform: translateY(-2px) !important;
-        box-shadow: 0 10px 30px rgba(255,107,43,0.4) !important;
-      }}
       .stLinkButton > a[kind="primary"],
       div[data-testid="stLinkButton"] a[data-testid="stBaseLinkButton-primary"] {{
-        background: linear-gradient(135deg, {NARANJA}, #FF8F5C) !important;
+        background: {NARANJA} !important;
         border: none !important;
         color: #fff !important;
-        font-weight: 800 !important;
-        border-radius: 12px !important;
+        font-weight: 700 !important;
+        border-radius: 10px !important;
         padding: 0 20px !important;
         min-height: 42px !important;
         height: 42px !important;
         line-height: 1.2 !important;
-        box-shadow: 0 6px 20px rgba(255,107,43,0.3) !important;
       }}
       .stLinkButton > a[kind="primary"] *,
       div[data-testid="stLinkButton"] a[data-testid="stBaseLinkButton-primary"] * {{
@@ -925,22 +607,21 @@ st.markdown(
         box-shadow: none !important;
         border: none !important;
         color: #fff !important;
-        font-weight: 800 !important;
+        font-weight: 700 !important;
         padding: 0 !important;
         margin: 0 !important;
         min-height: 0 !important;
         line-height: 1.2 !important;
       }}
       .stButton > button[kind="secondary"] {{
-        border: 2px solid {AZUL};
+        border: 1px solid {AZUL};
         color: {AZUL};
-        font-weight: 750;
-        border-radius: 12px;
+        font-weight: 600;
+        border-radius: 10px;
         padding: 0 20px;
         min-height: 42px;
         height: 42px;
         line-height: 1.2;
-        transition: all 0.3s ease;
       }}
       .stButton > button[kind="secondary"] * {{
         padding: 0 !important;
@@ -948,10 +629,7 @@ st.markdown(
         min-height: 0 !important;
         line-height: 1.2 !important;
       }}
-      .stButton > button[kind="secondary"]:hover {{
-        background: {LILA};
-        transform: translateY(-2px);
-      }}
+      .stButton > button[kind="secondary"]:hover {{ background: {FONDO}; }}
 
       /* Los botones de las tarjetas viven en una columna angosta. Sin esto,
          una etiqueta larga desborda la caja de 42px de alto. */
@@ -966,91 +644,57 @@ st.markdown(
         text-decoration: none;
         border-bottom: 1px dotted currentColor;
         cursor: help;
-        font-weight: 800;
+        font-weight: 700;
       }}
       .ro-period {{
-        background: linear-gradient(145deg, #fff, #FAFBFF);
-        border: 2px solid {BORDE};
-        border-radius: 14px;
-        padding: 16px 18px;
+        background: #fff;
+        border: 1px solid {BORDE};
+        border-radius: var(--ro-radio);
+        padding: 14px 16px;
         margin: 10px 0 16px 0;
-        box-shadow: 0 4px 15px rgba(0,0,0,0.03);
-        transition: all 0.3s ease;
       }}
-      .ro-period:hover {{ box-shadow: 0 8px 25px rgba(0,0,0,0.06); }}
-      .ro-period-title {{
-        color: {AZUL};
-        font-size: 15px;
-        font-weight: 850;
-        margin-bottom: 4px;
-      }}
-      .ro-period-copy {{
-        color: {APAGADO};
-        font-size: 12.5px;
-        line-height: 1.45;
-      }}
+      .ro-period-title {{ color: {AZUL}; font-size: 14px; font-weight: 700; margin-bottom: 4px; }}
+      .ro-period-copy {{ color: {APAGADO}; font-size: 12.5px; line-height: 1.45; }}
+
       .ro-index-help {{
-        background: linear-gradient(145deg, #FFF2E9, #FFF8F3);
-        border: 2px solid #F6CEB4;
-        border-radius: 16px;
-        padding: 22px 24px;
+        background: #FFF6EF;
+        border: 1px solid #F6CEB4;
+        border-radius: var(--ro-radio);
+        padding: 18px 20px;
         margin: 14px 0 18px 0;
-        box-shadow: 0 6px 20px rgba(246,206,180,0.15);
-        animation: fadeInUp 0.5s ease-out;
       }}
-      .ro-index-help h4 {{
-        margin: 0 0 10px 0;
-        color: {AZUL};
-        font-size: 19px;
-        font-weight: 800;
-      }}
-      .ro-index-help p {{
-        margin: 6px 0;
-        color: #4B4B4B;
-        font-size: 13px;
-        line-height: 1.5;
-      }}
+      .ro-index-help h4 {{ margin: 0 0 8px 0; color: {AZUL}; font-size: 16px; font-weight: 700; }}
+      .ro-index-help p {{ margin: 6px 0; color: {CUERPO}; font-size: 13px; line-height: 1.5; }}
       .ro-index-help strong {{ color: {NARANJA}; }}
+
       .ro-glossary {{
         display: grid;
         grid-template-columns: repeat(3, minmax(0, 1fr));
-        gap: 12px;
+        gap: 10px;
         margin: 10px 0 16px 0;
       }}
       .ro-glossary-item {{
-        background: linear-gradient(145deg, #fff, #FAFBFF);
-        border: 2px solid {BORDE};
-        border-radius: 12px;
-        padding: 14px 16px;
-        transition: all 0.3s ease;
+        background: #fff;
+        border: 1px solid {BORDE};
+        border-radius: 10px;
+        padding: 12px 14px;
       }}
-      .ro-glossary-item:hover {{
-        transform: translateY(-3px);
-        box-shadow: 0 8px 25px rgba(0,0,0,0.06);
-        border-color: {NARANJA};
-      }}
-      .ro-glossary-item b {{ color: {AZUL}; font-size: 14px; }}
+      .ro-glossary-item b {{ color: {AZUL}; font-size: 13.5px; }}
       .ro-glossary-item span {{ color: {APAGADO}; font-size: 12px; }}
 
-      .ro-divider {{
-        height: 2px;
-        background: linear-gradient(90deg, transparent, {BORDE}, transparent);
-        margin: 24px 0;
-        border: none;
-      }}
+      .ro-divider {{ height: 1px; background: {BORDE}; margin: 22px 0; border: none; }}
       .ro-urgent-badge {{
         display: inline-flex;
         align-items: center;
         gap: 4px;
-        background: linear-gradient(135deg, {NARANJA}, #FF8F5C);
+        background: {NARANJA};
         color: #fff;
         font-size: 10px;
-        font-weight: 800;
+        font-weight: 700;
         padding: 4px 10px;
         border-radius: 20px;
         text-transform: uppercase;
-        letter-spacing: .06em;
-        animation: pulse 2s ease-in-out infinite;
+        letter-spacing: .04em;
       }}
 
       .ro-prov-grid {{
@@ -1060,37 +704,22 @@ st.markdown(
         margin: 8px 0 14px 0;
       }}
       .ro-prov {{
-        background: linear-gradient(145deg, #fff, #FAFBFF);
+        background: #fff;
         border: 1px solid {BORDE};
-        border-left: 5px solid {VERDE};
-        border-radius: 12px;
+        border-left: 4px solid {VERDE};
+        border-radius: 10px;
         padding: 12px 14px;
-        transition: all 0.3s ease;
       }}
-      .ro-prov.baja {{ border-left-color: {GRIS}; opacity: .92; }}
-      .ro-prov:hover {{
-        transform: translateY(-2px);
-        box-shadow: 0 8px 22px rgba(0,64,100,.08);
-      }}
-      .ro-prov-nombre {{
-        color: {AZUL};
-        font-size: 13.5px;
-        font-weight: 850;
-        line-height: 1.3;
-      }}
-      .ro-prov-meta {{
-        color: {APAGADO};
-        font-size: 11.5px;
-        margin-top: 5px;
-        line-height: 1.4;
-      }}
+      .ro-prov.baja {{ border-left-color: {GRIS}; opacity: .9; }}
+      .ro-prov-nombre {{ color: {AZUL}; font-size: 13.5px; font-weight: 700; line-height: 1.3; }}
+      .ro-prov-meta {{ color: {APAGADO}; font-size: 11.5px; margin-top: 5px; line-height: 1.4; }}
       .ro-prov-estado {{
         display: inline-block;
         border-radius: 20px;
         padding: 2px 9px;
         font-size: 10px;
-        font-weight: 800;
-        letter-spacing: .04em;
+        font-weight: 700;
+        letter-spacing: .03em;
         text-transform: uppercase;
         margin-top: 6px;
       }}
@@ -1100,17 +729,65 @@ st.markdown(
       ::-webkit-scrollbar {{ width: 8px; }}
       ::-webkit-scrollbar-track {{ background: {FONDO}; }}
       ::-webkit-scrollbar-thumb {{ background: {BORDE}; border-radius: 4px; }}
-      ::-webkit-scrollbar-thumb:hover {{ background: {APAGADO}; }}
 
       @media (max-width: 980px) {{
-        .ro-questions {{ grid-template-columns: repeat(2, minmax(0, 1fr)); }}
         .ro-kpi-grid, .ro-answer-grid {{ grid-template-columns: repeat(2, minmax(0, 1fr)); }}
         .ro-calls {{ grid-template-columns: 1fr; }}
-        .ro-formal-grid {{ grid-template-columns: repeat(2, minmax(0, 1fr)); }}
+        .ro-formal-grid, .ro-glossary {{ grid-template-columns: repeat(2, minmax(0, 1fr)); }}
         .ro-prov-grid {{ grid-template-columns: 1fr; }}
         .ro-hero {{ align-items: flex-start; flex-direction: column; }}
         .ro-hero-meta {{ margin-left: 0; justify-content: flex-start; max-width: none; }}
-        .ro-hero-title {{ font-size: 26px; }}
+      }}
+
+      /* Celular: una sola columna en todo, tarjetas sin alto fijo (para
+         no dejar huecos vacíos al apilarse) y controles con área táctil
+         de al menos 44-48px, en vez de reusar los tamaños de mouse. */
+      @media (max-width: 640px) {{
+        .block-container {{ padding-left: .9rem; padding-right: .9rem; }}
+        .ro-kpi-grid, .ro-answer-grid, .ro-formal-grid, .ro-glossary, .ro-prov-grid {{
+          grid-template-columns: 1fr;
+        }}
+        .ro-qchip {{ flex: 1 1 100%; }}
+        .ro-hero {{ padding: 20px 18px; border-radius: 12px; }}
+        .ro-hero-title {{ font-size: 21px; }}
+        .ro-hero-sub {{ font-size: 13px; }}
+        .ro-step-title {{ font-size: 20px; }}
+        .ro-kpi-value, .ro-answer-value {{ font-size: 23px; }}
+        .ro-answer, .ro-call, .ro-formal {{ min-height: 0; }}
+        .ro-answer-title, .ro-call-title {{ min-height: 0; }}
+        .ro-focus-head {{ flex-direction: column; align-items: flex-start; }}
+        .ro-index {{ margin-left: 0; width: 100%; }}
+        .ro-reading {{ padding: 16px; }}
+
+        /* Navegación: de 4 pestañas en una fila (se cortaban o se
+           apilaban en 4 líneas completas) a una grilla de 2x2. */
+        div[data-testid="stRadio"] > div {{ flex-wrap: wrap; }}
+        div[data-testid="stRadio"] label {{
+          flex: 1 1 46%;
+          min-height: 44px;
+          font-size: 12.5px;
+        }}
+
+        /* Botones, checkboxes y expanders a tamaño de dedo, no de mouse. */
+        .stButton > button[kind="primary"],
+        .stButton > button[kind="secondary"],
+        div[data-testid="stButton"] button[data-testid="stBaseButton-primary"],
+        .stLinkButton > a[kind="primary"],
+        div[data-testid="stLinkButton"] a[data-testid="stBaseLinkButton-primary"] {{
+          min-height: 48px !important;
+          height: auto !important;
+          padding: 10px 16px !important;
+        }}
+        div[data-testid="stCheckbox"] label {{
+          min-height: 44px;
+          display: flex;
+          align-items: center;
+          gap: 8px;
+        }}
+        div[data-testid="stCheckbox"] label input[type="checkbox"] {{
+          transform: scale(1.3);
+        }}
+        div[data-testid="stExpander"] summary {{ min-height: 48px; }}
       }}
     </style>
     """,
@@ -1386,14 +1063,17 @@ def plazo_declarado(dias, origen=None) -> tuple[str, str, bool]:
     colapsado (startDate igual a endDate en casi todos los procesos), el limite
     se toma del cierre de consultas, que es una etapa distinta y asi se rotula.
     """
-    etiqueta = "fin de consultas" if origen == "fin de consultas" else "cierre de ofertas"
+    etiqueta = (
+        "para hacer preguntas" if origen == "fin de consultas"
+        else "para presentar tu oferta"
+    )
     if pd.isna(dias):
-        return "—", "SIN FECHA PUBLICADA", False
+        return "—", "Sin fecha publicada", False
     if dias < 0:
-        return "Cerrado", "YA NO PUEDE POSTULAR", True
+        return "Cerrado", "Ya no puedes postular", True
     if dias < 1:
-        return "Hoy", f"ÚLTIMO DÍA · {etiqueta.upper()}", False
-    return f"{dias:.0f} d", f"RESTAN · {etiqueta.upper()}", False
+        return "Hoy", f"Último día {etiqueta}", False
+    return f"{dias:.0f} d", f"Quedan {dias:.0f} días {etiqueta}", False
 
 
 def mes_nombre(mes) -> str:
@@ -1743,12 +1423,21 @@ def construir_maestro_periodo(
     return salida.sort_values("demanda_soles", ascending=False)
 
 
-def q(etiqueta: str, texto: str) -> None:
-    st.markdown(
-        f'<span class="ro-q">{escape(etiqueta)}</span>'
-        f'<span style="font-size:13px;color:{APAGADO};font-weight:650">{escape(texto)}</span>',
-        unsafe_allow_html=True,
-    )
+@st.cache_data(show_spinner="Calculando el periodo elegido…")
+def _calcular_periodo(
+    anios: tuple[int, ...], meses: tuple[int, ...]
+) -> tuple[pd.DataFrame, pd.DataFrame]:
+    """Envoltorio cacheado de filtrar_historico_periodo + construir_maestro_periodo.
+
+    Sin esto, cambiar cualquier filtro de cualquier pantalla recalculaba estos
+    dos pasos (groupby, merges y regex sobre ~30 mil filas de OCDS) en cada
+    clic, aunque el año y el mes no hubieran cambiado. La clave de caché son
+    los años/meses (tuplas, hasheables); ocds/padron/convocatorias se leen del
+    closure porque ya están cacheados una vez por sesión en cargar().
+    """
+    ocds_periodo = filtrar_historico_periodo(ocds, list(anios), list(meses))
+    maestro_periodo = construir_maestro_periodo(ocds_periodo, padron, convocatorias)
+    return ocds_periodo, maestro_periodo
 
 
 def titulo_paso(etiqueta: str, titulo: str, subtitulo: str, dark: bool = False) -> None:
@@ -1765,44 +1454,79 @@ def titulo_paso(etiqueta: str, titulo: str, subtitulo: str, dark: bool = False) 
     )
 
 
-def render_preguntas_negocio() -> None:
+def render_preguntas_negocio(
+    maestro_periodo: pd.DataFrame, ocds_periodo: pd.DataFrame
+) -> None:
+    """Franja compacta con las 5 preguntas, cada una con la respuesta del periodo.
+
+    Q1 y Q2 muestran la categoría concreta (no un promedio): la de mayor
+    compra y la de menor competencia conocida. Q3 se resume a nivel de todo
+    el periodo. Q4 y Q5 solo tienen sentido para una categoría puntual, así
+    que invitan a elegirla en el Paso 1 en vez de mostrar un promedio que
+    nadie usaría para decidir.
+    """
+    def _acortar(texto, limite: int = 60) -> str:
+        texto = str(texto)
+        return texto if len(texto) <= limite else texto[: limite - 1].rstrip() + "…"
+
+    if maestro_periodo is not None and not maestro_periodo.empty:
+        fila_demanda = maestro_periodo.loc[maestro_periodo["demanda_soles"].idxmax()]
+        texto_q1 = _acortar(fila_demanda["cubso_descripcion"])
+        nota_q1 = formato_soles(fila_demanda["demanda_soles"])
+
+        aptas = maestro_periodo[
+            maestro_periodo["apto_para_ranking"].astype("object").fillna(False).astype(bool)
+        ]
+        base_q2 = aptas if not aptas.empty else maestro_periodo
+        base_q2 = base_q2.assign(
+            _competencia=pd.to_numeric(base_q2["competencia_vigente"], errors="coerce")
+        ).dropna(subset=["_competencia"])
+        if not base_q2.empty:
+            fila_competencia = base_q2.sort_values(
+                ["_competencia", "demanda_soles"], ascending=[True, False]
+            ).iloc[0]
+            texto_q2 = _acortar(fila_competencia["cubso_descripcion"])
+            n_comp = int(round(numero_seguro(fila_competencia["competencia_vigente"])))
+            nota_q2 = (
+                f"{n_comp} competidor{'es' if n_comp != 1 else ''} "
+                f"conocido{'s' if n_comp != 1 else ''}"
+            )
+        else:
+            texto_q2, nota_q2 = "—", ""
+    else:
+        texto_q1, nota_q1 = "—", ""
+        texto_q2, nota_q2 = "—", ""
+
+    texto_q3, nota_q3 = "—", ""
+    if ocds_periodo is not None and not ocds_periodo.empty:
+        fechas = pd.to_datetime(ocds_periodo.get("fecha"), errors="coerce", utc=True)
+        montos = pd.to_numeric(ocds_periodo.get("monto_adjudicado"), errors="coerce")
+        por_mes = pd.DataFrame({"mes": fechas.dt.month, "monto": montos}).dropna()
+        if not por_mes.empty:
+            mes_pico = por_mes.groupby("mes")["monto"].sum().idxmax()
+            texto_q3 = mes_nombre(mes_pico)
+
+    ver_categoria = "Elige una categoría en el Paso 1"
+    chips = [
+        ("Q1", "💰", "¿Dónde compra más el Estado?", texto_q1, nota_q1),
+        ("Q2", "🛡️", "¿Dónde hay menos competencia?", texto_q2, nota_q2),
+        ("Q3", "📅", "¿Cuándo compra más?", texto_q3, nota_q3),
+        ("Q4", "📏", "¿El contrato está a mi alcance?", ver_categoria, ""),
+        ("Q5", "🏁", "¿Quiénes siguen en carrera hoy?", ver_categoria, ""),
+    ]
+    items = "".join(
+        f'<div class="ro-qchip">'
+        f'<div class="ro-qchip-q"><b>{qq}</b>{icon} {escape(texto)}</div>'
+        f'<div class="ro-qchip-a">{escape(str(respuesta))}</div>'
+        + (f'<div class="ro-qchip-n">{escape(str(nota))}</div>' if nota else "")
+        + '</div>'
+        for qq, icon, texto, respuesta, nota in chips
+    )
     st.markdown(
         f"""
         <div class="ro-questions-wrap">
-          <div class="ro-questions-title">🎯 Las 5 preguntas para decidir dónde vale la pena postular</div>
-          <div class="ro-questions">
-            <div class="ro-question">
-              <span class="ro-question-icon">💰</span>
-              <div class="ro-question-title"><b>Q1</b> · ¿Dónde compra más el Estado?</div>
-              <div class="ro-question-copy">Mira cuánto dinero adjudicó el Estado en cada categoría durante el periodo que elegiste.</div>
-            </div>
-            <div class="ro-question">
-              <span class="ro-question-icon">🛡️</span>
-              <div class="ro-question-title"><b>Q2</b> · ¿Dónde tengo menos competencia conocida?</div>
-              <div class="ro-question-copy">Cuenta cuántos proveedores que ya ganaron siguen habilitados para volver a competir.</div>
-            </div>
-            <div class="ro-question">
-              <span class="ro-question-icon">📅</span>
-              <div class="ro-question-title"><b>Q3</b> · ¿En qué meses se mueve más la compra?</div>
-              <div class="ro-question-copy">Ayuda a preparar compras, personal y documentos antes de que aparezcan los llamados.</div>
-            </div>
-            <div class="ro-question">
-              <span class="ro-question-icon">📏</span>
-              <div class="ro-question-title"><b>Q4</b> · ¿El tamaño del contrato está a mi alcance?</div>
-              <div class="ro-question-copy">Compara el monto promedio con la {sigla("UIT")} para saber si encaja con la capacidad de una {sigla("MYPE")}.</div>
-            </div>
-            <div class="ro-question q5">
-              <span class="ro-question-icon" style="font-size:32px;margin:0">🏁</span>
-              <div>
-                <div class="ro-question-title"><b>Q5</b> · ¿Cuántos proveedores siguen realmente en carrera?</div>
-                <div class="ro-question-copy">Cruza quién ganó antes con quién sigue habilitado hoy en el {sigla("RNP")}.</div>
-              </div>
-            </div>
-          </div>
-          <div class="ro-route">
-            <span style="font-size:18px">🧭</span>
-            <span>Elegir categoría → revisar la oportunidad → validar oportunidades actuales en SEACE → preparar documentos → decidir si postular.</span>
-          </div>
+          <div class="ro-questions-title">🎯 Recorrido: elegir rubro → ver la mejor oportunidad → confirmar en SEACE → preparar documentos</div>
+          <div class="ro-qchip-row">{items}</div>
         </div>
         """,
         unsafe_allow_html=True,
@@ -2522,7 +2246,6 @@ st.markdown(
     f"""
     <div class="ro-hero">
       <div class="ro-hero-left">
-        <span class="ro-kicker">📡 Data app · presentación final</span>
         <div class="ro-hero-title">Radar de Oportunidades en <span>Compras Públicas</span></div>
         <div class="ro-hero-sub">Encuentra categorías con compras reales, poca competencia conocida y contratos que tu negocio puede evaluar. Del millón de procesos del Estado, el llamado que tu empresa sí puede atender.</div>
       </div>
@@ -2535,8 +2258,6 @@ st.markdown(
     """,
     unsafe_allow_html=True,
 )
-
-render_preguntas_negocio()
 
 # Periodo histórico global: afecta demanda, competencia histórica, ticket,
 # estacionalidad, ranking e índice en todo el recorrido.
@@ -2553,43 +2274,42 @@ else:
 
 meses_disponibles = list(range(1, 13))
 
-st.sidebar.markdown("### 🗓️ Periodo de análisis")
-st.sidebar.caption("Estos filtros acompañan todo el dashboard.")
-anios_seleccionados = st.sidebar.multiselect(
-    "Años",
-    anios_disponibles,
-    default=anios_disponibles,
-    help="Elige uno o varios años del histórico que quieres comparar.",
+with st.expander("🗓️ Periodo de análisis (años y meses)"):
+    st.caption("Estos filtros acompañan todo el dashboard.")
+    fc1, fc2 = st.columns(2)
+    with fc1:
+        anios_seleccionados = st.multiselect(
+            "Años",
+            anios_disponibles,
+            default=anios_disponibles,
+            help="Elige uno o varios años del histórico que quieres comparar.",
+        )
+    with fc2:
+        meses_seleccionados = st.multiselect(
+            "Meses",
+            meses_disponibles,
+            default=meses_disponibles,
+            format_func=mes_nombre,
+            help="Si eliges varios años, el mes se aplica a cada año seleccionado.",
+        )
+if not anios_seleccionados or not meses_seleccionados:
+    st.warning("Selecciona al menos un año y un mes para continuar.")
+    st.stop()
+
+ocds_periodo, maestro_periodo = _calcular_periodo(
+    tuple(sorted(anios_seleccionados)), tuple(sorted(meses_seleccionados))
 )
-meses_seleccionados = st.sidebar.multiselect(
-    "Meses",
-    meses_disponibles,
-    default=meses_disponibles,
-    format_func=mes_nombre,
-    help="Si eliges varios años, el mes se aplica a cada año seleccionado.",
-)
+periodo_txt = resumen_periodo(anios_seleccionados, meses_seleccionados)
+
 st.markdown(
     f"""
     <div class="ro-period">
       <div class="ro-period-title">Periodo activo</div>
-      <div class="ro-period-copy">{escape(resumen_periodo(anios_seleccionados, meses_seleccionados))}</div>
+      <div class="ro-period-copy">{escape(periodo_txt)}</div>
     </div>
     """,
     unsafe_allow_html=True,
 )
-
-if not anios_seleccionados or not meses_seleccionados:
-    st.sidebar.warning("Selecciona al menos un año y un mes.")
-    st.info("Selecciona al menos un año y un mes para continuar.")
-    st.stop()
-
-ocds_periodo = filtrar_historico_periodo(
-    ocds, anios_seleccionados, meses_seleccionados
-)
-maestro_periodo = construir_maestro_periodo(
-    ocds_periodo, padron, convocatorias
-)
-periodo_txt = resumen_periodo(anios_seleccionados, meses_seleccionados)
 
 PANTALLAS = [
     "1 · ¿Dónde me conviene buscar?",
@@ -2626,70 +2346,58 @@ if pantalla.startswith("1"):
     )
 
     st.markdown(
-        '<div class="ro-filter-title">Ajusta la búsqueda a lo que tu negocio puede atender</div>',
+        '<div class="ro-filter-title">Primero, elige tu rubro</div>',
         unsafe_allow_html=True,
     )
-    f1, f2, f3, f4 = st.columns(4)
+    f1, f2 = st.columns(2)
     with f1:
         rubros_elegidos = st.multiselect(
-            "Rubro al que pertenezco",
+            "Rubro al que pertenece tu negocio",
             list(RUBROS_NEGOCIO.keys()),
             # Con key, Streamlit conserva la selección entre pantallas: el
             # rubro elegido aquí es el que usa el Paso 2.
             key="rubros_paso1",
-            help=(
-                "Atajo por giro comercial: agrupa varias palabras a la vez. "
-                "El rubro que marques aquí acompaña al Paso 2."
-            ),
+            help="El rubro que marques aquí también se usa en el Paso 2.",
         )
     with f2:
         busqueda = st.text_input(
-            "¿Qué vendes o qué servicio das?",
+            "¿Qué vendes o qué servicio das? (opcional)",
             placeholder="alimentación, catering, víveres...",
-            help=(
-                "Busca dentro de la descripción CUBSO. Ignora mayúsculas y tildes. "
-                "Puedes escribir varias palabras separadas por coma y trae las "
-                "categorías que contengan cualquiera de ellas."
-            ),
-        )
-    with f3:
-        bandas_comp = ["Todas"] + [
-            b
-            for b in (config.BANDAS_COMPETENCIA_ETIQUETAS + ["Competencia no determinada"])
-            if b in set(maestro_periodo["banda_competencia"].dropna().astype(str))
-        ] if not maestro_periodo.empty else ["Todas"]
-        banda_elegida = st.selectbox(
-            "Q2 · Competencia conocida",
-            bandas_comp,
-            format_func=lambda x: "Todas" if x == "Todas" else etiqueta_competencia(x),
-            help="Cuenta ganadores del periodo elegido que siguen habilitados hoy en el RNP.",
-        )
-    with f4:
-        bandas_disponibles = [
-            b
-            for b in config.BANDAS_TICKET_ETIQUETAS
-            if not maestro_periodo.empty
-            and b in set(maestro_periodo["banda_ticket"].dropna().astype(str))
-        ]
-        bandas_elegidas = st.multiselect(
-            "Q4 · Tamaño promedio del contrato",
-            bandas_disponibles,
-            default=bandas_disponibles,
-            help="Las bandas se expresan en UIT para que puedas comparar el tamaño de los contratos con mayor facilidad.",
+            help="Busca por palabra dentro de la categoría. Ignora mayúsculas y tildes.",
         )
 
-    # Segunda fila del panel: el índice mínimo y los dos interruptores de
-    # alcance, separados de los selectores para que las cajas de arriba
-    # queden alineadas entre sí.
-    g1, g2, g3 = st.columns([1, 1.5, 1.5])
-    with g1:
+    with st.expander("Filtros avanzados (opcional)"):
+        g1, g2 = st.columns(2)
+        with g1:
+            bandas_comp = ["Todas"] + [
+                b
+                for b in (config.BANDAS_COMPETENCIA_ETIQUETAS + ["Competencia no determinada"])
+                if b in set(maestro_periodo["banda_competencia"].dropna().astype(str))
+            ] if not maestro_periodo.empty else ["Todas"]
+            banda_elegida = st.selectbox(
+                "Q2 · Competencia conocida",
+                bandas_comp,
+                format_func=lambda x: "Todas" if x == "Todas" else etiqueta_competencia(x),
+                help="Cuenta ganadores del periodo elegido que siguen habilitados hoy en el RNP.",
+            )
+        with g2:
+            bandas_disponibles = [
+                b
+                for b in config.BANDAS_TICKET_ETIQUETAS
+                if not maestro_periodo.empty
+                and b in set(maestro_periodo["banda_ticket"].dropna().astype(str))
+            ]
+            bandas_elegidas = st.multiselect(
+                "Q4 · Tamaño del contrato",
+                bandas_disponibles,
+                default=bandas_disponibles,
+                help="Bandas en UIT para comparar el tamaño de los contratos.",
+            )
         indice_min = st.slider(
-            "Índice mínimo",
+            "Mostrar solo desde este índice",
             0, 100, 0, step=5,
-            help="Úsalo para quedarte solo con las categorías mejor posicionadas dentro del periodo seleccionado.",
+            help="Deja fuera las categorías con menor puntaje.",
         )
-    with g2:
-        st.markdown("<div style='height:30px'></div>", unsafe_allow_html=True)
         solo_aptas = st.checkbox(
             "Solo categorías con compras repetidas",
             value=True,
@@ -2698,15 +2406,13 @@ if pantalla.startswith("1"):
                 f"procesos y {config.MINIMO_DEMANDA_UIT_MERCADO} UIT acumuladas en el periodo."
             ),
         )
-    with g3:
-        st.markdown("<div style='height:30px'></div>", unsafe_allow_html=True)
         solo_accionables = st.checkbox(
             "Solo categorías convocadas el último día registrado",
             value=False,
             help=(
-                f"Muestra las categorías que tuvieron convocatorias con inicio de ofertas "
-                f"el {ultima_fecha_snapshot_txt}, la fecha más reciente del snapshot. "
-                f"Indica actividad reciente en la fuente, no vigencia para postular hoy."
+                f"Categorías con convocatorias cuya oferta inició el "
+                f"{ultima_fecha_snapshot_txt}. Indica actividad reciente en la fuente, "
+                f"no vigencia para postular hoy."
             ),
         )
 
@@ -2747,10 +2453,6 @@ if pantalla.startswith("1"):
     if indice_min > 0 and not filtrado.empty:
         filtrado = filtrado[filtrado["indice_oportunidad"] >= indice_min]
 
-    desierto = (
-        filtrado["mercado_desierto"].astype("object").fillna(False).astype(bool)
-        if not filtrado.empty else pd.Series(dtype=bool)
-    )
     indice_max = (
         numero_seguro(filtrado["indice_oportunidad"].max())
         if len(filtrado) else 0
@@ -2770,18 +2472,6 @@ if pantalla.startswith("1"):
             "accent": "orange",
         },
         {
-            "label": "Convocatorias del último día registrado",
-            "value": f"{int(ultimos_procedimientos_snapshot):,}",
-            "note": f"Inicio de ofertas el {ultima_fecha_snapshot_txt} · validar vigencia en SEACE",
-            "accent": "purple",
-        },
-        {
-            "label": "Q2 · Sin ganador histórico habilitado",
-            "value": f"{int(desierto.sum()):,}",
-            "note": "Hubo ganadores en el periodo, pero ninguno sigue habilitado",
-            "accent": "orange",
-        },
-        {
             "label": "Mejor índice",
             "value": f"{indice_max:.0f}",
             "note": "Mayor puntaje entre las categorías filtradas",
@@ -2792,11 +2482,10 @@ if pantalla.startswith("1"):
     st.markdown(
         f"""
         <div class="ro-index-help">
-          <h4>¿Qué es el índice de oportunidad?</h4>
-          <p>Es una <strong>brújula de 0 a 100</strong> para ordenar categorías. No dice que tengas 66% o 80% de probabilidad de ganar.</p>
-          <p><strong>1.</strong> Primero combinamos cuánto compró el Estado (<strong>55%</strong>) con qué tan despejada está la competencia conocida (<strong>45%</strong>).</p>
-          <p><strong>2.</strong> Después ajustamos ese potencial según el tamaño promedio del contrato: cuanto más manejable para una {sigla("MYPE")}, menos castigo recibe.</p>
-          <p><strong>3.</strong> Sirve para decidir <strong>qué revisar primero</strong>. El índice se recalcula con el periodo y los filtros elegidos.</p>
+          <h4>¿Qué significa el índice?</h4>
+          <p>Va de <strong>0 a 100</strong>. Mientras más alto, <strong>más conviene revisar esa categoría</strong>:
+          hay bastante compra del Estado y pocos competidores conocidos que sigan habilitados hoy.
+          No es una probabilidad de ganar, es un orden para decidir qué mirar primero.</p>
         </div>
         """,
         unsafe_allow_html=True,
@@ -2808,6 +2497,23 @@ if pantalla.startswith("1"):
             "Prueba ampliar los meses, quitar algún filtro, cambiar de rubro o buscar otra palabra."
         )
         st.stop()
+
+    if not rubros_elegidos and not busqueda:
+        st.info(
+            "👆 Elige tu rubro arriba (o escribe qué vendes) para ver la categoría "
+            "que más te conviene revisar dentro de ese giro."
+        )
+        st.stop()
+
+    ocds_filtrado = (
+        ocds_periodo[
+            ocds_periodo["cubso_descripcion"].astype(str)
+            .isin(set(filtrado["cubso_descripcion"].astype(str)))
+        ]
+        if ocds_periodo is not None and not ocds_periodo.empty
+        else ocds_periodo
+    )
+    render_preguntas_negocio(filtrado, ocds_filtrado)
 
     top = filtrado.nlargest(200, "indice_oportunidad")
     opciones = top["cubso_descripcion"].tolist()
@@ -2846,7 +2552,6 @@ if pantalla.startswith("1"):
     vigentes_cat = int(round(numero_seguro(fila.get("competencia_vigente"))))
     ganaron_cat = int(round(numero_seguro(fila.get("ganadores_historicos"))))
     ticket_cat = numero_seguro(fila.get("ticket_uit"))
-    salieron = numero_seguro(fila.get("salieron_del_registro"))
 
     # Puente entre el conteo de las tarjetas Q2/Q5 y el detalle nominal.
     # El popup responde "¿quiénes son esos proveedores?" sin salir de la vista.
@@ -2860,12 +2565,26 @@ if pantalla.startswith("1"):
         ),
     )
 
-    # Dos paneles balanceados: mapa a la izquierda e índice a la derecha.
-    # El gráfico del índice comienza a la misma altura que el mapa.
-    izq, der = st.columns([1.35, 1.05], gap="large")
+    st.markdown(
+        f"#### Índice de esta categoría: {numero_seguro(fila.get('indice_oportunidad')):.0f}/100"
+    )
+    st.caption(
+        "A mayor índice, más conviene revisarla: hay buena demanda y pocos "
+        "competidores conocidos siguen habilitados."
+    )
+    st.markdown(
+        f"""
+        <div class="ro-reading">
+          <h4>Qué me dice esta categoría</h4>
+          <p>En <strong>{escape(periodo_txt)}</strong>, el Estado adjudicó <strong>{escape(formato_soles(fila.get('demanda_soles')))}</strong> en esta categoría.</p>
+          <p>En ese periodo ganaron {ganaron_cat} proveedores; <strong>{vigentes_cat} siguen habilitados hoy</strong> en el {sigla("RNP")}.</p>
+          <p>El contrato promedio equivale a <strong>{ticket_cat:.1f} {sigla("UIT")}</strong>. La vigencia para postular se confirma en el {sigla("SEACE")}.</p>
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
 
-    with izq:
-        st.markdown("#### Mapa de categorías")
+    with st.expander("🗺️ Ver mapa de categorías (avanzado)"):
         st.caption(
             "Cada burbuja es una categoría. Más a la derecha significa más compras adjudicadas. "
             "Más arriba significa menos ganadores históricos que siguen habilitados. "
@@ -2943,142 +2662,6 @@ if pantalla.startswith("1"):
         )
         st.altair_chart(chart, use_container_width=True)
 
-    with der:
-        espacio = numero_seguro(fila.get("espacio_mercado"))
-        acces = numero_seguro(fila.get("accesibilidad"))
-        potencial = numero_seguro(fila.get("potencial_mercado")) / 100
-        demanda_esc = numero_seguro(fila.get("demanda_escalada"))
-
-        # Gráfico ampliado y alineado con el mapa de categorías.
-        st.markdown(
-            f"#### Cómo se construyó este índice: {numero_seguro(fila.get('indice_oportunidad')):.0f}/100"
-        )
-        st.caption(
-            "Los tres componentes están expresados en una escala de 0 a 1. Cuanto más larga la barra, mayor aporte al potencial de la categoría."
-        )
-        desglose = pd.DataFrame({
-            "Componente": [
-                "Nivel de compras",
-                "Espacio frente a competencia",
-                "Accesibilidad del contrato",
-            ],
-            "Valor": [demanda_esc, espacio, acces],
-        })
-        grafico_indice = (
-            alt.Chart(desglose)
-            .mark_bar(
-                color=AZUL,
-                cornerRadiusEnd=8,
-                size=38,
-            )
-            .encode(
-                x=alt.X(
-                    "Valor:Q",
-                    scale=alt.Scale(domain=[0, 1]),
-                    title=None,
-                    axis=alt.Axis(
-                        format=".1f",
-                        tickCount=6,
-                        grid=True,
-                        gridColor="#E9EDF1",
-                        labelColor=APAGADO,
-                        labelFontSize=11,
-                    ),
-                ),
-                y=alt.Y(
-                    "Componente:N",
-                    sort=None,
-                    title=None,
-                    axis=alt.Axis(
-                        labelLimit=220,
-                        labelPadding=12,
-                        labelColor=TINTA,
-                        labelFontSize=12,
-                        labelFontWeight=700,
-                    ),
-                ),
-                tooltip=[
-                    alt.Tooltip("Componente", title="Componente"),
-                    alt.Tooltip("Valor:Q", format=".2f", title="Valor"),
-                ],
-            )
-            .properties(height=280)
-            .configure_view(strokeWidth=0, fill="transparent")
-            .configure_axis(labelColor=APAGADO, titleColor=TINTA)
-        )
-        st.altair_chart(grafico_indice, use_container_width=True)
-        st.caption(
-            f"Potencial {potencial:.2f} × accesibilidad {acces:.2f} = "
-            f"{numero_seguro(fila.get('indice_oportunidad')):.0f} puntos."
-        )
-
-        st.markdown(
-            f"""
-            <div class="ro-reading">
-              <h4>Qué me dice esta categoría</h4>
-              <p>En <strong>{escape(periodo_txt)}</strong>, el Estado adjudicó <strong>{escape(formato_soles(fila.get('demanda_soles')))}</strong> en esta categoría.</p>
-              <p>En ese periodo ganaron {ganaron_cat} proveedores; <strong>{vigentes_cat} siguen habilitados hoy</strong> en el {sigla("RNP")}.</p>
-              <p>El contrato promedio equivale a <strong>{ticket_cat:.1f} {sigla("UIT")}</strong>. El día más reciente del snapshot es el <strong>{ultima_fecha_snapshot_txt}</strong>, con <strong>{int(ultimos_procedimientos_snapshot):,} convocatorias</strong> cuyo plazo de ofertas abrió esa fecha. La vigencia para postular se confirma en el {sigla("SEACE")}.</p>
-            </div>
-            """,
-            unsafe_allow_html=True,
-        )
-
-    # Q5 y Q3 salen de las columnas anteriores y se dibujan en una sola fila:
-    # así las seis tarjetas arrancan a la misma altura, sin depender del alto
-    # que tomen el mapa, el gráfico del índice o el texto de lectura.
-    q5_col, q3_col = st.columns([1.35, 1.05], gap="large")
-
-    with q5_col:
-        q("Q5", "¿Cuántos de los ganadores del periodo siguen habilitados hoy?")
-        q5c1, q5c2, q5c3 = st.columns(3)
-        q5c1.metric(
-            "Ganaron en el periodo",
-            f"{ganaron_cat}",
-            help="Proveedores distintos que ganaron adjudicaciones en el periodo seleccionado.",
-        )
-        q5c2.metric(
-            "Siguen habilitados hoy",
-            f"{vigentes_cat}",
-            help="Ganadores del periodo que actualmente figuran habilitados en el RNP.",
-        )
-        q5c3.metric(
-            "Ya no figuran habilitados",
-            f"{int(round(salieron))}",
-            help="Ganadores del periodo que ya no aparecen habilitados en el cruce actual con el RNP.",
-        )
-        st.caption(
-            "Lectura Q5: histórico del periodo seleccionado comparado con la situación actual en el RNP."
-        )
-        if st.button(
-            "👥 Ver quiénes son",
-            key="ver_proveedores_q5",
-            use_container_width=True,
-        ):
-            abrir_proveedores = True
-
-    with q3_col:
-        q("Q3", "¿En qué mes se concentraron más compras dentro del periodo?")
-        c1, c2, c3 = st.columns(3)
-        c1.metric(
-            "Mes con más compras",
-            mes_nombre(fila.get("mes_pico")),
-            help="Mes del periodo seleccionado con el mayor monto adjudicado en esta categoría.",
-        )
-        c2.metric(
-            "Peso de ese mes",
-            f"{numero_seguro(fila.get('concentracion_mes')) * 100:.0f}%",
-            help="Porcentaje del monto del periodo que cayó en el mes con mayor compra.",
-        )
-        c3.metric(
-            "Meses con actividad",
-            f"{int(round(numero_seguro(fila.get('meses_activos'))))}/{len(meses_seleccionados)}",
-            help="Cantidad de meses seleccionados en los que hubo adjudicaciones para esta categoría.",
-        )
-        st.caption(
-            "Lectura Q3: sirve para preparar compras y documentos antes del mes pico."
-        )
-
     if abrir_proveedores:
         abrir_popup_proveedores(foco)
 
@@ -3098,9 +2681,7 @@ if pantalla.startswith("1"):
     cols_rank = [
         c for c in [
             "cubso_descripcion", "indice_oportunidad", "demanda_soles",
-            "n_procesos", "ganadores_historicos", "competencia_vigente",
-            "salieron_del_registro", "banda_competencia", "ticket_promedio",
-            "ticket_uit", "banda_ticket", "mes_pico",
+            "competencia_vigente", "banda_competencia", "ticket_uit", "mes_pico",
         ] if c in filtrado.columns
     ]
 
@@ -3112,14 +2693,9 @@ if pantalla.startswith("1"):
         "cubso_descripcion": "Categoría",
         "indice_oportunidad": "Índice",
         "demanda_soles": "Q1 · Compras del periodo",
-        "n_procesos": "Procesos",
-        "ganadores_historicos": "Q5 · Ganaron en el periodo",
         "competencia_vigente": "Q5 · Siguen habilitados",
-        "salieron_del_registro": "Ya no figuran habilitados",
         "banda_competencia": "Q2 · Competencia conocida",
-        "ticket_promedio": "Q4 · Contrato promedio",
         "ticket_uit": "Q4 · Contrato (UIT)",
-        "banda_ticket": "Q4 · Tamaño",
         "mes_pico": "Q3 · Mes con más compras",
     })
     if "Q3 · Mes con más compras" in tabla.columns:
@@ -3135,12 +2711,10 @@ if pantalla.startswith("1"):
                 help="Puntaje comparativo para ordenar categorías; no es una probabilidad de ganar.",
             ),
             "Q1 · Compras del periodo": st.column_config.NumberColumn(format="S/ %.0f"),
-            "Q4 · Contrato promedio": st.column_config.NumberColumn(format="S/ %.0f"),
             "Q4 · Contrato (UIT)": st.column_config.NumberColumn(
                 format="%.1f",
                 help="UIT = Unidad Impositiva Tributaria.",
             ),
-            "Q5 · Ganaron en el periodo": st.column_config.NumberColumn(format="%d"),
             "Q5 · Siguen habilitados": st.column_config.NumberColumn(
                 format="%d",
                 help="De los ganadores del periodo, cuántos siguen habilitados hoy en el RNP.",
@@ -3337,14 +2911,13 @@ elif pantalla.startswith("2"):
     with c1:
         filtrar_categoria = st.checkbox(
             "Solo la categoría exacta que elegí (no todo el rubro)",
-            value=bool(st.session_state.categoria),
+            value=False,
             disabled=not st.session_state.categoria,
             help=(
-                "La categoría es una descripción CUBSO literal, una entre 38 mil. "
-                "El rubro agrupa muchas categorías del mismo giro: alimentación, "
-                "catering, víveres, desayunos y demás caen en Alimentos. Con esta "
-                "casilla marcada se exigen ambas condiciones a la vez, así que "
-                "puede quedar vacío aunque el rubro sí tenga llamados."
+                "Por defecto se muestra todo tu rubro (alimentación, catering, "
+                "víveres, desayunos, etc.), que suele traer más resultados. "
+                "Marca esta casilla para quedarte solo con la categoría exacta "
+                "que elegiste en el Paso 1."
             ),
         )
     with c2:
@@ -3405,20 +2978,8 @@ elif pantalla.startswith("2"):
         {
             "label": "Cierran esta semana",
             "value": f"{int((mostrar['vigencia'] == 'POR CERRAR').sum()):,}",
-            "note": "Plazo de 7 días o menos",
+            "note": "7 días o menos para preguntar u ofertar, según el llamado",
             "accent": "orange",
-        },
-        {
-            "label": "Entidades comprando",
-            "value": f"{mostrar['entidad'].nunique():,}",
-            "note": "Cantidad de compradores públicos distintos",
-            "accent": "purple",
-        },
-        {
-            "label": "Monto típico",
-            "value": formato_soles(_montos_publicados.median()) if len(_montos_publicados) else "—",
-            "note": _nota_montos,
-            "accent": "blue",
         },
     ])
 
@@ -3463,215 +3024,104 @@ elif pantalla.startswith("2"):
     st.caption("Mostramos primero los llamados cuya fecha de cierre está más cerca.")
     render_llamados_destacados(mostrar)
 
-    q("Q3", "¿Cuánto tiempo me queda y qué entidad está comprando?")
-    ventana = mostrar.copy()
-    ventana["Cierra en (días)"] = ventana["dias_para_cierre"].clip(lower=0)
-    chart_ventana = (
-        alt.Chart(ventana)
-        .mark_circle(opacity=0.85, strokeWidth=2, stroke="white")
-        .encode(
-            x=alt.X(
-                "Cierra en (días):Q",
-                title="Días que quedan para presentar oferta",
-                axis=alt.Axis(
-                    gridColor="#E8ECF1",
-                    labelColor=APAGADO,
-                    titleColor=TINTA,
-                    titleFontSize=13,
-                    titleFontWeight=700,
-                    labelFontSize=11,
-                ),
-            ),
-            y=alt.Y(
-                "entidad:N",
-                title=None,
-                axis=alt.Axis(
-                    labelColor=TINTA,
-                    labelFontSize=11,
-                    labelFontWeight=600,
-                ),
-            ),
-            size=alt.Size(
-                "monto_referencial:Q",
-                title="Monto referencial",
-                scale=alt.Scale(range=[90, 620]),
-            ),
-            color=alt.Color(
-                "vigencia:N",
-                scale=alt.Scale(
-                    domain=["POR CERRAR", "VIGENTE"],
-                    range=[NARANJA, MORADO],
-                ),
-                legend=alt.Legend(
-                    orient="bottom",
-                    title=None,
-                    labelFontSize=12,
-                    labelFontWeight=700,
-                    padding=15,
-                ),
-            ),
-            tooltip=[
-                alt.Tooltip("titulo:N", title="Llamado"),
-                alt.Tooltip("entidad:N", title="Entidad"),
-                alt.Tooltip("metodo_contratacion:N", title="Método"),
-                alt.Tooltip("monto_referencial:Q", title="Monto", format=",.0f"),
-                alt.Tooltip("dias_para_cierre:Q", title="Días restantes", format=".0f"),
-            ],
+    st.markdown("#### Oportunidades abiertas")
+    lista_oportunidades = mostrar.sort_values("dias_para_cierre").head(30)
+    limite_inicial = 8
+    ver_todas = st.session_state.get("p2_ver_todas_oportunidades", False)
+    n_mostrar = len(lista_oportunidades) if ver_todas else min(limite_inicial, len(lista_oportunidades))
+
+    for _, f in lista_oportunidades.head(n_mostrar).iterrows():
+        urgente = f["vigencia"] == "POR CERRAR"
+        dias = numero_seguro(f.get("dias_para_cierre"), default=np.nan)
+        monto = numero_seguro(f.get("monto_referencial"))
+
+        st.markdown(
+            f'<div class="ro-ancla" id="{ancla_llamado(f.get("ocid"))}"></div>',
+            unsafe_allow_html=True,
         )
-        .properties(height=320)
-        .configure_view(strokeWidth=0, fill="transparent")
-        .configure_axis(
-            gridColor="#E8ECF1",
-            labelColor=APAGADO,
-            titleColor=TINTA,
-        )
-        .configure_legend(labelColor=APAGADO)
-    )
-    st.altair_chart(chart_ventana, use_container_width=True)
+        with st.container(border=True):
+            n_docs = int(DOCS_POR_OCID.get(str(f["ocid"]), 0))
+            a, b, c = st.columns([4.2, 1.2, 1.35])
+            with a:
+                st.markdown(
+                    f"**{texto_seguro(f.get('titulo'))}**",
+                    unsafe_allow_html=True,
+                )
+                marca_docs = (
+                    f" · 📎 {n_docs} documento{'s' if n_docs != 1 else ''} publicados"
+                    if n_docs else " · sin documentos en la descarga"
+                )
+                categoria_fila = f.get("cubso_descripcion")
+                es_exacta = bool(
+                    not filtrar_categoria
+                    and st.session_state.categoria
+                    and pd.notna(categoria_fila)
+                    and categoria_fila == st.session_state.categoria
+                )
+                marca_exacta = " · ✓ tu categoría exacta" if es_exacta else ""
+                st.caption(
+                    f"{texto_seguro(f.get('entidad'))} · "
+                    f"{texto_seguro(f.get('metodo_contratacion'))} · "
+                    f"{texto_seguro(f.get('cubso_descripcion'))}"
+                    f"{marca_docs}{marca_exacta}"
+                )
+            with b:
+                dias_txt, dias_lbl, vencido = plazo_declarado(
+                    dias, f.get("origen_limite")
+                )
+                color_dias = GRIS if vencido else NARANJA
+                tam_dias = "20" if len(dias_txt) > 4 else "26"
+                st.markdown(
+                    f"<div style='font-size:{tam_dias}px;font-weight:700;"
+                    f"color:{color_dias};line-height:1.1'>{escape(dias_txt)}</div>"
+                    f"<div style='font-size:10.5px;color:{APAGADO};font-weight:500;margin-top:5px'>{escape(dias_lbl)}</div>",
+                    unsafe_allow_html=True,
+                )
+            with c:
+                monto_txt, monto_nota = monto_declarado(f)
+                color_monto = AZUL if monto > 0 else APAGADO
+                tam_monto = "16" if monto <= 0 else "19"
+                st.markdown(
+                    f"<div style='font-size:{tam_monto}px;font-weight:700;"
+                    f"color:{color_monto}'>{escape(monto_txt)}</div>"
+                    # La nota puede contener el <abbr> de sigla("UIT"), así que
+                    # va sin escape; los textos alternativos son planos.
+                    f"<div style='font-size:11px;color:{APAGADO}'>{monto_nota}</div>",
+                    unsafe_allow_html=True,
+                )
+                st.button(
+                    "Ver requisitos →",
+                    key=f"btn_{f['ocid']}",
+                    type="primary" if urgente else "secondary",
+                    use_container_width=True,
+                    on_click=ir_a,
+                    args=(PANTALLAS[2],),
+                    kwargs={"ocid": f["ocid"]},
+                )
 
-    lista, panel = st.columns([1.55, 0.9], gap="large")
-
-    with lista:
-        st.markdown("#### Oportunidades abiertas")
-        for _, f in mostrar.sort_values("dias_para_cierre").head(30).iterrows():
-            urgente = f["vigencia"] == "POR CERRAR"
-            dias = numero_seguro(f.get("dias_para_cierre"), default=np.nan)
-            monto = numero_seguro(f.get("monto_referencial"))
-
-            st.markdown(
-                f'<div class="ro-ancla" id="{ancla_llamado(f.get("ocid"))}"></div>',
-                unsafe_allow_html=True,
-            )
-            with st.container(border=True):
-                n_docs = int(DOCS_POR_OCID.get(str(f["ocid"]), 0))
-                a, b, c = st.columns([4.2, 1.2, 1.35])
-                with a:
-                    st.markdown(
-                        f"**{texto_seguro(f.get('titulo'))}**",
-                        unsafe_allow_html=True,
-                    )
-                    marca_docs = (
-                        f" · 📎 {n_docs} documento{'s' if n_docs != 1 else ''} publicados"
-                        if n_docs else " · sin documentos en la descarga"
-                    )
-                    st.caption(
-                        f"{f.get('entidad', '—')} · "
-                        f"{f.get('metodo_contratacion', '—')} · "
-                        f"{f.get('cubso_descripcion', '—')}"
-                        f"{marca_docs}"
-                    )
-                with b:
-                    dias_txt, dias_lbl, vencido = plazo_declarado(
-                        dias, f.get("origen_limite")
-                    )
-                    color_dias = GRIS if vencido else NARANJA
-                    tam_dias = "20" if len(dias_txt) > 4 else "27"
-                    st.markdown(
-                        f"<div style='font-size:{tam_dias}px;font-weight:880;"
-                        f"color:{color_dias};line-height:1.1'>{escape(dias_txt)}</div>"
-                        f"<div style='font-size:9.5px;color:{APAGADO};font-weight:750;margin-top:5px'>{escape(dias_lbl)}</div>",
-                        unsafe_allow_html=True,
-                    )
-                with c:
-                    monto_txt, monto_nota = monto_declarado(f)
-                    color_monto = AZUL if monto > 0 else APAGADO
-                    tam_monto = "16" if monto <= 0 else "19"
-                    st.markdown(
-                        f"<div style='font-size:{tam_monto}px;font-weight:850;"
-                        f"color:{color_monto}'>{escape(monto_txt)}</div>"
-                        # La nota puede contener el <abbr> de sigla("UIT"), así que
-                        # va sin escape; los textos alternativos son planos.
-                        f"<div style='font-size:11px;color:{APAGADO}'>{monto_nota}</div>",
-                        unsafe_allow_html=True,
-                    )
-                    st.button(
-                        "Ver requisitos →",
-                        key=f"btn_{f['ocid']}",
-                        type="primary" if urgente else "secondary",
-                        use_container_width=True,
-                        on_click=ir_a,
-                        args=(PANTALLAS[2],),
-                        kwargs={"ocid": f["ocid"]},
-                    )
-
-    with panel:
-        q("Q3", "¿Quién está comprando ahora?")
-        por_entidad = (
-            mostrar.groupby("entidad")
-            .size()
-            .reset_index(name="Llamados")
-            .sort_values("Llamados", ascending=False)
-        )
-        st.altair_chart(
-            alt.Chart(por_entidad.head(10))
-            .mark_bar(color=AZUL, cornerRadiusEnd=3)
-            .encode(
-                x=alt.X("Llamados:Q", title=None),
-                # labelLimit amplio para que el nombre de la entidad no se
-                # corte; cuando aun asi no entra, el tooltip lo muestra entero.
-                y=alt.Y(
-                    "entidad:N",
-                    sort="-x",
-                    title=None,
-                    axis=alt.Axis(labelLimit=260, labelFontSize=10.5),
-                ),
-                tooltip=[
-                    alt.Tooltip("entidad:N", title="Entidad"),
-                    alt.Tooltip("Llamados:Q", title="Llamados"),
-                ],
-            )
-            .properties(height=260)
-            .configure_view(strokeWidth=0)
-            .configure_axis(grid=False, labelColor=APAGADO),
+    restantes = len(lista_oportunidades) - n_mostrar
+    if restantes > 0:
+        if st.button(
+            f"Ver {restantes} oportunidades más ↓",
+            key="ver_mas_p2",
             use_container_width=True,
-        )
+        ):
+            st.session_state["p2_ver_todas_oportunidades"] = True
+            st.rerun()
 
-        q("Q4", "¿Qué tipo de proceso aparece con más frecuencia?")
-        por_metodo = (
-            mostrar.groupby("metodo_contratacion")
-            .size()
-            .reset_index(name="Llamados")
-            .sort_values("Llamados", ascending=False)
-        )
-        st.altair_chart(
-            alt.Chart(por_metodo)
-            .mark_bar(color=MORADO, cornerRadiusEnd=3)
-            .encode(
-                x=alt.X("Llamados:Q", title=None),
-                y=alt.Y(
-                    "metodo_contratacion:N",
-                    sort="-x",
-                    title=None,
-                    axis=alt.Axis(labelLimit=260, labelFontSize=10.5),
-                ),
-                tooltip=[
-                    alt.Tooltip("metodo_contratacion:N", title="Procedimiento"),
-                    alt.Tooltip("Llamados:Q", title="Llamados"),
-                ],
-            )
-            .properties(height=210)
-            .configure_view(strokeWidth=0)
-            .configure_axis(grid=False, labelColor=APAGADO),
-            use_container_width=True,
-        )
-        st.caption(
-            "Este gráfico ayuda a reconocer qué procedimiento aparece más entre las oportunidades que estás revisando."
-        )
-
-    # El rubro marcado en el Paso 1 acompaña al Paso 2. Los llamados vigentes
-    # son pocos por el desfase de la fuente; los cerrados del mismo rubro son
-    # la referencia concreta de qué pide el Estado en ese giro.
+    # El rubro marcado en el Paso 1 acompaña al Paso 2: es el camino de
+    # salida cuando ningún llamado vigente convence todavía.
     rubros_paso1 = st.session_state.get("rubros_paso1") or []
-    if rubros_elegido_historial := ([rubro_elegido] if rubro_elegido else rubros_paso1):
-        st.markdown('<hr class="ro-divider">', unsafe_allow_html=True)
-        render_historial_rubro(convocatorias, rubros_elegido_historial)
-    else:
-        st.markdown('<hr class="ro-divider">', unsafe_allow_html=True)
-        st.info(
-            "Marca tu rubro en el Paso 1 (o toca una barra del gráfico de arriba) "
-            "para ver los llamados anteriores de tu giro con el detalle de lo que "
-            "pidió cada entidad."
-        )
+    rubros_para_historial = [rubro_elegido] if rubro_elegido else rubros_paso1
+    with st.expander("¿Ninguno te convence? Mira llamados anteriores de tu rubro"):
+        if rubros_para_historial:
+            render_historial_rubro(convocatorias, rubros_para_historial)
+        else:
+            st.info(
+                "Marca tu rubro en el Paso 1 (o toca una barra del gráfico de arriba) "
+                "para ver los llamados anteriores de tu giro con el detalle de lo que "
+                "pidió cada entidad."
+            )
 
 
 # ===========================================================================
@@ -3789,6 +3239,19 @@ elif pantalla.startswith("3"):
     etapas = {e["clave"]: e for e in catalogo["etapas"]}
     total = len(reqs)
     listos = st.session_state.listos
+
+    # Streamlit ya actualizó el estado de los checkboxes (clave "chk_<id>")
+    # antes de esta corrida, aunque el bucle que los dibuja va más abajo.
+    # Sin este resumen previo, la barra de progreso mostraba el conteo del
+    # clic anterior en vez del que el usuario acaba de marcar.
+    for _, r in reqs.iterrows():
+        clave_chk = f"chk_{r['id']}"
+        if clave_chk not in st.session_state:
+            continue
+        if st.session_state[clave_chk]:
+            listos.add(r["id"])
+        else:
+            listos.discard(r["id"])
 
     cab1, cab2 = st.columns([3, 1])
     cab1.markdown("#### Mi checklist para postular")
@@ -3944,20 +3407,31 @@ else:
         unsafe_allow_html=True,
     )
 
-    st.markdown("### El índice explicado sin fórmulas complicadas")
+    st.markdown("### El índice, sin fórmulas complicadas")
     st.markdown(
         f"""
         <div class="ro-index-help">
-          <h4>¿Para qué sirve?</h4>
-          <p>Sirve para <strong>ordenar categorías y decidir cuál revisar primero</strong>. No predice que vas a ganar una licitación.</p>
-          <p><strong>Paso 1:</strong> damos 55% de peso a cuánto compró el Estado y 45% a cuánto espacio queda frente a los ganadores que siguen habilitados.</p>
-          <p><strong>Paso 2:</strong> convertimos ambas señales a una escala comparable entre 0 y 1.</p>
-          <p><strong>Paso 3:</strong> ajustamos el resultado por el tamaño promedio del contrato. Un contrato pequeño conserva más puntaje; uno muy grande recibe un castigo porque puede ser difícil para una {sigla("MYPE")}.</p>
-          <p><strong>Resultado:</strong> un puntaje de 0 a 100 que se recalcula cuando cambias el periodo o los filtros.</p>
+          <h4>¿Qué significa?</h4>
+          <p>Va de <strong>0 a 100</strong>. Mientras más alto, más conviene revisar esa categoría: hay
+          buena demanda del Estado y pocos competidores conocidos siguen habilitados hoy. No predice que
+          vas a ganar una licitación, solo ayuda a decidir qué mirar primero.</p>
         </div>
         """,
         unsafe_allow_html=True,
     )
+    with st.expander("Cómo se calcula (detalle técnico)"):
+        st.markdown(
+            f"""
+            1. Se pondera 55% cuánto compró el Estado y 45% cuánto espacio queda frente a los
+               ganadores que siguen habilitados.
+            2. Ambas señales se llevan a una escala comparable de 0 a 1.
+            3. El resultado se ajusta por el tamaño promedio del contrato: uno pequeño conserva
+               más puntaje, uno muy grande recibe un castigo porque puede ser difícil para una
+               {sigla("MYPE")}.
+            4. El puntaje final (0 a 100) se recalcula al cambiar el periodo o los filtros.
+            """,
+            unsafe_allow_html=True,
+        )
 
     st.markdown("### Qué responde cada pregunta")
     st.dataframe(
