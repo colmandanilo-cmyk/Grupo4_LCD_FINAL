@@ -34,7 +34,7 @@ st.set_page_config(
     page_title="Radar de Oportunidades en Compras Públicas",
     page_icon="📡",
     layout="wide",
-    initial_sidebar_state="expanded",
+    initial_sidebar_state="collapsed",
 )
 
 MONEDA = "S/"
@@ -550,7 +550,7 @@ st.markdown(
       div[data-testid="stDataFrame"] {{
         border: 1px solid {BORDE};
         border-radius: var(--ro-radio);
-        overflow: hidden;
+        overflow-x: auto;
       }}
       div[data-testid="stExpander"] {{
         border: 1px solid {BORDE};
@@ -733,10 +733,61 @@ st.markdown(
       @media (max-width: 980px) {{
         .ro-kpi-grid, .ro-answer-grid {{ grid-template-columns: repeat(2, minmax(0, 1fr)); }}
         .ro-calls {{ grid-template-columns: 1fr; }}
-        .ro-formal-grid {{ grid-template-columns: repeat(2, minmax(0, 1fr)); }}
+        .ro-formal-grid, .ro-glossary {{ grid-template-columns: repeat(2, minmax(0, 1fr)); }}
         .ro-prov-grid {{ grid-template-columns: 1fr; }}
         .ro-hero {{ align-items: flex-start; flex-direction: column; }}
         .ro-hero-meta {{ margin-left: 0; justify-content: flex-start; max-width: none; }}
+      }}
+
+      /* Celular: una sola columna en todo, tarjetas sin alto fijo (para
+         no dejar huecos vacíos al apilarse) y controles con área táctil
+         de al menos 44-48px, en vez de reusar los tamaños de mouse. */
+      @media (max-width: 640px) {{
+        .block-container {{ padding-left: .9rem; padding-right: .9rem; }}
+        .ro-kpi-grid, .ro-answer-grid, .ro-formal-grid, .ro-glossary, .ro-prov-grid {{
+          grid-template-columns: 1fr;
+        }}
+        .ro-qchip {{ flex: 1 1 100%; }}
+        .ro-hero {{ padding: 20px 18px; border-radius: 12px; }}
+        .ro-hero-title {{ font-size: 21px; }}
+        .ro-hero-sub {{ font-size: 13px; }}
+        .ro-step-title {{ font-size: 20px; }}
+        .ro-kpi-value, .ro-answer-value {{ font-size: 23px; }}
+        .ro-answer, .ro-call, .ro-formal {{ min-height: 0; }}
+        .ro-answer-title, .ro-call-title {{ min-height: 0; }}
+        .ro-focus-head {{ flex-direction: column; align-items: flex-start; }}
+        .ro-index {{ margin-left: 0; width: 100%; }}
+        .ro-reading {{ padding: 16px; }}
+
+        /* Navegación: de 4 pestañas en una fila (se cortaban o se
+           apilaban en 4 líneas completas) a una grilla de 2x2. */
+        div[data-testid="stRadio"] > div {{ flex-wrap: wrap; }}
+        div[data-testid="stRadio"] label {{
+          flex: 1 1 46%;
+          min-height: 44px;
+          font-size: 12.5px;
+        }}
+
+        /* Botones, checkboxes y expanders a tamaño de dedo, no de mouse. */
+        .stButton > button[kind="primary"],
+        .stButton > button[kind="secondary"],
+        div[data-testid="stButton"] button[data-testid="stBaseButton-primary"],
+        .stLinkButton > a[kind="primary"],
+        div[data-testid="stLinkButton"] a[data-testid="stBaseLinkButton-primary"] {{
+          min-height: 48px !important;
+          height: auto !important;
+          padding: 10px 16px !important;
+        }}
+        div[data-testid="stCheckbox"] label {{
+          min-height: 44px;
+          display: flex;
+          align-items: center;
+          gap: 8px;
+        }}
+        div[data-testid="stCheckbox"] label input[type="checkbox"] {{
+          transform: scale(1.3);
+        }}
+        div[data-testid="stExpander"] summary {{ min-height: 48px; }}
       }}
     </style>
     """,
@@ -2223,24 +2274,26 @@ else:
 
 meses_disponibles = list(range(1, 13))
 
-st.sidebar.markdown("### 🗓️ Periodo de análisis")
-st.sidebar.caption("Estos filtros acompañan todo el dashboard.")
-anios_seleccionados = st.sidebar.multiselect(
-    "Años",
-    anios_disponibles,
-    default=anios_disponibles,
-    help="Elige uno o varios años del histórico que quieres comparar.",
-)
-meses_seleccionados = st.sidebar.multiselect(
-    "Meses",
-    meses_disponibles,
-    default=meses_disponibles,
-    format_func=mes_nombre,
-    help="Si eliges varios años, el mes se aplica a cada año seleccionado.",
-)
+with st.expander("🗓️ Periodo de análisis (años y meses)"):
+    st.caption("Estos filtros acompañan todo el dashboard.")
+    fc1, fc2 = st.columns(2)
+    with fc1:
+        anios_seleccionados = st.multiselect(
+            "Años",
+            anios_disponibles,
+            default=anios_disponibles,
+            help="Elige uno o varios años del histórico que quieres comparar.",
+        )
+    with fc2:
+        meses_seleccionados = st.multiselect(
+            "Meses",
+            meses_disponibles,
+            default=meses_disponibles,
+            format_func=mes_nombre,
+            help="Si eliges varios años, el mes se aplica a cada año seleccionado.",
+        )
 if not anios_seleccionados or not meses_seleccionados:
-    st.sidebar.warning("Selecciona al menos un año y un mes.")
-    st.info("Selecciona al menos un año y un mes para continuar.")
+    st.warning("Selecciona al menos un año y un mes para continuar.")
     st.stop()
 
 ocds_periodo, maestro_periodo = _calcular_periodo(
@@ -2972,7 +3025,12 @@ elif pantalla.startswith("2"):
     render_llamados_destacados(mostrar)
 
     st.markdown("#### Oportunidades abiertas")
-    for _, f in mostrar.sort_values("dias_para_cierre").head(30).iterrows():
+    lista_oportunidades = mostrar.sort_values("dias_para_cierre").head(30)
+    limite_inicial = 8
+    ver_todas = st.session_state.get("p2_ver_todas_oportunidades", False)
+    n_mostrar = len(lista_oportunidades) if ver_todas else min(limite_inicial, len(lista_oportunidades))
+
+    for _, f in lista_oportunidades.head(n_mostrar).iterrows():
         urgente = f["vigencia"] == "POR CERRAR"
         dias = numero_seguro(f.get("dias_para_cierre"), default=np.nan)
         monto = numero_seguro(f.get("monto_referencial"))
@@ -3040,6 +3098,16 @@ elif pantalla.startswith("2"):
                     args=(PANTALLAS[2],),
                     kwargs={"ocid": f["ocid"]},
                 )
+
+    restantes = len(lista_oportunidades) - n_mostrar
+    if restantes > 0:
+        if st.button(
+            f"Ver {restantes} oportunidades más ↓",
+            key="ver_mas_p2",
+            use_container_width=True,
+        ):
+            st.session_state["p2_ver_todas_oportunidades"] = True
+            st.rerun()
 
     # El rubro marcado en el Paso 1 acompaña al Paso 2: es el camino de
     # salida cuando ningún llamado vigente convence todavía.
