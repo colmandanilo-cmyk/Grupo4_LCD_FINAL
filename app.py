@@ -3172,6 +3172,19 @@ elif pantalla.startswith("3"):
     total = len(reqs)
     listos = st.session_state.listos
 
+    # Streamlit ya actualizó el estado de los checkboxes (clave "chk_<id>")
+    # antes de esta corrida, aunque el bucle que los dibuja va más abajo.
+    # Sin este resumen previo, la barra de progreso mostraba el conteo del
+    # clic anterior en vez del que el usuario acaba de marcar.
+    for _, r in reqs.iterrows():
+        clave_chk = f"chk_{r['id']}"
+        if clave_chk not in st.session_state:
+            continue
+        if st.session_state[clave_chk]:
+            listos.add(r["id"])
+        else:
+            listos.discard(r["id"])
+
     cab1, cab2 = st.columns([3, 1])
     cab1.markdown("#### Mi checklist para postular")
     cab2.progress(
