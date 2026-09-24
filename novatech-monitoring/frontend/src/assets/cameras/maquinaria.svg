@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 360">
+  <!-- Escena: estacionamiento de maquinaria pesada (excavadora y volquete). Ilustracion propia del proyecto. -->
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#93aabf"/><stop offset="1" stop-color="#dbe0e3"/></linearGradient>
+    <linearGradient id="ground" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#9a8d77"/><stop offset="1" stop-color="#5c5447"/></linearGradient>
+  </defs>
+  <rect width="640" height="360" fill="url(#sky)"/>
+  <!-- cerros al fondo (Lurin) -->
+  <path d="M0 190 Q 120 110 250 170 T 480 150 T 640 175 L640 220 L0 220 Z" fill="#a79c86"/>
+  <rect y="210" width="640" height="150" fill="url(#ground)"/>
+  <!-- excavadora -->
+  <g>
+    <rect x="90" y="270" width="190" height="34" rx="16" fill="#3a3d40"/>
+    <g fill="#66696c"><circle cx="112" cy="287" r="10"/><circle cx="150" cy="287" r="10"/><circle cx="190" cy="287" r="10"/><circle cx="230" cy="287" r="10"/><circle cx="260" cy="287" r="10"/></g>
+    <rect x="110" y="215" width="150" height="55" fill="#e0a526" stroke="#6b4f11" stroke-width="3"/>
+    <rect x="200" y="180" width="60" height="45" fill="#e0a526" stroke="#6b4f11" stroke-width="3"/>
+    <rect x="210" y="188" width="40" height="28" fill="#4a6178"/>
+    <!-- brazo -->
+    <path d="M200 215 L320 130 L340 145 L225 230 Z" fill="#d49a1d" stroke="#6b4f11" stroke-width="3"/>
+    <path d="M320 130 L385 205 L368 215 L310 150 Z" fill="#d49a1d" stroke="#6b4f11" stroke-width="3"/>
+    <path d="M362 205 L400 205 L405 240 L372 240 Z" fill="#555a5e"/>
+  </g>
+  <!-- volquete -->
+  <g>
+    <path d="M430 200 L600 200 L590 262 L440 262 Z" fill="#c4c7ca" stroke="#55595e" stroke-width="3"/>
+    <rect x="390" y="222" width="50" height="45" fill="#2f6f8f" stroke="#1d4357" stroke-width="3"/>
+    <rect x="398" y="230" width="30" height="18" fill="#9fb8cc"/>
+    <g fill="#222"><circle cx="415" cy="275" r="15"/><circle cx="500" cy="275" r="15"/><circle cx="560" cy="275" r="15"/></g>
+    <g fill="#777"><circle cx="415" cy="275" r="5"/><circle cx="500" cy="275" r="5"/><circle cx="560" cy="275" r="5"/></g>
+  </g>
+  <!-- huellas en el terreno -->
+  <g stroke="#6f6658" stroke-width="6" stroke-dasharray="12 8" opacity="0.7"><path d="M0 330 C 200 310, 400 340, 640 320"/></g>
+</svg>

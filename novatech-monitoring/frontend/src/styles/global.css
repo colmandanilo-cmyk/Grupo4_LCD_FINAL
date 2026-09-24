@@ -1,0 +1,376 @@
+/* ============================================================
+   NOVA TECH - Estilos globales: colores, tipografia y estructura
+   ============================================================ */
+:root {
+  color-scheme: light;
+
+  /* Superficies */
+  --bg-page: #f3f5f8;
+  --bg-surface: #ffffff;
+  --bg-subtle: #f7f8fa;
+  --bg-sidebar: #0f2742;
+  --bg-sidebar-hover: #173558;
+  --bg-sidebar-active: #1f4570;
+
+  /* Texto */
+  --text-primary: #13202f;
+  --text-secondary: #4d5b6b;
+  --text-muted: #7b8794;
+  --text-on-dark: #e8eef6;
+  --text-on-dark-muted: #9fb2c8;
+
+  /* Bordes */
+  --border: #dde3ea;
+  --border-strong: #c5ced8;
+
+  /* Marca */
+  --brand: #1f6fd1;
+  --brand-dark: #16539e;
+  --brand-soft: #e6f0fc;
+
+  /* Estados (siempre acompanados de icono y texto) */
+  --ok: #0c8a0c;
+  --ok-soft: #e5f5e5;
+  --warn: #b37700;
+  --warn-strong: #fab219;
+  --warn-soft: #fff4d9;
+  --serious: #c2531f;
+  --serious-strong: #ec835a;
+  --serious-soft: #fdeadf;
+  --critical: #c42f2f;
+  --critical-strong: #d03b3b;
+  --critical-soft: #fbe5e5;
+  --info: #1f6fd1;
+  --info-soft: #e6f0fc;
+  --neutral: #5b6673;
+  --neutral-soft: #eef1f4;
+
+  /* Series de graficos (paleta categorica validada) */
+  --series-1: #2a78d6;
+  --series-2: #eb6834;
+  --series-3: #1baf7a;
+  --chart-grid: #e1e0d9;
+  --chart-axis: #898781;
+
+  --radius: 10px;
+  --radius-sm: 6px;
+  --shadow: 0 1px 2px rgba(16, 32, 52, 0.06), 0 1px 8px rgba(16, 32, 52, 0.04);
+  --sidebar-width: 240px;
+  --header-height: 60px;
+  --font: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html, body, #root {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font);
+  font-size: 14px;
+  line-height: 1.45;
+  color: var(--text-primary);
+  background: var(--bg-page);
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, h4 {
+  margin: 0;
+  line-height: 1.25;
+}
+
+a {
+  color: var(--brand);
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+button, input, select, textarea {
+  font: inherit;
+}
+
+.tabular {
+  font-variant-numeric: tabular-nums;
+}
+
+.muted {
+  color: var(--text-muted);
+}
+
+.secondary {
+  color: var(--text-secondary);
+}
+
+.nowrap {
+  white-space: nowrap;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+}
+
+/* ---------------- Estructura principal ---------------- */
+.app-shell {
+  display: flex;
+  min-height: 100vh;
+}
+
+.app-main {
+  flex: 1;
+  min-width: 0;
+  margin-left: var(--sidebar-width);
+  display: flex;
+  flex-direction: column;
+}
+
+.app-content {
+  flex: 1;
+  padding: 24px 28px 40px;
+  max-width: 1680px;
+  width: 100%;
+}
+
+/* ---------------- Menu lateral ---------------- */
+.sidebar {
+  position: fixed;
+  inset: 0 auto 0 0;
+  width: var(--sidebar-width);
+  background: var(--bg-sidebar);
+  color: var(--text-on-dark);
+  display: flex;
+  flex-direction: column;
+  z-index: 30;
+}
+
+.sidebar-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 18px 20px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.sidebar-brand img {
+  width: 34px;
+  height: 34px;
+}
+
+.sidebar-brand strong {
+  display: block;
+  font-size: 16px;
+  letter-spacing: 0.08em;
+}
+
+.sidebar-brand span {
+  display: block;
+  font-size: 11px;
+  color: var(--text-on-dark-muted);
+}
+
+.sidebar nav {
+  flex: 1;
+  overflow-y: auto;
+  padding: 12px 10px;
+}
+
+.sidebar-section {
+  font-size: 10.5px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-on-dark-muted);
+  padding: 14px 12px 6px;
+}
+
+.sidebar-link {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  padding: 9px 12px;
+  border-radius: 8px;
+  color: var(--text-on-dark);
+  font-weight: 500;
+  margin-bottom: 2px;
+}
+
+.sidebar-link:hover {
+  background: var(--bg-sidebar-hover);
+  text-decoration: none;
+}
+
+.sidebar-link.active {
+  background: var(--bg-sidebar-active);
+  box-shadow: inset 3px 0 0 #5aa2f0;
+}
+
+.sidebar-link .badge-count {
+  margin-left: auto;
+  background: var(--critical-strong);
+  color: #fff;
+  border-radius: 999px;
+  font-size: 11px;
+  padding: 1px 7px;
+  font-weight: 700;
+}
+
+.sidebar-footer {
+  padding: 12px 20px;
+  font-size: 11px;
+  color: var(--text-on-dark-muted);
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+/* ---------------- Cabecera ---------------- */
+.app-header {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  height: var(--header-height);
+  background: var(--bg-surface);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  padding: 0 28px;
+}
+
+.app-header .header-menu-button {
+  display: none;
+}
+
+.header-status {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.header-spacer {
+  flex: 1;
+}
+
+.header-clock {
+  text-align: right;
+  line-height: 1.2;
+}
+
+.header-clock strong {
+  display: block;
+  font-size: 15px;
+  font-variant-numeric: tabular-nums;
+}
+
+.header-clock span {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.header-user {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding-left: 18px;
+  border-left: 1px solid var(--border);
+}
+
+.header-user .avatar {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: var(--brand-soft);
+  color: var(--brand-dark);
+  display: grid;
+  place-items: center;
+  font-weight: 700;
+}
+
+.header-user .who {
+  line-height: 1.2;
+}
+
+.header-user .who strong {
+  display: block;
+  font-size: 13px;
+}
+
+.header-user .who span {
+  font-size: 11.5px;
+  color: var(--text-muted);
+}
+
+.data-source {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: var(--text-secondary);
+  white-space: nowrap;
+}
+
+.data-source .dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--ok);
+}
+
+.data-source.offline .dot {
+  background: var(--critical-strong);
+}
+
+/* ---------------- Responsive (laptop y escritorio; menu plegable en pantallas angostas) ---------------- */
+@media (max-width: 1100px) {
+  .sidebar {
+    transform: translateX(-100%);
+    transition: transform 0.2s ease;
+  }
+
+  .sidebar.open {
+    transform: translateX(0);
+    box-shadow: 0 0 40px rgba(0, 0, 0, 0.3);
+  }
+
+  .app-main {
+    margin-left: 0;
+  }
+
+  .app-header .header-menu-button {
+    display: inline-flex;
+  }
+
+  .app-content {
+    padding: 18px 16px 32px;
+  }
+
+  .app-header {
+    padding: 0 16px;
+    gap: 12px;
+  }
+
+  .header-clock, .data-source .label-long {
+    display: none;
+  }
+}
+
+@media print {
+  .sidebar, .app-header, .no-print {
+    display: none !important;
+  }
+
+  .app-main {
+    margin-left: 0;
+  }
+
+  body {
+    background: #fff;
+  }
+}

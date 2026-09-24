@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="NOVA TECH">
+  <rect width="64" height="64" rx="14" fill="#1f4570"/>
+  <path d="M32 9 51 16.5v13.5c0 12.5-8.3 21.6-19 25-10.7-3.4-19-12.5-19-25V16.5z" fill="none" stroke="#7fb6f2" stroke-width="3.6" stroke-linejoin="round"/>
+  <path d="M20 31c3.2-5.3 7.3-8 12-8s8.8 2.7 12 8c-3.2 5.3-7.3 8-12 8s-8.8-2.7-12-8z" fill="#0f2742" stroke="#7fb6f2" stroke-width="2.4"/>
+  <circle cx="32" cy="31" r="4.6" fill="#7fb6f2"/>
+  <circle cx="33.6" cy="29.4" r="1.4" fill="#0f2742"/>
+</svg>

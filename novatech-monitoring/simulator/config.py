@@ -58,6 +58,7 @@ BATTERY_VOLTAGE_FULL = 27.2      # voltaje con 100 %
 
 SOLAR_RANDOM_MIN = 0.92          # variacion aleatoria de la generacion
 SOLAR_RANDOM_MAX = 1.03
+SOLAR_RANDOM_STEP = 0.01         # cambio maximo del factor en cada paso
 CLOUDY_FACTOR = 0.25             # escenario DIA NUBLADO
 
 INITIAL_BATTERY_PERCENT = 85     # bateria al iniciar (si Java no informa otra) y al reiniciar

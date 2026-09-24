@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 360">
+  <!-- Escena: acceso principal de la obra (porton peatonal y caseta). Ilustracion propia del proyecto. -->
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#8fa9c2"/><stop offset="1" stop-color="#d8dee2"/></linearGradient>
+    <linearGradient id="ground" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#8d8577"/><stop offset="1" stop-color="#5f584d"/></linearGradient>
+  </defs>
+  <rect width="640" height="360" fill="url(#sky)"/>
+  <!-- edificio en construccion al fondo -->
+  <g fill="#9a9c9e" stroke="#6f7275" stroke-width="2">
+    <rect x="300" y="60" width="240" height="170"/>
+  </g>
+  <g stroke="#6f7275" stroke-width="3">
+    <line x1="300" y1="102" x2="540" y2="102"/><line x1="300" y1="144" x2="540" y2="144"/><line x1="300" y1="186" x2="540" y2="186"/>
+    <line x1="360" y1="60" x2="360" y2="230"/><line x1="420" y1="60" x2="420" y2="230"/><line x1="480" y1="60" x2="480" y2="230"/>
+  </g>
+  <g fill="#3b3f44" opacity="0.55">
+    <rect x="310" y="112" width="40" height="24"/><rect x="430" y="112" width="40" height="24"/><rect x="370" y="154" width="40" height="24"/><rect x="490" y="154" width="40" height="24"/>
+  </g>
+  <rect y="230" width="640" height="130" fill="url(#ground)"/>
+  <!-- camino de ingreso -->
+  <path d="M250 360 L300 230 L360 230 L420 360 Z" fill="#6c665c"/>
+  <!-- cerco -->
+  <g fill="#c9cfd4" stroke="#4d5359" stroke-width="2">
+    <rect x="0" y="190" width="290" height="70" fill="#b9c1c7" opacity="0.85"/>
+    <rect x="370" y="190" width="270" height="70" fill="#b9c1c7" opacity="0.85"/>
+  </g>
+  <g stroke="#4d5359" stroke-width="1" opacity="0.6">
+    <path d="M0 200 H290 M0 214 H290 M0 228 H290 M0 242 H290 M370 200 H640 M370 214 H640 M370 228 H640 M370 242 H640"/>
+  </g>
+  <g stroke="#3a3f44" stroke-width="5"><line x1="290" y1="180" x2="290" y2="262"/><line x1="370" y1="180" x2="370" y2="262"/></g>
+  <!-- porton abierto -->
+  <path d="M292 192 L318 200 L318 258 L292 262 Z" fill="#d7a531" stroke="#5b4a1a" stroke-width="2"/>
+  <!-- caseta de control -->
+  <rect x="60" y="150" width="120" height="110" fill="#e3e1db" stroke="#5a5c5f" stroke-width="3"/>
+  <rect x="50" y="140" width="140" height="16" fill="#44484d"/>
+  <rect x="80" y="175" width="50" height="34" fill="#4a6178" stroke="#2e3338" stroke-width="2"/>
+  <rect x="140" y="190" width="28" height="70" fill="#6f5a45"/>
+  <!-- letrero -->
+  <rect x="420" y="160" width="110" height="30" fill="#f0c33c" stroke="#5b4a1a" stroke-width="2"/>
+  <text x="475" y="180" font-family="Arial" font-size="13" font-weight="bold" text-anchor="middle" fill="#2b2b2b">USO DE EPP</text>
+  <!-- conos -->
+  <g fill="#e2672e"><path d="M235 300 l10 -28 l10 28 z"/><path d="M430 300 l10 -28 l10 28 z"/></g>
+  <g fill="#fff"><rect x="240" y="288" width="10" height="4"/><rect x="435" y="288" width="10" height="4"/></g>
+</svg>

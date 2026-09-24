@@ -13,7 +13,7 @@ Este proyecto es independiente del que ocupa la raíz del repositorio y vive com
 | 1 | Diseño y estructura | Completada: [docs/etapa-1-diseno.md](docs/etapa-1-diseno.md) |
 | 2 | Backend Java | Completada: [backend/](backend/) |
 | 3 | Simulador Python | Completada: [simulator/](simulator/) |
-| 4 | Frontend React | Pendiente |
+| 4 | Frontend React | Completada: [frontend/](frontend/) |
 | 5 | Integración | Pendiente |
 | 6 | Pruebas y corrección | Pendiente |
 | 7 | Instalación, ejecución, reset y documentación | Pendiente |
@@ -41,5 +41,16 @@ python -m venv .venv
 ```
 
 En Linux/macOS: `.venv/bin/pip` y `.venv/bin/python`. Pruebas: `python -m unittest discover -s tests -t .`
+
+## Probar el frontend (Etapa 4)
+
+Requiere Node.js 20.19 o superior, con el backend en marcha (y, para ver datos en vivo, el simulador). Desde la carpeta `frontend/`:
+
+```
+npm install
+npm run dev
+```
+
+La aplicación queda en http://localhost:5173. Las llamadas a `/api` se redirigen al backend en el puerto 8080, así que no hace falta configurar nada más. Se ingresa con cualquiera de los usuarios de arriba; el menú y los botones cambian según el rol.
 
 En la Etapa 7 este archivo se reemplaza por el README completo: instalación en Windows, ejecución, usuarios de prueba, escenarios de simulación, limitaciones y evolución futura.

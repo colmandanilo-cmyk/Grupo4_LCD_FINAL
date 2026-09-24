@@ -282,10 +282,11 @@ public class DataSeeder implements ApplicationRunner {
 
         // Un dia previo "de calentamiento" para que la bateria llegue a un nivel realista.
         double energy = capacity * 0.70;
+        Walk solarNoise = new Walk(0.98, 0.92, 1.03, 0.01);
         for (LocalDateTime t = now.minusHours(48); t.isBefore(now.minusHours(24)); t = t.plusMinutes(STEP_MINUTES)) {
             double hour = hourOf(t);
             double consumption = seed.cameras().size() * cameraWatts(hour) + STARLINK_ONLINE_W + CELLULAR_STANDBY_W + CONTROL_W;
-            energy = integrate(energy, solarWatts(hour, seed.panelW(), 1.0, rnd), consumption, dtHours, capacity);
+            energy = integrate(energy, solarWatts(hour, seed.panelW(), 1.0, solarNoise.next(rnd)), consumption, dtHours, capacity);
         }
 
         Walk latency = new Walk(42, 30, 60, 3);
@@ -324,7 +325,7 @@ public class DataSeeder implements ApplicationRunner {
                     camerasOnline++;
                 }
             }
-            gen = solarWatts(hour, seed.panelW(), cloudFactor, rnd);
+            gen = solarWatts(hour, seed.panelW(), cloudFactor, solarNoise.next(rnd));
             camerasW = camerasOnline * cameraWatts(hour);
             connectivityW = (starlinkUp ? STARLINK_ONLINE_W : STARLINK_SEARCHING_W)
                     + (starlinkUp ? CELLULAR_STANDBY_W : CELLULAR_ACTIVE_W);
@@ -413,13 +414,13 @@ public class DataSeeder implements ApplicationRunner {
         return t.getHour() + t.getMinute() / 60.0;
     }
 
-    /** Ciclo solar: 0 de noche, maximo al mediodia, con pequenas variaciones. */
-    private static double solarWatts(double hour, double panelW, double cloudFactor, Random rnd) {
+    /** Ciclo solar: 0 de noche, maximo al mediodia; "noise" aporta pequenas variaciones graduales. */
+    private static double solarWatts(double hour, double panelW, double cloudFactor, double noise) {
         if (hour < 6 || hour >= 18) {
             return 0;
         }
         double base = panelW * Math.sin(Math.PI * (hour - 6) / 12);
-        return Math.max(0, base * (0.92 + rnd.nextDouble() * 0.11) * cloudFactor);
+        return Math.max(0, base * noise * cloudFactor);
     }
 
     private static double cameraWatts(double hour) {

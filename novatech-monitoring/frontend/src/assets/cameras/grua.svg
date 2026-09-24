@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 360">
+  <!-- Escena: grua torre y losas en construccion. Ilustracion propia del proyecto. -->
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#86a2bd"/><stop offset="1" stop-color="#d9dfe3"/></linearGradient>
+  </defs>
+  <rect width="640" height="360" fill="url(#sky)"/>
+  <!-- grua: torre -->
+  <g stroke="#b88a14" stroke-width="3" fill="none">
+    <line x1="170" y1="40" x2="170" y2="300"/><line x1="200" y1="40" x2="200" y2="300"/>
+    <path d="M170 60 L200 80 L170 100 L200 120 L170 140 L200 160 L170 180 L200 200 L170 220 L200 240 L170 260 L200 280 L170 300"/>
+  </g>
+  <!-- pluma -->
+  <g stroke="#b88a14" stroke-width="3" fill="none">
+    <line x1="60" y1="40" x2="600" y2="40"/><line x1="60" y1="56" x2="600" y2="56"/>
+    <path d="M60 56 L80 40 L100 56 L120 40 L140 56 L160 40 L180 56 L200 40 L220 56 L240 40 L260 56 L280 40 L300 56 L320 40 L340 56 L360 40 L380 56 L400 40 L420 56 L440 40 L460 56 L480 40 L500 56 L520 40 L540 56 L560 40 L580 56 L600 40"/>
+    <line x1="185" y1="10" x2="60" y2="40"/><line x1="185" y1="10" x2="600" y2="40"/>
+  </g>
+  <rect x="60" y="56" width="50" height="26" fill="#6a6d70"/>
+  <rect x="160" y="70" width="50" height="28" fill="#d7a531" stroke="#5b4a1a" stroke-width="2"/>
+  <!-- cable y carga -->
+  <line x1="470" y1="56" x2="470" y2="150" stroke="#2e3236" stroke-width="2"/>
+  <rect x="440" y="150" width="60" height="18" fill="#8a6b45"/>
+  <!-- edificio en construccion -->
+  <rect x="260" y="160" width="360" height="200" fill="#a7a9ab"/>
+  <g fill="#6f7275"><rect x="260" y="160" width="360" height="10"/><rect x="260" y="215" width="360" height="10"/><rect x="260" y="270" width="360" height="10"/></g>
+  <g fill="#7d8083"><rect x="270" y="170" width="10" height="45"/><rect x="350" y="170" width="10" height="45"/><rect x="430" y="170" width="10" height="45"/><rect x="510" y="170" width="10" height="45"/><rect x="590" y="170" width="10" height="45"/>
+    <rect x="270" y="225" width="10" height="45"/><rect x="350" y="225" width="10" height="45"/><rect x="430" y="225" width="10" height="45"/><rect x="510" y="225" width="10" height="45"/><rect x="590" y="225" width="10" height="45"/></g>
+  <!-- barandas de seguridad -->
+  <g stroke="#e2672e" stroke-width="3"><line x1="260" y1="150" x2="620" y2="150"/><line x1="260" y1="205" x2="620" y2="205"/></g>
+  <rect y="300" width="260" height="60" fill="#857c6e"/>
+  <!-- base de la grua -->
+  <rect x="150" y="296" width="70" height="20" fill="#5b5f63"/>
+</svg>

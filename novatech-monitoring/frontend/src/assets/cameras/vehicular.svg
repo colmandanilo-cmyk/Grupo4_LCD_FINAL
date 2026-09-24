@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 360">
+  <!-- Escena: acceso vehicular con barrera y camion. Ilustracion propia del proyecto. -->
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#90a8bf"/><stop offset="1" stop-color="#d9dfe3"/></linearGradient>
+  </defs>
+  <rect width="640" height="360" fill="url(#sky)"/>
+  <rect y="200" width="640" height="160" fill="#7f786c"/>
+  <!-- pista -->
+  <path d="M120 360 L270 200 L400 200 L560 360 Z" fill="#55524d"/>
+  <g stroke="#e9e3c8" stroke-width="5" stroke-dasharray="26 22"><line x1="335" y1="205" x2="340" y2="360"/></g>
+  <!-- porton grande -->
+  <g stroke="#3a3f44" stroke-width="8"><line x1="250" y1="120" x2="250" y2="210"/><line x1="420" y1="120" x2="420" y2="210"/></g>
+  <rect x="246" y="110" width="178" height="18" fill="#44494e"/>
+  <text x="335" y="124" font-family="Arial" font-size="12" font-weight="bold" text-anchor="middle" fill="#f0c33c">INGRESO DE VEHÍCULOS</text>
+  <!-- barrera -->
+  <rect x="200" y="186" width="18" height="40" fill="#3c4146"/>
+  <g><rect x="215" y="190" width="150" height="9" fill="#ffffff"/><g fill="#d03b3b"><rect x="235" y="190" width="18" height="9"/><rect x="275" y="190" width="18" height="9"/><rect x="315" y="190" width="18" height="9"/></g></g>
+  <!-- camion -->
+  <g>
+    <rect x="360" y="215" width="150" height="70" fill="#d7d9dc" stroke="#55595e" stroke-width="3"/>
+    <rect x="505" y="232" width="70" height="53" fill="#d7a531" stroke="#5b4a1a" stroke-width="3"/>
+    <rect x="520" y="240" width="40" height="22" fill="#4a6178"/>
+    <circle cx="395" cy="292" r="16" fill="#222"/><circle cx="470" cy="292" r="16" fill="#222"/><circle cx="545" cy="292" r="16" fill="#222"/>
+    <circle cx="395" cy="292" r="6" fill="#777"/><circle cx="470" cy="292" r="6" fill="#777"/><circle cx="545" cy="292" r="6" fill="#777"/>
+  </g>
+  <!-- caseta -->
+  <rect x="40" y="150" width="110" height="80" fill="#e3e1db" stroke="#5a5c5f" stroke-width="3"/>
+  <rect x="55" y="165" width="45" height="30" fill="#4a6178"/>
+  <!-- rompemuelle -->
+  <rect x="180" y="320" width="300" height="10" fill="#f0c33c"/>
+  <g fill="#222"><rect x="200" y="320" width="20" height="10"/><rect x="260" y="320" width="20" height="10"/><rect x="320" y="320" width="20" height="10"/><rect x="380" y="320" width="20" height="10"/><rect x="440" y="320" width="20" height="10"/></g>
+</svg>

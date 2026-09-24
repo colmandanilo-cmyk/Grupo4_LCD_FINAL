@@ -10,7 +10,7 @@ import math
 import random
 
 import config
-from sim_utils import clamp
+from sim_utils import RandomWalk, clamp
 
 
 def solar_fraction(hour):
@@ -33,7 +33,8 @@ class EnergySimulator:
         self.energy_today_kwh = energy_today_kwh
         self.cloudy = False
         self.panel_failed = False
-        self.random_factor = 1.0
+        self.solar_noise = RandomWalk(config.SOLAR_RANDOM_MIN, config.SOLAR_RANDOM_MAX,
+                                      config.SOLAR_RANDOM_STEP, 0.98)
         self.generation_w = 0.0
         self.cameras_w = 0.0
         self.connectivity_w = 0.0
@@ -80,7 +81,7 @@ class EnergySimulator:
             self.generation_w = 0.0
         else:
             cloud = config.CLOUDY_FACTOR if self.cloudy else 1.0
-            self.generation_w = self.panel_w * solar_fraction(hour) * self.random_factor * cloud
+            self.generation_w = self.panel_w * solar_fraction(hour) * self.solar_noise.value * cloud
         night = is_night(hour)
         self.cameras_w = sum(camera.consumption_w(night) for camera in cameras)
         starlink = config.STARLINK_ONLINE_W if starlink_online else config.STARLINK_SEARCHING_W
@@ -94,7 +95,7 @@ class EnergySimulator:
         """
         hour = virtual_time.hour + virtual_time.minute / 60 + virtual_time.second / 3600
         if virtual_seconds > 0:
-            self.random_factor = random.uniform(config.SOLAR_RANDOM_MIN, config.SOLAR_RANDOM_MAX)
+            self.solar_noise.next()
             self.control_w = config.CONTROL_W + random.uniform(-0.5, 0.5)
         self.update_loads(hour, cameras, starlink_online, active_connection)
         if virtual_seconds <= 0:

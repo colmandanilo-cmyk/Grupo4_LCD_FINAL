@@ -1845,3 +1845,6 @@ Cada etapa termina con una verificación concreta. La siguiente no empieza hasta
 | 2 | Con un cuerpo JSON inválido, un usuario sin permiso recibe 400 antes que 403 | Spring valida el cuerpo antes de evaluar `@PreAuthorize`. Con datos válidos la respuesta es 403, como corresponde |
 | 3 | Nuevo `simulator/sim_utils.py` | La variación acotada (`RandomWalk`) la usan cámaras y conectividad; así no se duplica |
 | 3 | Mientras el panel solar está en falla, Java no evalúa la "baja generación" | Evita registrar "Generación solar normalizada" en el momento en que el panel falla |
+| 4 | Nuevos `components/charts/chartTheme.js` y `components/charts/ChartTooltip.jsx` | Colores, ejes, cuadrícula y tooltip compartidos por todos los gráficos, para que se vean iguales |
+| 4 | La variación de la generación solar pasa a ser gradual (`RandomWalk` en el simulador, `Walk` en `DataSeeder`) | Con un valor aleatorio independiente en cada lectura la curva salía dentada |
+| 4 | La segunda escena de cada tipo de cámara usa un encuadre recortado en vez de una imagen espejada | El espejo invertía los letreros de las escenas |

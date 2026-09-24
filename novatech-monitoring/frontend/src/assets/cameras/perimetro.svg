@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 360">
+  <!-- Escena: cerco perimetrico de la obra con poste de iluminacion. Ilustracion propia del proyecto. -->
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#94abc0"/><stop offset="1" stop-color="#dce1e4"/></linearGradient>
+    <linearGradient id="ground" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#94897a"/><stop offset="1" stop-color="#5b5448"/></linearGradient>
+    <pattern id="mesh" width="14" height="14" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+      <path d="M0 0 H14 M0 0 V14" stroke="#50575e" stroke-width="1.2"/>
+    </pattern>
+  </defs>
+  <rect width="640" height="360" fill="url(#sky)"/>
+  <!-- edificios vecinos lejanos -->
+  <g fill="#aab1b7"><rect x="20" y="120" width="90" height="90"/><rect x="120" y="95" width="70" height="115"/><rect x="520" y="110" width="100" height="100"/></g>
+  <rect y="205" width="640" height="155" fill="url(#ground)"/>
+  <!-- cerco en perspectiva -->
+  <path d="M0 150 L640 185 L640 260 L0 300 Z" fill="url(#mesh)" opacity="0.8"/>
+  <path d="M0 150 L640 185" stroke="#3b4147" stroke-width="3"/>
+  <path d="M0 300 L640 260" stroke="#3b4147" stroke-width="3"/>
+  <g stroke="#2f3439" stroke-width="6">
+    <line x1="20" y1="148" x2="20" y2="300"/><line x1="140" y1="155" x2="140" y2="293"/><line x1="250" y1="161" x2="250" y2="286"/>
+    <line x1="350" y1="167" x2="350" y2="280"/><line x1="440" y1="172" x2="440" y2="274"/><line x1="520" y1="177" x2="520" y2="269"/><line x1="590" y1="181" x2="590" y2="265"/>
+  </g>
+  <!-- alambre de puas -->
+  <path d="M0 140 C 60 135, 120 150, 180 146 S 300 158, 360 156 S 520 170, 640 176" stroke="#2f3439" stroke-width="2" fill="none"/>
+  <!-- poste con reflector -->
+  <line x1="470" y1="40" x2="470" y2="250" stroke="#3a3e42" stroke-width="7"/>
+  <rect x="440" y="36" width="60" height="16" rx="3" fill="#4c5156"/>
+  <rect x="446" y="52" width="48" height="8" fill="#f4e7a0"/>
+  <!-- huella de camino interno -->
+  <path d="M0 340 C 160 320, 360 330, 640 300" stroke="#6e685e" stroke-width="24" fill="none" opacity="0.7"/>
+  <!-- bolsas de cemento apiladas -->
+  <g fill="#cfc6b2" stroke="#8a8170" stroke-width="2"><rect x="80" y="300" width="60" height="22" rx="4"/><rect x="100" y="280" width="60" height="22" rx="4"/><rect x="140" y="300" width="60" height="22" rx="4"/></g>
+</svg>

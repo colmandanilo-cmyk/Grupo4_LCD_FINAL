@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 360">
+  <!-- Escena: zona de acopio de materiales (fierro, agregados, contenedor). Ilustracion propia del proyecto. -->
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#8ea6bd"/><stop offset="1" stop-color="#d6dce0"/></linearGradient>
+    <linearGradient id="ground" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#978b78"/><stop offset="1" stop-color="#5e564a"/></linearGradient>
+  </defs>
+  <rect width="640" height="360" fill="url(#sky)"/>
+  <rect y="190" width="640" height="170" fill="url(#ground)"/>
+  <!-- contenedor -->
+  <rect x="380" y="110" width="230" height="110" fill="#2f6f8f" stroke="#1d4357" stroke-width="3"/>
+  <g stroke="#1d4357" stroke-width="3">
+    <line x1="410" y1="112" x2="410" y2="218"/><line x1="440" y1="112" x2="440" y2="218"/><line x1="470" y1="112" x2="470" y2="218"/>
+    <line x1="500" y1="112" x2="500" y2="218"/><line x1="530" y1="112" x2="530" y2="218"/><line x1="560" y1="112" x2="560" y2="218"/><line x1="590" y1="112" x2="590" y2="218"/>
+  </g>
+  <!-- pila de arena -->
+  <path d="M20 270 Q 110 150 220 270 Z" fill="#c9b27e"/>
+  <path d="M60 270 Q 120 200 180 270" fill="#b89f69"/>
+  <!-- fierro de construccion -->
+  <g stroke="#6b3c24" stroke-width="4">
+    <line x1="230" y1="300" x2="470" y2="270"/><line x1="230" y1="292" x2="470" y2="262"/><line x1="230" y1="284" x2="470" y2="254"/>
+    <line x1="230" y1="308" x2="470" y2="278"/><line x1="230" y1="316" x2="470" y2="286"/>
+  </g>
+  <g fill="#8a7d69"><rect x="250" y="300" width="14" height="24"/><rect x="430" y="276" width="14" height="24"/></g>
+  <!-- parihuelas con ladrillos -->
+  <g>
+    <rect x="490" y="250" width="110" height="10" fill="#8a6b45"/>
+    <rect x="495" y="200" width="100" height="50" fill="#b5553a"/>
+    <g stroke="#7e3a27" stroke-width="2"><line x1="495" y1="216" x2="595" y2="216"/><line x1="495" y1="233" x2="595" y2="233"/><line x1="528" y1="200" x2="528" y2="250"/><line x1="562" y1="200" x2="562" y2="250"/></g>
+  </g>
+  <!-- carretilla -->
+  <g stroke="#2d3236" stroke-width="4" fill="none"><path d="M90 330 L150 330 L175 300"/><line x1="150" y1="330" x2="140" y2="345"/></g>
+  <path d="M85 300 L165 300 L150 330 L95 330 Z" fill="#d7a531" stroke="#5b4a1a" stroke-width="2"/>
+  <circle cx="92" cy="338" r="10" fill="#2d3236"/>
+</svg>

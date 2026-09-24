@@ -1,0 +1,509 @@
+/* ============================================================
+   Estilos propios de pantallas: login, CCTV, centro de control, laboratorio
+   ============================================================ */
+
+/* ---------------- Login ---------------- */
+.login-page {
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: 1.1fr 1fr;
+  background: var(--bg-page);
+}
+
+.login-brand {
+  background: linear-gradient(160deg, #0f2742 0%, #163a63 60%, #1d4d80 100%);
+  color: var(--text-on-dark);
+  padding: 56px 64px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.login-brand .logo {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.login-brand .logo img {
+  width: 54px;
+  height: 54px;
+}
+
+.login-brand .logo strong {
+  font-size: 28px;
+  letter-spacing: 0.14em;
+}
+
+.login-brand h1 {
+  font-size: 32px;
+  font-weight: 700;
+  margin: 40px 0 12px;
+  max-width: 460px;
+}
+
+.login-brand p {
+  color: var(--text-on-dark-muted);
+  max-width: 460px;
+  font-size: 15px;
+}
+
+.login-features {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+  max-width: 520px;
+  margin-top: 32px;
+}
+
+.login-features div {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  font-size: 13px;
+  color: var(--text-on-dark);
+}
+
+.login-features svg {
+  color: #7fb6f2;
+  flex-shrink: 0;
+}
+
+.login-panel {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 32px;
+}
+
+.login-card {
+  width: 100%;
+  max-width: 400px;
+  padding: 32px;
+}
+
+.login-card h2 {
+  font-size: 22px;
+}
+
+.login-card .subtitle {
+  color: var(--text-secondary);
+  margin: 6px 0 24px;
+}
+
+.login-card form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.login-card .btn-primary {
+  padding: 11px;
+  font-size: 14px;
+  letter-spacing: 0.06em;
+}
+
+.demo-accounts {
+  margin-top: 22px;
+  border-top: 1px solid var(--border);
+  padding-top: 14px;
+  font-size: 12.5px;
+}
+
+.demo-accounts summary {
+  cursor: pointer;
+  color: var(--text-secondary);
+  font-weight: 600;
+}
+
+.demo-accounts button {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  border: 1px solid var(--border);
+  background: var(--bg-subtle);
+  border-radius: 6px;
+  padding: 7px 10px;
+  margin-top: 6px;
+  cursor: pointer;
+  font-size: 12.5px;
+}
+
+.demo-accounts button:hover {
+  border-color: var(--brand);
+}
+
+@media (max-width: 900px) {
+  .login-page {
+    grid-template-columns: 1fr;
+  }
+
+  .login-brand {
+    padding: 32px 24px;
+  }
+
+  .login-features {
+    display: none;
+  }
+}
+
+/* ---------------- Centro de control ---------------- */
+.site-hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(300px, auto);
+  gap: 16px;
+  align-items: stretch;
+  margin-bottom: 18px;
+}
+
+.site-hero .site-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 18px;
+  color: var(--text-secondary);
+  font-size: 13px;
+  margin-top: 8px;
+}
+
+.site-hero .site-meta span {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+@media (max-width: 1000px) {
+  .site-hero {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ---------------- CCTV ---------------- */
+.cctv-grid {
+  display: grid;
+  gap: 10px;
+  grid-template-columns: repeat(var(--cctv-cols, 3), minmax(0, 1fr));
+}
+
+@media (max-width: 1100px) {
+  .cctv-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 700px) {
+  .cctv-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.cctv-tile {
+  position: relative;
+  aspect-ratio: 16 / 9;
+  background: #0b0f14;
+  border-radius: 8px;
+  overflow: hidden;
+  cursor: pointer;
+  border: 2px solid #1c2530;
+  color: #fff;
+  font-family: "Consolas", "Courier New", monospace;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.9);
+}
+
+.cctv-tile:hover {
+  border-color: #5aa2f0;
+}
+
+.cctv-tile.motion {
+  border-color: var(--warn-strong);
+}
+
+.cctv-tile.intrusion {
+  border-color: var(--critical-strong);
+}
+
+.cctv-scene {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: saturate(0.55) contrast(1.08) brightness(0.92);
+}
+
+.cctv-scene.flip {
+  transform: scale(1.18) translateX(-6%);
+}
+
+.cctv-tile.ir .cctv-scene {
+  filter: grayscale(1) brightness(0.62) contrast(1.35);
+}
+
+/* Lineas de barrido y vineta: dan aspecto de camara de seguridad */
+.cctv-tile::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    repeating-linear-gradient(0deg, rgba(0, 0, 0, 0.12) 0 1px, transparent 1px 3px),
+    radial-gradient(ellipse at center, transparent 55%, rgba(0, 0, 0, 0.5) 100%);
+}
+
+.cctv-noise {
+  position: absolute;
+  inset: 0;
+  background:
+    repeating-radial-gradient(circle at 17% 32%, #2a2f36 0 1px, #111 1px 3px),
+    repeating-linear-gradient(90deg, #1b1f25 0 2px, #0c0e11 2px 5px);
+  opacity: 0.9;
+}
+
+.cctv-maintenance {
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(45deg, #2b2f35 0 14px, #1d2025 14px 28px);
+}
+
+.cctv-center {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  text-align: center;
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  z-index: 2;
+}
+
+.cctv-center small {
+  font-size: 11px;
+  font-weight: 400;
+  letter-spacing: 0;
+  opacity: 0.85;
+}
+
+.cctv-osd {
+  position: absolute;
+  z-index: 3;
+  font-size: 11.5px;
+  line-height: 1.3;
+}
+
+.cctv-osd.top-left { top: 8px; left: 10px; }
+.cctv-osd.top-right { top: 8px; right: 10px; text-align: right; }
+.cctv-osd.bottom-left { bottom: 8px; left: 10px; }
+.cctv-osd.bottom-right { bottom: 8px; right: 10px; text-align: right; }
+
+.cctv-osd .cam-name {
+  font-weight: 700;
+  font-size: 12.5px;
+}
+
+.cctv-rec {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-weight: 700;
+}
+
+.cctv-rec::before {
+  content: "";
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: #ff3b3b;
+  animation: rec-blink 1.6s steps(2, start) infinite;
+}
+
+@keyframes rec-blink {
+  to {
+    visibility: hidden;
+  }
+}
+
+.cctv-status {
+  display: inline-block;
+  padding: 1px 6px;
+  border-radius: 3px;
+  font-size: 10.5px;
+  font-weight: 700;
+  background: rgba(0, 0, 0, 0.55);
+  margin-top: 3px;
+}
+
+.cctv-banner {
+  position: absolute;
+  z-index: 4;
+  left: 50%;
+  top: 34%;
+  transform: translateX(-50%);
+  padding: 5px 12px;
+  border-radius: 4px;
+  font-size: 12.5px;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  white-space: nowrap;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  text-shadow: none;
+}
+
+.cctv-banner.motion {
+  background: rgba(250, 178, 25, 0.95);
+  color: #2b1d00;
+}
+
+.cctv-banner.intrusion {
+  background: rgba(208, 59, 59, 0.96);
+  color: #fff;
+}
+
+.cctv-banner.motion + .cctv-banner.intrusion,
+.cctv-banner.intrusion + .cctv-banner.motion {
+  top: calc(34% + 34px);
+}
+
+.cctv-modal-view {
+  max-width: 100%;
+}
+
+/* ---------------- Laboratorio de simulacion ---------------- */
+.lab-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.5fr) minmax(320px, 1fr);
+  gap: 16px;
+  align-items: start;
+}
+
+@media (max-width: 1200px) {
+  .lab-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.scenario-group h3 {
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-muted);
+  margin: 4px 0 8px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.scenario-buttons {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.scenario-btn {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  text-align: left;
+  border: 1px solid var(--border);
+  background: var(--bg-surface);
+  border-radius: 8px;
+  padding: 10px 12px;
+  cursor: pointer;
+  transition: border-color 0.12s ease, background 0.12s ease;
+}
+
+.scenario-btn:hover:not(:disabled) {
+  border-color: var(--brand);
+  background: var(--brand-soft);
+}
+
+.scenario-btn:disabled {
+  opacity: 0.55;
+  cursor: wait;
+}
+
+.scenario-btn .sb-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+}
+
+.scenario-btn strong {
+  display: block;
+  font-size: 12.5px;
+  letter-spacing: 0.02em;
+}
+
+.scenario-btn span {
+  font-size: 11.5px;
+  color: var(--text-muted);
+}
+
+.speed-controls {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+/* ---------------- Reportes / impresion ---------------- */
+.report-summary {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+.print-only {
+  display: none;
+}
+
+@media print {
+  .print-only {
+    display: block;
+  }
+
+  .card {
+    box-shadow: none;
+    break-inside: avoid;
+  }
+
+  .app-content {
+    padding: 0;
+  }
+}
+
+/* ---------------- Paginas de error ---------------- */
+.error-page {
+  min-height: 70vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: 10px;
+}
+
+.error-page .code {
+  font-size: 64px;
+  font-weight: 800;
+  color: var(--brand);
+  line-height: 1;
+}
+
+.error-page h1 {
+  font-size: 22px;
+}
+
+.error-page p {
+  color: var(--text-secondary);
+  max-width: 460px;
+}
