@@ -10,12 +10,24 @@ Este proyecto es independiente del que ocupa la raíz del repositorio y vive com
 
 | Etapa | Contenido | Estado |
 |---|---|---|
-| 1 | Diseño y estructura | Entregada, en revisión: [docs/etapa-1-diseno.md](docs/etapa-1-diseno.md) |
-| 2 | Backend Java | Pendiente |
+| 1 | Diseño y estructura | Completada: [docs/etapa-1-diseno.md](docs/etapa-1-diseno.md) |
+| 2 | Backend Java | Completada: [backend/](backend/) |
 | 3 | Simulador Python | Pendiente |
 | 4 | Frontend React | Pendiente |
 | 5 | Integración | Pendiente |
 | 6 | Pruebas y corrección | Pendiente |
 | 7 | Instalación, ejecución, reset y documentación | Pendiente |
+
+## Probar el backend (Etapa 2)
+
+Requiere Java 17 o superior. Desde la carpeta `backend/`:
+
+```
+mvnw.cmd -DskipTests package        (Windows)
+./mvnw -DskipTests package          (Linux/macOS)
+java -jar target/novatech-backend.jar
+```
+
+La API queda en http://localhost:8080/api (salud: http://localhost:8080/api/health). La primera vez crea `backend/data/novatech.db` con los datos iniciales. Usuarios: `admin@novatech.local` / `Admin123*`, `supervisor@novatech.local` / `Supervisor123*`, `operador@novatech.local` / `Operador123*`.
 
 En la Etapa 7 este archivo se reemplaza por el README completo: instalación en Windows, ejecución, usuarios de prueba, escenarios de simulación, limitaciones y evolución futura.

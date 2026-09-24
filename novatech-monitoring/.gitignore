@@ -1,0 +1,21 @@
+# El .gitignore de la raiz del repositorio ignora *.bat; aqui se vuelven a incluir
+!*.bat
+
+# Backend
+backend/target/
+backend/data/
+
+# Frontend
+frontend/node_modules/
+frontend/dist/
+
+# Simulador
+simulator/.venv/
+__pycache__/
+*.pyc
+
+# Varios
+*.log
+.idea/
+.vscode/
+*.iml

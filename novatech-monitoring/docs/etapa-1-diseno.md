@@ -270,6 +270,7 @@ novatech-monitoring/
 │       │   │   ├── NovatechApplication.java           [E2] punto de entrada; crea backend/data/
 │       │   │   ├── config/
 │       │   │   │   ├── AppProperties.java             [E2] propiedades novatech.*
+│       │   │   │   ├── DatabaseConfig.java            [E2] conexión SQLite (agregado en la Etapa 2)
 │       │   │   │   └── DataSeeder.java                [E2] datos iniciales y 24 h de historia
 │       │   │   ├── security/
 │       │   │   │   ├── SecurityConfig.java            [E2]
@@ -509,7 +510,7 @@ novatech-monitoring/
             └── NotFoundPage.jsx           [E4] 404
 ```
 
-Tamaño aproximado: 112 archivos en el backend (incluidas las pruebas), 81 en el frontend, 12 en el simulador y 12 en la raíz y `docs/`. Cada archivo tiene una responsabilidad; los DTO y los componentes muy pequeños se agruparon para no inflar el conteo.
+Tamaño aproximado: 113 archivos en el backend (incluidas las pruebas), 81 en el frontend, 12 en el simulador y 12 en la raíz y `docs/`. Cada archivo tiene una responsabilidad; los DTO y los componentes muy pequeños se agruparon para no inflar el conteo.
 
 Dos detalles de Git ya comprobados en este repositorio:
 
@@ -537,6 +538,7 @@ Paquete base: `com.novatech.monitoring`. Artefacto: `novatech-backend.jar`.
 |---|---|---|
 | (raíz) | `NovatechApplication` | Arranca Spring Boot, activa las tareas programadas y crea la carpeta `data/` antes de abrir la base |
 | config | `AppProperties` | Lee las propiedades `novatech.*`: ruta de la base, duración del token, clave de dispositivos, orígenes CORS, retención de datos |
+| config | `DatabaseConfig` | Arma la conexión a SQLite: crea la carpeta `data/`, un pool de una conexión, WAL, `busy_timeout` y claves foráneas (agregado en la Etapa 2) |
 | config | `DataSeeder` | Si la base está vacía, carga usuarios, obras, dispositivos, cámaras, estado actual, 24 h de historia, eventos, alertas, incidencias, auditoría, configuración y estado de simulación. Con `--novatech.exit-after-init=true` carga los datos y termina (lo usan `install.bat` y `reset_demo.bat`) |
 | security | `SecurityConfig` | Cadena de filtros: `/api/auth/login` y `/api/health` públicos; `/api/ingest/**` solo con clave de dispositivo; el resto requiere token. Sin sesión en servidor, CORS para `localhost:5173`, BCrypt |
 | security | `JwtService` | Genera y valida tokens (id, correo, rol, vencimiento). Crea `data/jwt-secret.key` si no existe |
@@ -1583,8 +1585,10 @@ Energía, conectividad y telemetría:
 | GET | `/api/connectivity` | Todos | Conexión activa por obra y totales Starlink, 4G y sin conexión |
 | GET | `/api/connectivity/sites/{siteId}` | Todos | Detalle de Starlink y 4G |
 | GET | `/api/connectivity/sites/{siteId}/history?hours=24` | Todos | Latencia y conexión activa en el tiempo, con las contingencias |
+| GET | `/api/connectivity/sites/{siteId}/timeline` | Todos | Línea de tiempo de contingencias: "Conexión Starlink perdida", "Activando respaldo 4G"... |
 | GET | `/api/telemetry?siteId=&deviceId=&metric=&hours=` | Todos | Serie de una métrica de un dispositivo |
 | GET | `/api/telemetry/latest?siteId=` | Todos | Últimos registros de telemetría de la obra |
+| GET | `/api/telemetry/metrics?siteId=` | Todos | Métricas disponibles de cada dispositivo (para elegir qué graficar) |
 
 Eventos, alertas e incidencias:
 
@@ -1639,6 +1643,7 @@ Configuración y auditoría:
 | GET | `/api/config` | Todos | Parámetros actuales |
 | PUT | `/api/config` | Admin | Guardar parámetros |
 | GET | `/api/audit?userId=&action=&from=&to=&page=&size=` | Admin | Registro de auditoría |
+| GET | `/api/audit/actions` | Admin | Acciones registradas, para el filtro de la pantalla |
 
 ### 6.1 Convenciones de respuesta
 
@@ -1825,3 +1830,14 @@ Cada etapa termina con una verificación concreta. La siguiente no empieza hasta
 | README y scripts | Raíz de `novatech-monitoring/` | 7 |
 | Sin botones decorativos, sin pantallas vacías, sin TODO pendientes | Revisión de la Etapa 5 y búsqueda de "TODO" en la Etapa 6 | 5 y 6 |
 | No requiere hardware, nube ni Docker | Decisiones de las secciones 0 y 7 | 1 |
+
+---
+
+## Registro de cambios durante la implementación
+
+| Etapa | Cambio | Motivo |
+|---|---|---|
+| 2 | Nuevo `config/DatabaseConfig.java` | SQLite crea el archivo pero no la carpeta; la conexión se arma a mano para crear `data/` y fijar un pool de una conexión con WAL, `busy_timeout` y claves foráneas |
+| 2 | Nuevos endpoints `GET /api/connectivity/sites/{id}/timeline`, `GET /api/telemetry/metrics` y `GET /api/audit/actions` | Datos que necesitan la línea de tiempo de contingencias, el selector de la pestaña Telemetría y el filtro de auditoría |
+| 2 | Se excluye el usuario en memoria que Spring Security crea por defecto | Los usuarios viven en la tabla `users`; así no aparece una contraseña generada en la consola |
+| 2 | Con un cuerpo JSON inválido, un usuario sin permiso recibe 400 antes que 403 | Spring valida el cuerpo antes de evaluar `@PreAuthorize`. Con datos válidos la respuesta es 403, como corresponde |
