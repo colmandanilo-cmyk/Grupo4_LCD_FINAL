@@ -15,7 +15,7 @@ Este proyecto es independiente del que ocupa la raíz del repositorio y vive com
 | 3 | Simulador Python | Completada: [simulator/](simulator/) |
 | 4 | Frontend React | Completada: [frontend/](frontend/) |
 | 5 | Integración | Completada: flujo de demostración de 30 pasos verificado |
-| 6 | Pruebas y corrección | Pendiente |
+| 6 | Pruebas y corrección | Completada: 47 pruebas JUnit, 25 del simulador y el recorrido de demostración |
 | 7 | Instalación, ejecución, reset y documentación | Pendiente |
 
 ## Probar el backend (Etapa 2)
@@ -58,5 +58,22 @@ La aplicación queda en http://localhost:5173. Las llamadas a `/api` se redirige
 Con el backend, el simulador y el frontend en marcha, en ese orden, se puede seguir el escenario completo de demostración: iniciar sesión como administrador, entrar a OBRA-001, ejecutar SIMULAR INTRUSIÓN en el Laboratorio, reconocer la alerta, crear una incidencia y resolverla, provocar FALLA STARLINK para ver el paso a 4G, restaurar Starlink, ejecutar BATERÍA CRÍTICA y volver a OPERACIÓN NORMAL. Las órdenes del laboratorio tardan uno o dos segundos en reflejarse.
 
 Si el simulador está apagado, la cabecera muestra "Fuente de datos: desconectada" y las órdenes del laboratorio esperan hasta 2 minutos antes de vencer. Si el backend se detiene, la interfaz muestra el error y se recupera sola cuando vuelve.
+
+## Pruebas (Etapa 6)
+
+En Windows, `run_tests.bat` ejecuta las pruebas del backend (JUnit) y del simulador (unittest) y muestra un resumen. Con el sistema en marcha, `run_tests.bat demo` además recorre por API los 30 pasos del escenario de demostración.
+
+Por separado:
+
+```
+cd backend
+mvnw.cmd test                                   (Windows; en Linux/macOS: ./mvnw test)
+
+cd simulator
+.venv\Scripts\python -m unittest discover -s tests -t .
+.venv\Scripts\python tests\check_demo_flow.py    (con backend y simulador en marcha)
+```
+
+Las pruebas del backend cubren inicio de sesión, permisos por rol, consulta de obras, eventos y alertas, intrusión, falla de Starlink y cambio a 4G, batería baja y crítica, y el ciclo de alertas e incidencias. Usan una base de datos propia en `backend/target/test-data/`, así que no alteran los datos de la demostración.
 
 En la Etapa 7 este archivo se reemplaza por el README completo: instalación en Windows, ejecución, usuarios de prueba, escenarios de simulación, limitaciones y evolución futura.
