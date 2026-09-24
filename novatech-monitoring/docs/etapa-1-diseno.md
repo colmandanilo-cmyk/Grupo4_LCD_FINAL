@@ -399,6 +399,7 @@ novatech-monitoring/
 │   ├── energy_simulator.py                [E3]
 │   ├── connectivity_simulator.py          [E3]
 │   ├── event_simulator.py                 [E3]
+│   ├── sim_utils.py                       [E3] variación acotada (RandomWalk) y límites (agregado en la Etapa 3)
 │   ├── tests/
 │   │   ├── __init__.py                    [E3]
 │   │   ├── test_simulator.py              [E3] pruebas unitarias del modelo
@@ -510,7 +511,7 @@ novatech-monitoring/
             └── NotFoundPage.jsx           [E4] 404
 ```
 
-Tamaño aproximado: 113 archivos en el backend (incluidas las pruebas), 81 en el frontend, 12 en el simulador y 12 en la raíz y `docs/`. Cada archivo tiene una responsabilidad; los DTO y los componentes muy pequeños se agruparon para no inflar el conteo.
+Tamaño aproximado: 113 archivos en el backend (incluidas las pruebas), 81 en el frontend, 13 en el simulador y 12 en la raíz y `docs/`. Cada archivo tiene una responsabilidad; los DTO y los componentes muy pequeños se agruparon para no inflar el conteo.
 
 Dos detalles de Git ya comprobados en este repositorio:
 
@@ -587,6 +588,7 @@ Paquete base: `com.novatech.monitoring`. Artefacto: `novatech-backend.jar`.
 | `connectivity_simulator.py` | Clase `ConnectivitySimulator`: Starlink y 4G con variaciones pequeñas, fallas y recuperaciones. Aplica la conexión activa que le devuelve Java |
 | `event_simulator.py` | Eventos puntuales (movimiento, intrusión) con su descripción, y movimiento aleatorio ocasional en horario laboral |
 | `station_simulator.py` | Clase `StationSimulator`, una por obra: reloj virtual, pausa, velocidad, aplicación de órdenes del laboratorio y armado del JSON de telemetría |
+| `sim_utils.py` | `RandomWalk`: valor que cambia poco en cada paso y nunca sale de su rango. Lo usan cámaras y conectividad (agregado en la Etapa 3) |
 | `main.py` | Bucle principal: sincroniza con Java, ejecuta órdenes, avanza el tiempo, envía datos y muestra un resumen en consola |
 | `tests/test_simulator.py` | Pruebas del modelo: curva solar, límites de batería, escenarios, forma del JSON |
 | `tests/check_demo_flow.py` | Recorre por API el flujo de §56 con el sistema en marcha y reporta cada paso |
@@ -1841,3 +1843,5 @@ Cada etapa termina con una verificación concreta. La siguiente no empieza hasta
 | 2 | Nuevos endpoints `GET /api/connectivity/sites/{id}/timeline`, `GET /api/telemetry/metrics` y `GET /api/audit/actions` | Datos que necesitan la línea de tiempo de contingencias, el selector de la pestaña Telemetría y el filtro de auditoría |
 | 2 | Se excluye el usuario en memoria que Spring Security crea por defecto | Los usuarios viven en la tabla `users`; así no aparece una contraseña generada en la consola |
 | 2 | Con un cuerpo JSON inválido, un usuario sin permiso recibe 400 antes que 403 | Spring valida el cuerpo antes de evaluar `@PreAuthorize`. Con datos válidos la respuesta es 403, como corresponde |
+| 3 | Nuevo `simulator/sim_utils.py` | La variación acotada (`RandomWalk`) la usan cámaras y conectividad; así no se duplica |
+| 3 | Mientras el panel solar está en falla, Java no evalúa la "baja generación" | Evita registrar "Generación solar normalizada" en el momento en que el panel falla |

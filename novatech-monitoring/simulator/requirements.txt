@@ -1,0 +1,2 @@
+# Unica dependencia externa del simulador: cliente HTTP para hablar con el backend Java.
+requests==2.34.2

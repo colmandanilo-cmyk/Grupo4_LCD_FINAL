@@ -95,6 +95,10 @@ public class IngestService {
         int alerts;
     }
 
+    /** Resultado del panel solar: si esta en falla y si hay baja generacion. */
+    private record SolarState(boolean failed, boolean lowGeneration) {
+    }
+
     /** Estado final de una camara despues de procesarla (para el historial). */
     private record CameraState(Device device, boolean online, int signal) {
     }
@@ -120,7 +124,7 @@ public class IngestService {
 
         List<CameraState> cameras = processCameras(site, request.cameras(), devices, changes, now);
         BatteryLevel batteryLevel = processBattery(site, battery, request.battery(), previous, changes, now);
-        boolean solarFailed = processSolar(site, solar, request.solarPanel(), previous, changes, now);
+        SolarState solarState = processSolar(site, solar, request.solarPanel(), previous, changes, now);
         ConnectionType active = processConnectivity(site, starlink, cellular, request.starlink(),
                 request.cellular(), previous, changes, now);
 
@@ -129,7 +133,7 @@ public class IngestService {
                 || Duration.between(previous.lastHistoryAt(), now).getSeconds()
                 >= configService.telemetryIntervalSeconds();
 
-        SiteLiveStatus current = buildLiveStatus(site, request, previous, batteryLevel, solarFailed, active,
+        SiteLiveStatus current = buildLiveStatus(site, request, previous, batteryLevel, solarState, active,
                 now, saveHistory ? now : previous.lastHistoryAt());
         liveRepository.save(current);
         if (saveHistory) {
@@ -224,7 +228,7 @@ public class IngestService {
 
     // ---------------- Panel solar ----------------
 
-    private boolean processSolar(Site site, Device solar, SolarReading reading, SiteLiveStatus previous,
+    private SolarState processSolar(Site site, Device solar, SolarReading reading, SiteLiveStatus previous,
                                  Changes changes, LocalDateTime now) {
         boolean failed = reading.status() == Device.Status.FALLA || reading.status() == Device.Status.OFFLINE;
         boolean failedBefore = solar.status() == Device.Status.FALLA;
@@ -238,8 +242,9 @@ public class IngestService {
             alertService.autoResolve(site.id(), solar.id(), Alert.Type.SOLAR_PANEL, "el panel solar volvió a generar", now);
         }
 
-        boolean lowGeneration = reading.lowGeneration() && !failed;
+        // Mientras el panel esta en falla no se evalua la baja generacion (se conserva el estado anterior).
         boolean lowBefore = previous != null && previous.lowGeneration();
+        boolean lowGeneration = failed ? lowBefore : reading.lowGeneration();
         if (lowGeneration && !lowBefore) {
             event(changes, site, solar.id(), EventType.LOW_SOLAR_GENERATION,
                     String.format("Baja generación solar: %.0f W (condición nublada)", reading.generationW()), now);
@@ -248,7 +253,7 @@ public class IngestService {
         }
         deviceRepository.updateStatus(solar.id(), failed ? Device.Status.FALLA : Device.Status.ONLINE,
                 failed ? null : now);
-        return failed;
+        return new SolarState(failed, lowGeneration);
     }
 
     // ---------------- Conectividad: contingencia Starlink -> 4G (seccion 26) ----------------
@@ -328,10 +333,11 @@ public class IngestService {
     // ---------------- Estado actual e historial ----------------
 
     private SiteLiveStatus buildLiveStatus(Site site, TelemetryRequest r, SiteLiveStatus previous,
-                                           BatteryLevel batteryLevel, boolean solarFailed, ConnectionType active,
+                                           BatteryLevel batteryLevel, SolarState solar, ConnectionType active,
                                            LocalDateTime now, LocalDateTime lastHistoryAt) {
         boolean starlinkUp = r.starlink().status() == Device.Status.ONLINE;
         boolean cellularUp = r.cellular().status() == Device.Status.ONLINE;
+        boolean solarFailed = solar.failed();
         double generation = solarFailed ? 0 : r.solarPanel().generationW();
         return new SiteLiveStatus(
                 site.id(), now, r.deviceTime(),
@@ -339,7 +345,7 @@ public class IngestService {
                 MonitoringRules.batteryTrend(generation, r.consumption().totalW(), r.battery().percent()),
                 solarFailed ? Device.Status.FALLA : Device.Status.ONLINE,
                 round2(r.solarPanel().ratedPowerW()), round2(generation), round2(r.solarPanel().energyTodayKwh()),
-                r.solarPanel().lowGeneration() && !solarFailed,
+                solar.lowGeneration(),
                 round2(r.consumption().totalW()), round2(r.consumption().camerasW()),
                 round2(r.consumption().connectivityW()), round2(r.consumption().controlW()),
                 round2(r.battery().autonomyHours()),
