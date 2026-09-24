@@ -23,14 +23,13 @@ export default function CamerasTab({ siteId }) {
             <div className="table-wrap">
               <table className="table">
                 <thead>
-                  <tr><th>ID</th><th>Nombre</th><th>Ubicación</th><th>Estado</th><th>Resolución</th><th className="num">FPS</th><th className="num">Señal</th><th>Última comunicación</th><th>Detección de movimiento</th></tr>
+                  <tr><th>ID</th><th>Nombre / ubicación</th><th>Estado</th><th>Resolución</th><th className="num">FPS</th><th className="num">Señal</th><th>Última comunicación</th><th>Detección</th></tr>
                 </thead>
                 <tbody>
                   {cameras.map((c) => (
                     <tr key={c.deviceId} className="clickable" onClick={() => setSelectedId(c.deviceId)}>
                       <td className="cell-main nowrap">{c.code}</td>
-                      <td>{c.name}</td>
-                      <td>{c.position}</td>
+                      <td>{c.name}<div className="cell-sub">{c.position}</div></td>
                       <td><StatusBadge kind="device" value={c.status} /></td>
                       <td>{c.resolution}</td>
                       <td className="num">{c.fps}</td>

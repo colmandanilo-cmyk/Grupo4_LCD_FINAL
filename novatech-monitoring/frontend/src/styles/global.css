@@ -374,3 +374,15 @@ button, input, select, textarea {
     background: #fff;
   }
 }
+
+/* Pantalla completa centrada (servidor no disponible al abrir la aplicacion) */
+.page-center {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 24px 16px;
+  text-align: center;
+}

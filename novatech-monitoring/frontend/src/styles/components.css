@@ -100,6 +100,10 @@
   grid-template-columns: repeat(7, minmax(0, 1fr));
 }
 
+.kpi-grid.kpi-grid-6 {
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+}
+
 .grid-main-side {
   grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr);
 }
@@ -109,6 +113,10 @@
 }
 
 @media (max-width: 1500px) {
+  .kpi-grid.kpi-grid-6 {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
   .kpi-grid.kpi-grid-7 {
     grid-template-columns: repeat(4, minmax(0, 1fr));
   }
@@ -119,6 +127,7 @@
 }
 
 @media (max-width: 700px) {
+  .kpi-grid.kpi-grid-6,
   .kpi-grid.kpi-grid-7 {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
@@ -554,6 +563,13 @@
   justify-content: flex-end;
 }
 
+.stack-badges {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 5px;
+}
+
 .table .actions-stack {
   flex-direction: column;
   align-items: stretch;
@@ -627,6 +643,13 @@
 
 .tab:hover {
   color: var(--text-primary);
+}
+
+@media (max-width: 1500px) {
+  .tab {
+    padding: 10px 10px;
+    gap: 6px;
+  }
 }
 
 .tab.active {

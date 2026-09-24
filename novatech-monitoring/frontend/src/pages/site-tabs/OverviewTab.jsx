@@ -21,7 +21,7 @@ export default function OverviewTab({ detail, onChanged }) {
 
   return (
     <div className="stack">
-      <div className="kpi-grid" style={{ marginBottom: 0 }}>
+      <div className="kpi-grid kpi-grid-6" style={{ marginBottom: 0 }}>
         <KpiCard icon={Cctv} label="Cámaras en línea" value={`${s.camerasOnline} / ${s.cameraCount}`} tone={s.camerasOnline === s.cameraCount ? 'ok' : 'serious'} />
         <KpiCard icon={BatteryCharging} label="Batería" value={formatNumber(live?.batteryPercent, 0)} suffix="%"
           tone={batteryTone(live?.batteryPercent, settings.batteryLowThreshold, settings.batteryCriticalThreshold)}
@@ -37,7 +37,7 @@ export default function OverviewTab({ detail, onChanged }) {
           <KpiCard icon={ClipboardList} label="Incidencias abiertas" value={detail.openIncidents} tone={detail.openIncidents ? 'warn' : 'ok'} />
         )}
       </div>
-      <div className="grid" style={{ gridTemplateColumns: 'minmax(0, 1.4fr) minmax(0, 1fr)' }}>
+      <div className="grid grid-main-side">
         <DeviceInventory siteId={s.id} devices={detail.devices} onChanged={onChanged} />
         <div className="card">
           <div className="card-header"><h3>Últimos eventos</h3></div>

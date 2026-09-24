@@ -153,16 +153,17 @@ export default function SimulationLabPage() {
                   {sim.commands.length === 0 ? <EmptyState title="Sin órdenes" message="Las órdenes que envíe aparecerán aquí." /> : (
                     <div className="table-wrap" style={{ maxHeight: 360 }}>
                       <table className="table">
-                        <thead><tr><th>Hora</th><th>Orden</th><th>Obra</th><th>Estado</th><th>Resultado</th><th>Usuario</th></tr></thead>
+                        <thead><tr><th>Hora</th><th>Orden</th><th>Estado</th><th>Resultado</th></tr></thead>
                         <tbody>
                           {sim.commands.map((c) => (
                             <tr key={c.id}>
                               <td className="nowrap tabular">{formatTime(c.createdAt, true)}</td>
-                              <td className="cell-main nowrap">{c.commandLabel}{c.deviceCode && <div className="cell-sub">{c.deviceCode}</div>}</td>
-                              <td>{c.siteCode || 'Todas'}</td>
+                              <td>
+                                <div className="cell-main nowrap">{c.commandLabel}</div>
+                                <div className="cell-sub">{[c.siteCode || 'Todas las obras', c.deviceCode, c.createdByName].filter(Boolean).join(' · ')}</div>
+                              </td>
                               <td><StatusBadge kind="command" value={c.status} /></td>
                               <td className="secondary">{c.result || '—'}</td>
-                              <td>{c.createdByName || '—'}</td>
                             </tr>
                           ))}
                         </tbody>

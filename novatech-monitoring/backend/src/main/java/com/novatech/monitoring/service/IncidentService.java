@@ -141,7 +141,7 @@ public class IncidentService {
             closedAt = now;
         }
 
-        String line = "[" + now.format(NOTE_TIME) + "] " + user.name() + ": " + incident.status() + " → " + target
+        String line = "[" + now.format(NOTE_TIME) + "] " + user.name() + ": " + incident.status().label() + " → " + target.label()
                 + (request.observation() == null || request.observation().isBlank() ? "" : ". " + request.observation().trim());
         String observations = incident.observations() == null || incident.observations().isBlank()
                 ? line : incident.observations() + "\n" + line;
@@ -154,7 +154,7 @@ public class IncidentService {
             alertService.resolveFromIncident(incident.alertId(), incident.code(), user);
         }
         auditService.log(user.id(), target == Incident.Status.CERRADA ? "INCIDENCIA_CERRADA" : "INCIDENCIA_ACTUALIZADA",
-                "INCIDENT", id, incident.code() + ": " + incident.status() + " → " + target);
+                "INCIDENT", id, incident.code() + ": " + incident.status().label() + " → " + target.label());
         return view(id);
     }
 

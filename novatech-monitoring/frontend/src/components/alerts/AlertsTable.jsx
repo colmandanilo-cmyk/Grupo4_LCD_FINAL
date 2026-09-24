@@ -75,11 +75,9 @@ export default function AlertsTable({ siteId, defaultStatus = 'ACTIVAS', pageSiz
                   <thead>
                     <tr>
                       <th>Fecha</th>
-                      {!siteId && <th>Obra</th>}
-                      <th>Dispositivo</th>
+                      <th>{siteId ? 'Dispositivo' : 'Obra / dispositivo'}</th>
                       <th>Alerta</th>
-                      <th>Severidad</th>
-                      <th>Estado</th>
+                      <th>Severidad / estado</th>
                       <th>Responsable</th>
                       <th className="num">Acciones</th>
                     </tr>
@@ -88,16 +86,23 @@ export default function AlertsTable({ siteId, defaultStatus = 'ACTIVAS', pageSiz
                     {result.items.map((a) => (
                       <tr key={a.id}>
                         <td className="nowrap"><div>{formatDateTime(a.createdAt)}</div><div className="cell-sub">{timeAgo(a.createdAt)}</div></td>
-                        {!siteId && <td><Link className="nowrap" to={`/obras/${a.siteId}?tab=alertas`}>{a.siteCode}</Link><div className="cell-sub">{a.siteName}</div></td>}
-                        <td>{a.deviceCode || '—'}<div className="cell-sub">{a.deviceName}</div></td>
+                        <td>
+                          {!siteId && <Link className="nowrap" to={`/obras/${a.siteId}?tab=alertas`}>{a.siteCode}</Link>}
+                          {siteId ? <div>{a.deviceCode || '—'}</div> : a.deviceCode && <div className="cell-sub nowrap">{a.deviceCode}</div>}
+                          <div className="cell-sub">{a.deviceName}</div>
+                        </td>
                         <td style={{ minWidth: 240, maxWidth: 380 }}>
                           <div className="cell-main">{a.title}</div>
                           <div className="cell-sub">{a.description}</div>
                           {a.resolutionNote && <div className="cell-sub">Resolución: {a.resolutionNote}</div>}
                           {a.incidentCode && <div className="cell-sub">Incidencia {a.incidentCode}</div>}
                         </td>
-                        <td><StatusBadge kind="severity" value={a.severity} /></td>
-                        <td><StatusBadge kind="alertStatus" value={a.status} /></td>
+                        <td>
+                          <div className="stack-badges">
+                            <StatusBadge kind="severity" value={a.severity} />
+                            <StatusBadge kind="alertStatus" value={a.status} />
+                          </div>
+                        </td>
                         <td>
                           {a.responsibleName || (a.status === 'RESUELTA' && !a.resolvedByName ? 'Sistema' : '—')}
                           {a.resolvedAt && <div className="cell-sub">Resuelta {formatDateTime(a.resolvedAt)}{a.resolvedByName ? ` por ${a.resolvedByName}` : ''}</div>}

@@ -65,20 +65,23 @@ export default function SitesPage() {
               <table className="table">
                 <thead>
                   <tr>
-                    <th>Código</th><th>Nombre</th><th>Cliente</th><th>Ubicación</th><th>Estado</th><th>Estado general</th>
-                    <th className="num">Cámaras</th><th>Batería</th><th>Conexión activa</th><th className="num">Alertas</th>
+                    <th>Obra</th><th>Cliente / ubicación</th><th>Estado</th>
+                    <th className="num">Cámaras</th><th>Batería</th><th>Conexión</th><th className="num">Alertas</th>
                     {can(user, 'manageSites') && <th className="num">Acciones</th>}
                   </tr>
                 </thead>
                 <tbody>
                   {sites.map((s) => (
                     <tr key={s.id} className="clickable" onClick={() => navigate(`/obras/${s.id}`)}>
-                      <td className="cell-main nowrap">{s.code}</td>
-                      <td><div className="cell-main">{s.name}</div><div className="cell-sub">Instalada el {formatDate(s.installationDate)}</div></td>
-                      <td>{s.client}</td>
-                      <td>{s.location}</td>
-                      <td><StatusBadge kind="site" value={s.status} /></td>
-                      <td><StatusBadge kind="general" value={s.generalState} />{s.dataStale && <div className="cell-sub">Sin datos recientes</div>}</td>
+                      <td><div className="cell-main nowrap">{s.code}</div><div>{s.name}</div><div className="cell-sub">Instalada el {formatDate(s.installationDate)}</div></td>
+                      <td>{s.client}<div className="cell-sub">{s.location}</div></td>
+                      <td>
+                        <div className="stack-badges">
+                          <StatusBadge kind="general" value={s.generalState} />
+                          {s.status !== 'ACTIVA' && <StatusBadge kind="site" value={s.status} />}
+                        </div>
+                        {s.dataStale && <div className="cell-sub">Sin datos recientes</div>}
+                      </td>
                       <td className="num">{s.camerasOnline}/{s.cameraCount}</td>
                       <td><ProgressBar value={s.batteryPercent} tone={batteryTone(s.batteryPercent, settings.batteryLowThreshold, settings.batteryCriticalThreshold)} label="Batería" /></td>
                       <td><StatusBadge kind="connection" value={s.activeConnection} /></td>

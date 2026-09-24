@@ -461,8 +461,8 @@ public class DataSeeder implements ApplicationRunner {
         incident(o3, null, "Mantenimiento preventivo de cámaras",
                 "Limpieza de lentes y revisión de conectores de las cámaras del Centro Logístico Callao.", Severity.BAJA,
                 Incident.Status.CERRADA, supervisor, supervisor, t1, t1.plusMinutes(180), t1.plusDays(1),
-                note(t1.plusMinutes(10), "Supervisor de Monitoreo", "ABIERTA → EN_PROCESO. Técnico asignado en obra")
-                        + "\n" + note(t1.plusMinutes(180), "Supervisor de Monitoreo", "EN_PROCESO → RESUELTA. Lentes limpios y conectores ajustados")
+                note(t1.plusMinutes(10), "Supervisor de Monitoreo", "ABIERTA → EN PROCESO. Técnico asignado en obra")
+                        + "\n" + note(t1.plusMinutes(180), "Supervisor de Monitoreo", "EN PROCESO → RESUELTA. Lentes limpios y conectores ajustados")
                         + "\n" + note(t1.plusDays(1), "Supervisor de Monitoreo", "RESUELTA → CERRADA"));
         event(o3, o3.camera("CAM-009"), EventType.DEVICE_MAINTENANCE, "Cámara CAM-009 en mantenimiento programado", t1.plusMinutes(30));
         event(o3, o3.camera("CAM-009"), EventType.SYSTEM_RESTORED, "Cámara CAM-009 operativa tras mantenimiento", t1.plusMinutes(150));
@@ -496,9 +496,9 @@ public class DataSeeder implements ApplicationRunner {
                 "Se detectó una intrusión en el cerco norte. Coordinar verificación con el personal de seguridad de la obra.",
                 MonitoringRules.incidentPriorityFor(s3), Incident.Status.CERRADA, supervisor, supervisor, i3,
                 t3.plusMinutes(50), t3.plusMinutes(360),
-                note(i3.plusMinutes(3), "Supervisor de Monitoreo", "ABIERTA → EN_PROCESO. Se contactó al vigilante de la obra")
+                note(i3.plusMinutes(3), "Supervisor de Monitoreo", "ABIERTA → EN PROCESO. Se contactó al vigilante de la obra")
                         + "\n" + note(t3.plusMinutes(50), "Supervisor de Monitoreo",
-                        "EN_PROCESO → RESUELTA. Recorrido del perímetro sin hallazgos; se reforzó el cerco en el sector norte")
+                        "EN PROCESO → RESUELTA. Recorrido del perímetro sin hallazgos; se reforzó el cerco en el sector norte")
                         + "\n" + note(t3.plusMinutes(360), "Supervisor de Monitoreo", "RESUELTA → CERRADA"));
         alertRepository.setInAttention(a3, supervisor, supervisor, i3);
         String code3 = incidentCode(inc3);
@@ -545,7 +545,7 @@ public class DataSeeder implements ApplicationRunner {
                 "Corte de Starlink en el Centro Logístico Callao. Revisar obstrucciones y estado de la antena.",
                 Severity.MEDIA, Incident.Status.EN_PROCESO, supervisor, supervisor, i5, null, null,
                 note(i5.plusMinutes(5), "Supervisor de Monitoreo",
-                        "ABIERTA → EN_PROCESO. Se solicitó visita técnica para revisar obstrucciones"));
+                        "ABIERTA → EN PROCESO. Se solicitó visita técnica para revisar obstrucciones"));
         alertRepository.setInAttention(a5, supervisor, supervisor, i5);
         audit(supervisor, "INCIDENCIA_CREADA", "INCIDENT", inc5, incidentCode(inc5) + " desde la alerta " + a5
                 + ": Revisión de la antena Starlink", i5);

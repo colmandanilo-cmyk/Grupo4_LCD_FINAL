@@ -1848,3 +1848,6 @@ Cada etapa termina con una verificación concreta. La siguiente no empieza hasta
 | 4 | Nuevos `components/charts/chartTheme.js` y `components/charts/ChartTooltip.jsx` | Colores, ejes, cuadrícula y tooltip compartidos por todos los gráficos, para que se vean iguales |
 | 4 | La variación de la generación solar pasa a ser gradual (`RandomWalk` en el simulador, `Walk` en `DataSeeder`) | Con un valor aleatorio independiente en cada lectura la curva salía dentada |
 | 4 | La segunda escena de cada tipo de cámara usa un encuadre recortado en vez de una imagen espejada | El espejo invertía los letreros de las escenas |
+| 5 | Si al recargar la página el backend no responde, la sesión se conserva y se reintenta cada 5 segundos | Antes, un backend apagado mandaba al login aunque el token siguiera válido. Solo un 401 cierra la sesión |
+| 5 | Las observaciones de incidencias y la auditoría escriben "EN PROCESO" en lugar de "EN_PROCESO" | Texto que lee una persona |
+| 5 | Tablas de obras, alertas, bitácora del laboratorio y cámaras con columnas combinadas | A 1366×768 no cabían sin barra horizontal |

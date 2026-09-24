@@ -25,6 +25,11 @@ public record Incident(
         ABIERTA,
         EN_PROCESO,
         RESUELTA,
-        CERRADA
+        CERRADA;
+
+        /** Nombre para mostrar: "EN PROCESO" en lugar de "EN_PROCESO". */
+        public String label() {
+            return name().replace('_', ' ');
+        }
     }
 }

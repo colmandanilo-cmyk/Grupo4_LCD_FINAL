@@ -14,7 +14,7 @@ Este proyecto es independiente del que ocupa la raíz del repositorio y vive com
 | 2 | Backend Java | Completada: [backend/](backend/) |
 | 3 | Simulador Python | Completada: [simulator/](simulator/) |
 | 4 | Frontend React | Completada: [frontend/](frontend/) |
-| 5 | Integración | Pendiente |
+| 5 | Integración | Completada: flujo de demostración de 30 pasos verificado |
 | 6 | Pruebas y corrección | Pendiente |
 | 7 | Instalación, ejecución, reset y documentación | Pendiente |
 
@@ -52,5 +52,11 @@ npm run dev
 ```
 
 La aplicación queda en http://localhost:5173. Las llamadas a `/api` se redirigen al backend en el puerto 8080, así que no hace falta configurar nada más. Se ingresa con cualquiera de los usuarios de arriba; el menú y los botones cambian según el rol.
+
+## Probar todo junto (Etapa 5)
+
+Con el backend, el simulador y el frontend en marcha, en ese orden, se puede seguir el escenario completo de demostración: iniciar sesión como administrador, entrar a OBRA-001, ejecutar SIMULAR INTRUSIÓN en el Laboratorio, reconocer la alerta, crear una incidencia y resolverla, provocar FALLA STARLINK para ver el paso a 4G, restaurar Starlink, ejecutar BATERÍA CRÍTICA y volver a OPERACIÓN NORMAL. Las órdenes del laboratorio tardan uno o dos segundos en reflejarse.
+
+Si el simulador está apagado, la cabecera muestra "Fuente de datos: desconectada" y las órdenes del laboratorio esperan hasta 2 minutos antes de vencer. Si el backend se detiene, la interfaz muestra el error y se recupera sola cuando vuelve.
 
 En la Etapa 7 este archivo se reemplaza por el README completo: instalación en Windows, ejecución, usuarios de prueba, escenarios de simulación, limitaciones y evolución futura.
