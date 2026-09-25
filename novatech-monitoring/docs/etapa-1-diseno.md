@@ -1853,3 +1853,6 @@ Cada etapa termina con una verificación concreta. La siguiente no empieza hasta
 | 5 | Tablas de obras, alertas, bitácora del laboratorio y cámaras con columnas combinadas | A 1366×768 no cabían sin barra horizontal |
 | 6 | Las pruebas JUnit usan una base propia en `backend/target/test-data/`, que se borra al comenzar cada ejecución | Siempre parten de los datos iniciales y nunca tocan `data/novatech.db` |
 | 6 | `run_tests.bat demo` agrega el recorrido completo por API con `check_demo_flow.py` | Ese recorrido necesita el sistema en marcha; las pruebas normales no |
+| 7 | `install.bat` y `reset_demo.bat` crean la base con `--server.port=0` | El modo de inicialización levanta Spring completo; con un puerto libre cualquiera no choca con otra aplicación que use el 8080 |
+| 7 | `stop_app.bat` también detiene por puerto (solo java.exe y node.exe) y el Python de `simulator\.venv` | En Windows 11 con Windows Terminal los títulos de ventana no siempre se pueden consultar |
+| 7 | `start_app.bat` comprueba que el backend y el frontend respondan antes de abrir el navegador | Evita abrir una página en blanco mientras Java todavía arranca |
